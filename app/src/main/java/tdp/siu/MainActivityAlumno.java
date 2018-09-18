@@ -28,7 +28,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivityAlumno extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue queue;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_alumno);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
 
     private void formularRequest() {
 
-        progress = ProgressDialog.show(MainActivity.this, "Calculando prioridad",
+        progress = ProgressDialog.show(MainActivityAlumno.this, "Calculando prioridad",
                 "Recolectando datos...", true);
 
         String url = APIUrl + "alumno/prioridad/95812";
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         progress.dismiss();
-                        Toast.makeText(MainActivity.this, "Prioridad actualizada",
+                        Toast.makeText(MainActivityAlumno.this, "Prioridad actualizada",
                                 Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
                     public void onErrorResponse(VolleyError error) {
                         Log.i("Error.Response", String.valueOf(error));
                         progress.dismiss();
-                        Toast.makeText(MainActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                        Toast.makeText(MainActivityAlumno.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();
                     }
                 });
