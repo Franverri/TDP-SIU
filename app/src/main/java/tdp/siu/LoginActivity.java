@@ -1,5 +1,6 @@
 package tdp.siu;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+
 public class LoginActivity extends AppCompatActivity {
 
     // UI references.
@@ -26,6 +34,10 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
 
     private boolean esAlumno;
+
+    RequestQueue queue;
+    ProgressDialog progress;
+    String APIUrl ="https://siu-api.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +76,28 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        configurarHTTPRequestSingleton();
+    }
+
+    private void configurarHTTPRequestSingleton() {
+
+        // Get RequestQueue Singleton
+        queue = HTTPRequestSingleton.getInstance(this.getApplicationContext()).
+                getRequestQueue();
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the RequestQueue with the cache and network.
+        queue = new RequestQueue(cache, network);
+
+        // Start the queue
+        queue.start();
+
     }
 
     /**
