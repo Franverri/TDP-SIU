@@ -1,6 +1,9 @@
 package tdp.siu;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,9 +29,16 @@ public class MainActivityDocente extends AppCompatActivity
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/";
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -120,9 +130,19 @@ public class MainActivityDocente extends AppCompatActivity
 
         if (id == R.id.nav_cursos) {
             // Handle the camera action
+        } else if (id == R.id.nav_cerrarSesionDocente) {
+            editorShared.remove("logueadoDocente");
+            editorShared.apply();
+            goLogin();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_docente);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }

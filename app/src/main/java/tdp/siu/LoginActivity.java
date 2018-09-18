@@ -1,7 +1,9 @@
 package tdp.siu;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
@@ -39,9 +41,25 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/";
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        //Verifico si ya se encuentra logueado
+        boolean alumnoLogueado = sharedPref.getBoolean("logueadoAlumno", false);
+        boolean docenteLogueado = sharedPref.getBoolean("logueadoDocente", false);
+        if(alumnoLogueado){
+            goMainAlumno();
+        } else if(docenteLogueado){
+            goMainDocente();
+        }
 
         //Le quito la barra de notificaciones
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -152,12 +170,32 @@ public class LoginActivity extends AppCompatActivity {
     private void goMain() {
         //Verificar si es un alumno o un docente
         if(esAlumno){
+            //Almaceno boolean para mantener logueado
+            editorShared.putBoolean("logueadoAlumno",true);
+            editorShared.apply();
             Intent intent = new Intent(this, MainActivityAlumno.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         } else {
+            //Almaceno boolean para mantener logueado
+            editorShared.putBoolean("logueadoDocente",true);
+            editorShared.apply();
             Intent intent = new Intent(this, MainActivityDocente.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
+    }
+
+    private void goMainAlumno() {
+        Intent intent = new Intent(this, MainActivityAlumno.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void goMainDocente() {
+        Intent intent = new Intent(this, MainActivityDocente.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private boolean isEmailValid(String email) {

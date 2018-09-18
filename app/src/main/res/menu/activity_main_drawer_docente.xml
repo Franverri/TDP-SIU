@@ -8,6 +8,10 @@
             android:id="@+id/nav_cursos"
             android:icon="@drawable/ic_menu_camera"
             android:title="Cursos" />
+        <item
+            android:id="@+id/nav_cerrarSesionDocente"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Cerrar sesión" />
     </group>
 
 </menu>
