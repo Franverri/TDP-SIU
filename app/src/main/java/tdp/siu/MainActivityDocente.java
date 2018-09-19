@@ -10,6 +10,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.Window;
@@ -22,6 +24,9 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivityDocente extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,6 +36,9 @@ public class MainActivityDocente extends AppCompatActivity
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
+
+    List<Curso> cursosList;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +66,47 @@ public class MainActivityDocente extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         configurarHTTPRequestSingleton();
+
+        configurarRecyclerView();
+    }
+
+    private void configurarRecyclerView() {
+        //getting the recyclerview from xml
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_docente);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //initializing the productlist
+        cursosList = new ArrayList<>();
+
+
+        //adding some items to our list
+        cursosList.add(
+                new Curso(
+                        "TDP 2",
+                        1,
+                        35,
+                        0));
+
+        cursosList.add(
+                new Curso(
+                        "TDP 2",
+                        1,
+                        35,
+                        0));
+
+        cursosList.add(
+                new Curso(
+                        "TDP 2",
+                        1,
+                        35,
+                        0));
+
+        //creating recyclerview adapter
+        CursosAdapter adapter = new CursosAdapter(this, cursosList);
+
+        //setting adapter to recyclerview
+        recyclerView.setAdapter(adapter);
     }
 
     private void configurarHTTPRequestSingleton() {
