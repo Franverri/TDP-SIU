@@ -6,11 +6,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_cursos"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_bullets"
             android:title="Cursos" />
         <item
             android:id="@+id/nav_cerrarSesionDocente"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_cross"
             android:title="Cerrar sesión" />
     </group>
 
