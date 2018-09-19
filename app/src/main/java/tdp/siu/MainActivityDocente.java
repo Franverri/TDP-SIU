@@ -33,6 +33,7 @@ import com.android.volley.VolleyError;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -90,34 +91,15 @@ public class MainActivityDocente extends AppCompatActivity
         //initializing the productlist
         cursosList = new ArrayList<>();
 
-
-        //adding some items to our list
-        cursosList.add(
-                new Curso(
-                        "TDP 2",
-                        1,
-                        35,
-                        0));
-
-        cursosList.add(
-                new Curso(
-                        "TDP 2",
-                        1,
-                        35,
-                        0));
-
-        cursosList.add(
-                new Curso(
-                        "TDP 2",
-                        1,
-                        35,
-                        0));
-
         //creating recyclerview adapter
         adapter = new CursosAdapter(this, cursosList);
 
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
+        //Aca se manda el request al server
+        //enviarRequestCursos();
+
+        //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
+        JSONObject value = exampleJSON();
+        actualizarCursos(value);
     }
 
 
@@ -151,26 +133,62 @@ public class MainActivityDocente extends AppCompatActivity
 
     private void actualizarCursos(JSONObject response){
         cursosList.clear();
-        for (int i = 0; i < response.length(); i++) {
+        JSONArray array = null;
+        try {
+            array = response.getJSONArray("cursos");
+        }catch (JSONException e){
+            Log.i("JSON","Error al parsear JSON");
+        }
+        for (int i = 0; i < array.length(); i++) {
             JSONObject jsonobject = null;
             try {
-                jsonobject = response.getJSONObject(i);
+                jsonobject = array.getJSONObject(i);
             } catch (JSONException e) {
                 Log.i("JSON","Error al parsear JSON");
             }
             try {
                 String nombreCurso = jsonobject.getString("nombre");
                 int numeroCurso = jsonobject.getInt("numero");
-                int inscriptos = jsonobject.getInt("cantInscriptosRegular");
+                int inscriptos = jsonobject.getInt("inscriptos");
                 int vacantesRestantes = jsonobject.getInt("vacantes");
                 cursosList.add(new Curso(nombreCurso, numeroCurso, inscriptos, vacantesRestantes));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }
         }
-        //adapter = new CursosAdapter(this, cursosList);
         recyclerView.setAdapter(adapter);
 
+    }
+
+    private JSONObject exampleJSON() {
+        JSONObject curso1 = new JSONObject();
+        try{
+            curso1.put("nombre", "Analisis Matemático II");
+            curso1.put("numero", 1);
+            curso1.put("inscriptos", 18);
+            curso1.put("vacantes", 42);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONObject curso2 = new JSONObject();
+        try{
+            curso2.put("nombre", "Física II");
+            curso2.put("numero", 2);
+            curso2.put("inscriptos", 5);
+            curso2.put("vacantes", 25);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONArray arr = new JSONArray();
+        arr.put(curso1);
+        arr.put(curso2);
+        JSONObject obj = new JSONObject();
+        try{
+            obj.put("cursos", arr);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     private void configurarHTTPRequestSingleton() {
