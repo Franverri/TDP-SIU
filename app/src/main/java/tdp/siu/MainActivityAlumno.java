@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,6 +33,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class MainActivityAlumno extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,6 +46,8 @@ public class MainActivityAlumno extends AppCompatActivity
     SharedPreferences.Editor editorShared;
 
     NavigationView navigationView;
+
+    boolean estaEnPrincipal = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +134,18 @@ public class MainActivityAlumno extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+
+            if(estaEnPrincipal){
+                super.onBackPressed();
+                finish();
+            } else {
+                estaEnPrincipal = true;
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+
+            /*
             int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
             if (backStackEntryCount == 1) {
                 setTitle("SIU");
@@ -139,7 +156,7 @@ public class MainActivityAlumno extends AppCompatActivity
                 super.onBackPressed();
             } else {
                 super.onBackPressed();
-            }
+            }*/
         }
     }
 
@@ -166,6 +183,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     private void goInscripciones() {
         //setTitle("Inscripciones");
+        estaEnPrincipal = false;
         InscripcionesFragment inscripcionesFragment = new InscripcionesFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragments_alumno, inscripcionesFragment).addToBackStack(null).commit();
@@ -173,6 +191,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     private void goOfertaAcademica() {
         //setTitle("Oferta académica");
+        estaEnPrincipal = false;
         OfertaAcademicaFragment ofertaAcademicaFragment = new OfertaAcademicaFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragments_alumno, ofertaAcademicaFragment).addToBackStack(null).commit();
