@@ -9,12 +9,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class OfertaAcademicaFragment extends Fragment {
+
+    ListView listaMaterias;
+    ArrayList<String> listItems = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
 
     public OfertaAcademicaFragment() {
@@ -34,8 +43,29 @@ public class OfertaAcademicaFragment extends Fragment {
         {
             menuItem.setChecked(true);
         }
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_oferta_academica, container, false);
+
+        // The ArrayAdapter will take data from a source and
+        // use it to populate the ListView it's attached to.
+        adapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_1,
+                listItems);
+
+        View rootView = inflater.inflate(R.layout.fragment_oferta_academica, container, false);
+
+        listaMaterias = (ListView) rootView.findViewById(
+                R.id.listaMaterias);
+        listaMaterias.setAdapter(adapter);
+
+        addMaterias();
+
+        return rootView;
+    }
+
+    private void addMaterias() {
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        adapter.notifyDataSetChanged();
     }
 
 }
