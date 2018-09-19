@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -75,6 +76,23 @@ public class MainActivityAlumno extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         configurarHTTPRequestSingleton();
+
+        configurarAccesoAPerfil();
+    }
+
+    private void configurarAccesoAPerfil() {
+        View headerview = navigationView.getHeaderView(0);
+        headerview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goPerfil();
+            }
+        });
+    }
+
+    private void goPerfil() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     private void configurarHTTPRequestSingleton() {
