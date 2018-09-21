@@ -131,6 +131,7 @@
         android:layout_below="@id/linearLayout_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Guardar cambios"/>
+        android:text="Guardar cambios"
+        android:onClick="guardarCambios"/>
 
 </RelativeLayout>

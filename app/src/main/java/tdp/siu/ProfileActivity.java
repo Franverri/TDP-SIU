@@ -7,8 +7,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -42,5 +44,12 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         super.onBackPressed();
         return true;
+    }
+
+    public void guardarCambios(View view) {
+        //TO DO: hacer llamada a API para modificar los datos
+        Toast.makeText(this, "Cambios guardados!",
+                Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 }
