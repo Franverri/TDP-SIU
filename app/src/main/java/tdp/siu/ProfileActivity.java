@@ -1,6 +1,8 @@
 package tdp.siu;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,9 +12,19 @@ import android.view.WindowManager;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+    private boolean esAlumno;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        esAlumno = sharedPref.getBoolean("logueadoAlumno", false);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -28,10 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        //TO DO: Validar si es alumno o docente!
-        Intent intent = new Intent(this, MainActivityAlumno.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        super.onBackPressed();
         return true;
     }
 }
