@@ -65,6 +65,22 @@ public class OfertaAcademicaFragment extends Fragment {
     private void addMaterias() {
         listItems.add("Prueba 1");
         listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
+        listItems.add("Prueba 1");
+        listItems.add("Prueba 2");
         adapter.notifyDataSetChanged();
     }
 
