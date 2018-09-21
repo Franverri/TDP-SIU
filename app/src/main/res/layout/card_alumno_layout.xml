@@ -29,7 +29,7 @@
                 android:id="@+id/tvPadronAlumno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvCursoNombre"
+                android:layout_below="@id/tvNombreAlumno"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:textSize="15sp" />
@@ -38,7 +38,7 @@
                 android:id="@+id/tvPrioridadAlumno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvCursoNombre"
+                android:layout_below="@id/tvPadronAlumno"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:textSize="15sp" />
