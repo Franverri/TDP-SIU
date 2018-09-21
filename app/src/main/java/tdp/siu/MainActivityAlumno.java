@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -78,6 +79,35 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarHTTPRequestSingleton();
 
         configurarAccesoAPerfil();
+
+        configurarClickTarjetas();
+    }
+
+    private void configurarClickTarjetas() {
+        CardView tPerfil = (CardView) findViewById(R.id.tarjeta_perfil);
+        CardView tOferta = (CardView) findViewById(R.id.tarjeta_ofertaAcademica);
+        CardView tInscripciones = (CardView) findViewById(R.id.tarjeta_inscripciones);
+
+        tPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goPerfil();
+            }
+        });
+
+        tOferta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goOfertaAcademica();
+            }
+        });
+
+        tInscripciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goInscripciones();
+            }
+        });
     }
 
     private void configurarAccesoAPerfil() {
@@ -162,19 +192,6 @@ public class MainActivityAlumno extends AppCompatActivity
                 finish();
                 startActivity(intent);
             }
-
-            /*
-            int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-            if (backStackEntryCount == 1) {
-                setTitle("SIU");
-                int size = navigationView.getMenu().size();
-                for (int i = 0; i < size; i++) {
-                    navigationView.getMenu().getItem(i).setChecked(false);
-                }
-                super.onBackPressed();
-            } else {
-                super.onBackPressed();
-            }*/
         }
     }
 
@@ -200,7 +217,6 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void goInscripciones() {
-        //setTitle("Inscripciones");
         estaEnPrincipal = false;
         InscripcionesFragment inscripcionesFragment = new InscripcionesFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -208,7 +224,6 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void goOfertaAcademica() {
-        //setTitle("Oferta académica");
         estaEnPrincipal = false;
         OfertaAcademicaFragment ofertaAcademicaFragment = new OfertaAcademicaFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
