@@ -1,121 +1,136 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     tools:context=".ProfileActivity">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="4"
-        android:orientation="vertical"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:id="@+id/linearLayout_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/tvProfile_nombre1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="Nombre: "/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
 
-        <TextView
-            android:id="@+id/tvProfile_DNI1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="DNI: "/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/tvProfile_nombre1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Nombre: "/>
 
-        <TextView
-            android:layout_marginBottom="20dp"
-            android:id="@+id/tvProfile_padron1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="Padron: "/>
+            <TextView
+                android:id="@+id/tvProfile_DNI1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="DNI: "/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@android:color/darker_gray"/>
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:id="@+id/tvProfile_padron1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Padron: "/>
 
-        <TextView
-            android:layout_marginTop="35dp"
-            android:id="@+id/tvProfile_mail1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="Mail: "/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@android:color/darker_gray"/>
 
-        <TextView
-            android:layout_marginTop="20dp"
-            android:id="@+id/tvProfile_psw1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="Contraseña: "/>
+            <TextView
+                android:layout_marginTop="35dp"
+                android:id="@+id/tvProfile_mail1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Mail: "/>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/tvProfile_psw1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="Contraseña: "/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/tvProfile_nombre2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Franco Etcheverri"/>
+
+            <TextView
+                android:id="@+id/tvProfile_DNI2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="DNI: 33333333"/>
+
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:id="@+id/tvProfile_padron2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Padron: 99999"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@android:color/darker_gray"/>
+
+            <EditText
+                android:layout_marginTop="20dp"
+                android:id="@+id/tvProfile_mail2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="franco@mail.com"/>
+
+            <EditText
+                android:id="@+id/tvProfile_psw2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:text="aaaaaa"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="6"
-        android:orientation="vertical"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+    <Button
+        android:layout_marginTop="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/linearLayout_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar cambios"/>
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/tvProfile_nombre2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Franco Etcheverri"/>
-
-        <TextView
-            android:id="@+id/tvProfile_DNI2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="DNI: 33333333"/>
-
-        <TextView
-            android:layout_marginBottom="20dp"
-            android:id="@+id/tvProfile_padron2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Padron: 99999"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:background="@android:color/darker_gray"/>
-
-        <EditText
-            android:layout_marginTop="20dp"
-            android:id="@+id/tvProfile_mail2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="franco@mail.com"/>
-
-        <EditText
-            android:id="@+id/tvProfile_psw2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:text="aaaaaa"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
