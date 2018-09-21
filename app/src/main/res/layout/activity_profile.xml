@@ -90,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="DNI: 33333333"/>
+                android:text="33333333"/>
 
             <TextView
                 android:layout_marginBottom="20dp"
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:text="Padron: 99999"/>
+                android:text="99999"/>
 
             <View
                 android:layout_width="match_parent"

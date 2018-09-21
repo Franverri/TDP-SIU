@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -39,6 +40,18 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_profile);
+
+        //Determinar si colocar Padron o Legajo según el usuario
+        configurarAtributos();
+    }
+
+    private void configurarAtributos() {
+        TextView tvAtributo = (TextView) findViewById(R.id.tvProfile_padron1);
+        if(esAlumno){
+            tvAtributo.setText("Padrón:");
+        } else {
+            tvAtributo.setText("Legajo:");
+        }
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
