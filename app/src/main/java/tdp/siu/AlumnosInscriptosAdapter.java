@@ -39,8 +39,8 @@ public class AlumnosInscriptosAdapter extends RecyclerView.Adapter<AlumnosInscri
 
         //binding the data with the view holder views
         holder.tvNombreAlumno.setText(alumno.getNombre());
-        holder.tvPadronAlumno.setText(alumno.getPadron());
-        holder.tvPrioridadAlumno.setText("Prioridad: " + alumno.getPrioridad());
+        holder.tvPadronAlumno.setText(String.valueOf(alumno.getPadron()));
+        holder.tvPrioridadAlumno.setText("Prioridad: " + String.valueOf(alumno.getPrioridad()));
     }
 
     @Override

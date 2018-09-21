@@ -45,19 +45,16 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
         holder.tvNumeroCurso.setText("Curso número " + curso.getNumeroCurso());
         holder.tvAlumnosInscriptos.setText(String.valueOf(curso.getAlumnosInscriptos()));
         holder.tvVacantes.setText(String.valueOf(curso.getVacantesRestantes()));
-
         holder.cvCursoCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, AlumnosInscriptosActivity.class);
+                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
                 Bundle b = new Bundle();
                 b.putInt("id", 1); //Your id
                 intent.putExtras(b); //Put your id to your next Intent
-                context.startActivity(intent);
+                mCtx.startActivity(intent);
             }
         });
-
     }
 
 
@@ -79,6 +76,17 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
             tvNumeroCurso = itemView.findViewById(R.id.tvCursoNumero);
             tvAlumnosInscriptos = itemView.findViewById(R.id.tvCursoAlumnos);
             tvVacantes = itemView.findViewById(R.id.tvCursoVacantes);
+            cvCursoCard = itemView.findViewById(R.id.cvCursoCard);
+            /*itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
+                    Bundle b = new Bundle();
+                    b.putInt("id", 1); //Your id
+                    intent.putExtras(b); //Put your id to your next Intent
+                    mCtx.startActivity(intent);
+                }
+            });*/
         }
     }
 }
