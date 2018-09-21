@@ -11,13 +11,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +36,7 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
     RequestQueue queue;
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/";
+    int idCurso = -1;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -42,6 +48,11 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Recuperar el id del curso en el cual se hizo click
+        Bundle b = getIntent().getExtras();
+        if(b != null)
+            idCurso = b.getInt("id");
 
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
@@ -73,11 +84,39 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         adapter = new AlumnosInscriptosAdapter(this, alumnosList);
 
         //Aca se manda el request al server
-        //enviarRequestCursos();
+        //enviarRequestInscriptos();
 
         //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
         JSONObject value = exampleJSON();
         actualizarAlumnosInscriptos(value);
+    }
+
+    private void enviarRequestInscriptos() {
+
+        String url = APIUrl + "inscriptos/" + idCurso;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        progress.dismiss();
+                        actualizarAlumnosInscriptos(response);
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        progress.dismiss();
+                        Toast.makeText(AlumnosInscriptosActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
     }
 
     private void actualizarAlumnosInscriptos(JSONObject response){
