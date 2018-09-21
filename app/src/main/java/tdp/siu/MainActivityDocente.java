@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -48,6 +49,8 @@ public class MainActivityDocente extends AppCompatActivity
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
+    NavigationView navigationView;
+
     List<Curso> cursosList;
     CursosAdapter adapter;
     RecyclerView recyclerView;
@@ -74,12 +77,29 @@ public class MainActivityDocente extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_docente);
+        navigationView = (NavigationView) findViewById(R.id.nav_view_docente);
         navigationView.setNavigationItemSelectedListener(this);
 
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+
+        configurarAccesoAPerfil();
+    }
+
+    private void configurarAccesoAPerfil() {
+        View headerview = navigationView.getHeaderView(0);
+        headerview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goPerfil();
+            }
+        });
+    }
+
+    private void goPerfil() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     private void configurarRecyclerView() {

@@ -6,16 +6,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -31,6 +35,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class MainActivityAlumno extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +46,10 @@ public class MainActivityAlumno extends AppCompatActivity
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
+
+    NavigationView navigationView;
+
+    boolean estaEnPrincipal = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +73,56 @@ public class MainActivityAlumno extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_alumno);
+        navigationView = (NavigationView) findViewById(R.id.nav_view_alumno);
         navigationView.setNavigationItemSelectedListener(this);
 
         configurarHTTPRequestSingleton();
+
+        configurarAccesoAPerfil();
+
+        configurarClickTarjetas();
+    }
+
+    private void configurarClickTarjetas() {
+        CardView tPerfil = (CardView) findViewById(R.id.tarjeta_perfil);
+        CardView tOferta = (CardView) findViewById(R.id.tarjeta_ofertaAcademica);
+        CardView tInscripciones = (CardView) findViewById(R.id.tarjeta_inscripciones);
+
+        tPerfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goPerfil();
+            }
+        });
+
+        tOferta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goOfertaAcademica();
+            }
+        });
+
+        tInscripciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goInscripciones();
+            }
+        });
+    }
+
+    private void configurarAccesoAPerfil() {
+        View headerview = navigationView.getHeaderView(0);
+        headerview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goPerfil();
+            }
+        });
+    }
+
+    private void goPerfil() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     private void configurarHTTPRequestSingleton() {
@@ -126,7 +182,16 @@ public class MainActivityAlumno extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            if(estaEnPrincipal){
+                super.onBackPressed();
+                finish();
+            } else {
+                estaEnPrincipal = true;
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
         }
     }
 
@@ -137,9 +202,9 @@ public class MainActivityAlumno extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_ofertaAcademica) {
-            // Handle the camera action
+            goOfertaAcademica();
         } else if (id == R.id.nav_inscripciones) {
-
+            goInscripciones();
         } else if (id == R.id.nav_cerrarSesionAlumno) {
             editorShared.remove("logueadoAlumno");
             editorShared.apply();
@@ -149,6 +214,20 @@ public class MainActivityAlumno extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_alumno);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void goInscripciones() {
+        estaEnPrincipal = false;
+        InscripcionesFragment inscripcionesFragment = new InscripcionesFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragments_alumno, inscripcionesFragment).addToBackStack(null).commit();
+    }
+
+    private void goOfertaAcademica() {
+        estaEnPrincipal = false;
+        OfertaAcademicaFragment ofertaAcademicaFragment = new OfertaAcademicaFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragments_alumno, ofertaAcademicaFragment).addToBackStack(null).commit();
     }
 
     private void goLogin() {

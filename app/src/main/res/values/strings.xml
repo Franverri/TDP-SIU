@@ -18,4 +18,5 @@
     <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_field_required">Obligatorio</string>
     <string name="saved_data" />
+
 </resources>
