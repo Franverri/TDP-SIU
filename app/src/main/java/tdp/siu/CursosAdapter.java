@@ -41,7 +41,7 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
         Curso curso = cursoList.get(position);
 
         //binding the data with the view holder views
-        holder.tvNombreCurso.setText(curso.getNombreCurso());
+        holder.tvNombreCurso.setText(curso.getNombreCurso() + " (" + curso.getCodigoCurso() + ")");
         holder.tvNumeroCurso.setText("Curso número " + curso.getNumeroCurso());
         holder.tvAlumnosInscriptos.setText(String.valueOf(curso.getAlumnosInscriptos()));
         holder.tvVacantes.setText(String.valueOf(curso.getVacantesRestantes()));

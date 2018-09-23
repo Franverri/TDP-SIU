@@ -1,6 +1,5 @@
 package tdp.siu;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,9 +41,8 @@ public class MainActivityDocente extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue queue;
-    ProgressDialog progress;
-    String APIUrl ="https://siu-api.herokuapp.com/";
-    int idDocente = 1234;
+    String APIUrl ="https://siu-api.herokuapp.com/docente/";
+    int idDocente = 12345;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -115,24 +113,23 @@ public class MainActivityDocente extends AppCompatActivity
         adapter = new CursosAdapter(this, cursosList);
 
         //Aca se manda el request al server
-        //enviarRequestCursos();
+        enviarRequestCursos();
 
         //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
-        JSONObject value = exampleJSON();
-        actualizarCursos(value);
+        //JSONObject value = exampleJSON();
+        //actualizarCursos(value);
     }
 
 
     private void enviarRequestCursos() {
 
-        String url = APIUrl + "cursos/" + idDocente;
+        String url = APIUrl + "cursos/" + String.valueOf(idDocente);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
-                        progress.dismiss();
                         actualizarCursos(response);
 
                     }
@@ -141,7 +138,6 @@ public class MainActivityDocente extends AppCompatActivity
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("Error.Response", String.valueOf(error));
-                        progress.dismiss();
                         Toast.makeText(MainActivityDocente.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();
                     }
@@ -168,10 +164,14 @@ public class MainActivityDocente extends AppCompatActivity
             }
             try {
                 String nombreCurso = jsonobject.getString("nombre");
-                int numeroCurso = jsonobject.getInt("numero");
-                int inscriptos = jsonobject.getInt("inscriptos");
-                int vacantesRestantes = jsonobject.getInt("vacantes");
-                cursosList.add(new Curso(nombreCurso, numeroCurso, inscriptos, vacantesRestantes));
+                String codigoCurso = jsonobject.getString("codigo");
+                int idCurso = jsonobject.getInt("id_curso");
+                //TODO
+                //int numeroCurso = jsonobject.getInt("numero");
+                int numeroCurso = 1;
+                int inscriptos = jsonobject.getInt("total_inscriptos");
+                int vacantesRestantes = jsonobject.getInt("cupos_totales") - inscriptos;
+                cursosList.add(new Curso(nombreCurso, codigoCurso, idCurso, numeroCurso, inscriptos, vacantesRestantes));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }
