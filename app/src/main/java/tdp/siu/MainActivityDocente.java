@@ -1,6 +1,5 @@
 package tdp.siu;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,31 +12,45 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivityDocente extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue queue;
-    ProgressDialog progress;
-    String APIUrl ="https://siu-api.herokuapp.com/";
+    String APIUrl ="https://siu-api.herokuapp.com/docente/";
+    int idDocente = 12345;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
+    NavigationView navigationView;
+
     List<Curso> cursosList;
+    CursosAdapter adapter;
     RecyclerView recyclerView;
 
     @Override
@@ -62,12 +75,29 @@ public class MainActivityDocente extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_docente);
+        navigationView = (NavigationView) findViewById(R.id.nav_view_docente);
         navigationView.setNavigationItemSelectedListener(this);
 
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+
+        configurarAccesoAPerfil();
+    }
+
+    private void configurarAccesoAPerfil() {
+        View headerview = navigationView.getHeaderView(0);
+        headerview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goPerfil();
+            }
+        });
+    }
+
+    private void goPerfil() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     private void configurarRecyclerView() {
@@ -79,34 +109,106 @@ public class MainActivityDocente extends AppCompatActivity
         //initializing the productlist
         cursosList = new ArrayList<>();
 
-
-        //adding some items to our list
-        cursosList.add(
-                new Curso(
-                        "TDP 2",
-                        1,
-                        35,
-                        0));
-
-        cursosList.add(
-                new Curso(
-                        "TDP 2",
-                        1,
-                        35,
-                        0));
-
-        cursosList.add(
-                new Curso(
-                        "TDP 2",
-                        1,
-                        35,
-                        0));
-
         //creating recyclerview adapter
-        CursosAdapter adapter = new CursosAdapter(this, cursosList);
+        adapter = new CursosAdapter(this, cursosList);
 
-        //setting adapter to recyclerview
+        //Aca se manda el request al server
+        enviarRequestCursos();
+
+        //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
+        //JSONObject value = exampleJSON();
+        //actualizarCursos(value);
+    }
+
+
+    private void enviarRequestCursos() {
+
+        String url = APIUrl + "cursos/" + String.valueOf(idDocente);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        actualizarCursos(response);
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(MainActivityDocente.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+    }
+
+    private void actualizarCursos(JSONObject response){
+        cursosList.clear();
+        JSONArray array = null;
+        try {
+            array = response.getJSONArray("cursos");
+        }catch (JSONException e){
+            Log.i("JSON","Error al parsear JSON");
+        }
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject jsonobject = null;
+            try {
+                jsonobject = array.getJSONObject(i);
+            } catch (JSONException e) {
+                Log.i("JSON","Error al parsear JSON");
+            }
+            try {
+                String nombreCurso = jsonobject.getString("nombre");
+                String codigoCurso = jsonobject.getString("codigo");
+                int idCurso = jsonobject.getInt("id_curso");
+                //TODO
+                //int numeroCurso = jsonobject.getInt("numero");
+                int numeroCurso = 1;
+                int inscriptos = jsonobject.getInt("total_inscriptos");
+                int vacantesRestantes = jsonobject.getInt("cupos_totales") - inscriptos;
+                cursosList.add(new Curso(nombreCurso, codigoCurso, idCurso, numeroCurso, inscriptos, vacantesRestantes));
+            } catch (JSONException e) {
+                Log.i("JSON","Error al obtener datos del JSON");
+            }
+        }
         recyclerView.setAdapter(adapter);
+
+    }
+
+    private JSONObject exampleJSON() {
+        JSONObject curso1 = new JSONObject();
+        try{
+            curso1.put("nombre", "Analisis Matemático II");
+            curso1.put("numero", 1);
+            curso1.put("inscriptos", 18);
+            curso1.put("vacantes", 42);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONObject curso2 = new JSONObject();
+        try{
+            curso2.put("nombre", "Física II");
+            curso2.put("numero", 2);
+            curso2.put("inscriptos", 5);
+            curso2.put("vacantes", 25);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JSONArray arr = new JSONArray();
+        arr.put(curso1);
+        arr.put(curso2);
+        JSONObject obj = new JSONObject();
+        try{
+            obj.put("cursos", arr);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return obj;
     }
 
     private void configurarHTTPRequestSingleton() {
@@ -129,37 +231,6 @@ public class MainActivityDocente extends AppCompatActivity
 
     }
 
-    private void formularRequest() {
-
-        /*
-        progress = ProgressDialog.show(MainActivityDocente.this, "Calculando prioridad",
-                "Recolectando datos...", true);
-
-        String url = APIUrl + "alumno/prioridad/95812";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("RESPUESTA","Response: " + response.toString());
-                        progress.dismiss();
-                        Toast.makeText(MainActivityAlumno.this, "Prioridad actualizada",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("Error.Response", String.valueOf(error));
-                        progress.dismiss();
-                        Toast.makeText(MainActivityAlumno.this, "No fue posible conectarse al servidor, por favor intente más tarde",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);*/
-    }
 
     @Override
     public void onBackPressed() {

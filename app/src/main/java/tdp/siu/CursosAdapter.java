@@ -1,6 +1,9 @@
 package tdp.siu;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,12 +40,21 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
         //getting the product of the specified position
         Curso curso = cursoList.get(position);
 
-        //binding the data with the viewholder views
-        holder.tvNombreCurso.setText(curso.getNombreCurso());
+        //binding the data with the view holder views
+        holder.tvNombreCurso.setText(curso.getNombreCurso() + " (" + curso.getCodigoCurso() + ")");
         holder.tvNumeroCurso.setText("Curso número " + curso.getNumeroCurso());
         holder.tvAlumnosInscriptos.setText(String.valueOf(curso.getAlumnosInscriptos()));
         holder.tvVacantes.setText(String.valueOf(curso.getVacantesRestantes()));
-
+        holder.cvCursoCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
+                Bundle b = new Bundle();
+                b.putInt("id", 1); //Your id
+                intent.putExtras(b); //Put your id to your next Intent
+                mCtx.startActivity(intent);
+            }
+        });
     }
 
 
@@ -55,6 +67,7 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvNombreCurso, tvNumeroCurso, tvAlumnosInscriptos, tvVacantes;
+        CardView cvCursoCard;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -63,6 +76,17 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
             tvNumeroCurso = itemView.findViewById(R.id.tvCursoNumero);
             tvAlumnosInscriptos = itemView.findViewById(R.id.tvCursoAlumnos);
             tvVacantes = itemView.findViewById(R.id.tvCursoVacantes);
+            cvCursoCard = itemView.findViewById(R.id.cvCursoCard);
+            /*itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
+                    Bundle b = new Bundle();
+                    b.putInt("id", 1); //Your id
+                    intent.putExtras(b); //Put your id to your next Intent
+                    mCtx.startActivity(intent);
+                }
+            });*/
         }
     }
 }
