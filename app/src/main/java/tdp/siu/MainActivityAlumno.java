@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -49,7 +50,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
-    boolean estaEnPrincipal = true;
+    //boolean estaEnPrincipal = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,14 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarClickTarjetas();
 
         calcularPrioridad();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        for (int i = 0; i < navigationView.getMenu().size(); i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
     }
 
     private void configurarClickTarjetas() {
@@ -193,6 +202,8 @@ public class MainActivityAlumno extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            super.onBackPressed();
+            /*
 
             if(estaEnPrincipal){
                 super.onBackPressed();
@@ -202,7 +213,7 @@ public class MainActivityAlumno extends AppCompatActivity
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
-            }
+            }*/
         }
     }
 
@@ -228,17 +239,25 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void goInscripciones() {
+        /*
         estaEnPrincipal = false;
         InscripcionesFragment inscripcionesFragment = new InscripcionesFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragments_alumno, inscripcionesFragment).addToBackStack(null).commit();
+        */
+        Intent intent = new Intent(this, InscripcionesActivity.class);
+        startActivity(intent);
     }
 
     private void goOfertaAcademica() {
+        /*
         estaEnPrincipal = false;
         OfertaAcademicaFragment ofertaAcademicaFragment = new OfertaAcademicaFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragments_alumno, ofertaAcademicaFragment).addToBackStack(null).commit();
+        */
+        Intent intent = new Intent(this, OfertaAcademicaActivity.class);
+        startActivity(intent);
     }
 
     private void goLogin() {
