@@ -1,15 +1,24 @@
 package tdp.siu;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -32,6 +41,7 @@ import java.util.ArrayList;
 public class OfertaAcademicaActivity extends AppCompatActivity {
 
     ProgressDialog progress;
+    EditText etSearch;
 
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/";
@@ -62,11 +72,70 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         listaMaterias = (ListView) findViewById(R.id.listaMaterias);
         listaMaterias.setAdapter(adapter);
 
+        searchKeyboardClick();
+        searchScreenClick();
+
         addMaterias();
 
         configurarHTTPRequestSingleton();
 
         enviarRequestOferta();
+    }
+
+    private void searchKeyboardClick() {
+        etSearch = (EditText) findViewById(R.id.etSearch);
+        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String strMateria = String.valueOf(etSearch.getText());
+                    hideKeyboard(OfertaAcademicaActivity.this);
+                    filtrarMaterias(strMateria);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void searchScreenClick() {
+        etSearch.setLongClickable(false);
+        etSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        String strMateria = String.valueOf(etSearch.getText());
+                        hideKeyboard(OfertaAcademicaActivity.this);
+                        filtrarMaterias(strMateria);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    private void filtrarMaterias(String strMateria) {
+    }
+
+
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private void enviarRequestOferta() {
