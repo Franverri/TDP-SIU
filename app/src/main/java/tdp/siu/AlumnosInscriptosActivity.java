@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -62,13 +64,21 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        //Agrego la flecha de volver atras en la barra superior
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         setContentView(R.layout.activity_alumnos_inscriptos);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_docente);
-        setSupportActionBar(toolbar);
+
 
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        super.onBackPressed();
+        return true;
     }
 
     private void configurarRecyclerView() {

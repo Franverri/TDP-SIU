@@ -30,8 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AlumnosInscriptosActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Alumnos inscriptos" />
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".OfertaAcademicaActivity"
