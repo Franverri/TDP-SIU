@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/fondo_main2"
     tools:context=".ProfileActivity">
 
     <LinearLayout
@@ -19,6 +20,7 @@
             android:focusableInTouchMode="true">
 
             <TextView
+                android:paddingLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:id="@+id/tvProfile_nombre1"
                 android:layout_width="wrap_content"
@@ -28,6 +30,7 @@
                 android:text="Nombre: "/>
 
             <TextView
+                android:paddingLeft="10dp"
                 android:id="@+id/tvProfile_DNI1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -36,6 +39,7 @@
                 android:text="DNI: "/>
 
             <TextView
+                android:paddingLeft="10dp"
                 android:layout_marginBottom="20dp"
                 android:id="@+id/tvProfile_padron1"
                 android:layout_width="wrap_content"
@@ -47,9 +51,10 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/black"/>
 
             <TextView
+                android:paddingLeft="10dp"
                 android:layout_marginTop="35dp"
                 android:id="@+id/tvProfile_mail1"
                 android:layout_width="wrap_content"
@@ -59,6 +64,7 @@
                 android:text="Mail: "/>
 
             <TextView
+                android:paddingLeft="10dp"
                 android:layout_marginTop="20dp"
                 android:id="@+id/tvProfile_psw1"
                 android:layout_width="wrap_content"
