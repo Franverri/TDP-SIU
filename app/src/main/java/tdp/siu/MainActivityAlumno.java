@@ -1,6 +1,5 @@
 package tdp.siu;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -33,6 +33,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -41,7 +42,6 @@ public class MainActivityAlumno extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue queue;
-    ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/";
 
     SharedPreferences sharedPref;
@@ -81,6 +81,8 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
+
+        calcularPrioridad();
     }
 
     private void configurarClickTarjetas() {
@@ -147,33 +149,42 @@ public class MainActivityAlumno extends AppCompatActivity
 
     private void formularRequest() {
 
-        progress = ProgressDialog.show(MainActivityAlumno.this, "Calculando prioridad",
-                "Recolectando datos...", true);
-
-        String url = APIUrl + "alumno/prioridad/95812";
+        String url = APIUrl + "alumno/prioridad/10101";
+        //String url = APIUrl + "alumno/prioridad/95812";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
-                        progress.dismiss();
-                        Toast.makeText(MainActivityAlumno.this, "Prioridad actualizada",
-                                Toast.LENGTH_LONG).show();
+                        try {
+                            String prioridad = response.getString("prioridad");
+                            modificarPrioridad(prioridad);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("Error.Response", String.valueOf(error));
-                        progress.dismiss();
-                        Toast.makeText(MainActivityAlumno.this, "No fue posible conectarse al servidor, por favor intente más tarde",
-                                Toast.LENGTH_LONG).show();
                     }
                 });
 
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
+    }
+
+    private void modificarPrioridad(String prioridad) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_alumno);
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvPrioridad = (TextView) headerView.findViewById(R.id.tvPrioridad);
+        if(prioridad.equals("undefined")){
+            tvPrioridad.setText("-");
+        } else {
+            tvPrioridad.setText(prioridad);
+        }
     }
 
     @Override
@@ -236,7 +247,7 @@ public class MainActivityAlumno extends AppCompatActivity
         startActivity(intent);
     }
 
-    public void calcularPrioridad(View view) {
+    public void calcularPrioridad() {
         formularRequest();
     }
 }
