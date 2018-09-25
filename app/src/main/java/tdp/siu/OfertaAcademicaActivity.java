@@ -99,7 +99,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     }
 
     private void goCurso(String materia) {
-        Intent intent = new Intent(this, CursosActivity.class);
+        Intent intent = new Intent(this, CatedrasActivity.class);
         Bundle b = new Bundle();
         b.putString("materia", materia);
         intent.putExtras(b); //Put your id to your next Intent

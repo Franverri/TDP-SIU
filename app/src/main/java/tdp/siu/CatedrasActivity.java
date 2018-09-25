@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-public class CursosActivity extends AppCompatActivity {
+public class CatedrasActivity extends AppCompatActivity {
 
     private String codigoMateria;
 

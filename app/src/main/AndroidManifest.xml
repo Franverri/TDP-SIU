@@ -38,7 +38,7 @@
         <activity
             android:name=".InscripcionesActivity"
             android:label="Inscripciones" />
-        <activity android:name=".CursosActivity"></activity>
+        <activity android:name=".CatedrasActivity"></activity>
     </application>
 
 </manifest>
