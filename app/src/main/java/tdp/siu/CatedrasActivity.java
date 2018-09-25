@@ -1,6 +1,9 @@
 package tdp.siu;
 
+import android.content.DialogInterface;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,8 +19,8 @@ public class CatedrasActivity extends AppCompatActivity {
 
     private String codigoMateria;
 
-    List<Inscripcion> catedrasList;
-    InscripcionAdapter adapter;
+    List<Catedra> catedrasList;
+    CatedrasAdapter adapter;
     RecyclerView recyclerView;
 
     @Override
@@ -73,14 +76,36 @@ public class CatedrasActivity extends AppCompatActivity {
         catedrasList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new InscripcionAdapter(this, catedrasList);
+        adapter = new CatedrasAdapter(this, catedrasList);
 
         enviarRequestCursos(materia);
 
         //FALTARIA SINCRONIZAR CON LA API
         //Reutilizo la CARD de Inscripciones
-        catedrasList.add(new Inscripcion("Curso 1", "", "Fontela", "Lunes 17:00 - 23:00"));
-        catedrasList.add(new Inscripcion("Curso 2", "",  "Fontela", "Martes 17:00 - 20:000 \n  Jueves 17:00 - 20:00"));
+        catedrasList.add(new Catedra("Curso 1", "Fontela", "Lunes 17:00 - 23:00"));
+        catedrasList.add(new Catedra("Curso 2",  "Fontela", "Martes 17:00 - 20:000 \n  Jueves 17:00 - 20:00"));
         recyclerView.setAdapter(adapter);
+    }
+
+    private void mostrarDialog(String curso, String catedra) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(CatedrasActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(CatedrasActivity.this);
+        }
+        builder.setTitle(curso + " - " + catedra)
+                .setMessage("¿Confirmar inscripción?")
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Confirmar inscripción
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Simplemente se cierra
+                    }
+                })
+                .show();
     }
 }

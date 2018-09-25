@@ -19,11 +19,7 @@ public class Inscripcion {
     }
 
     public String getCodigoMateria() {
-        if(this.codigoMateria.isEmpty()){
-            return codigoMateria;
-        } else {
-            return (" (" + codigoMateria + ")");
-        }
+        return codigoMateria;
     }
 
     public String getNombreCatedra() {
