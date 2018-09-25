@@ -34,9 +34,11 @@
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".OfertaAcademicaActivity"
-            android:label="Oferta académica"></activity>
-        <activity android:name=".InscripcionesActivity"
-            android:label="Inscripciones"></activity>
+            android:label="Oferta académica" />
+        <activity
+            android:name=".InscripcionesActivity"
+            android:label="Inscripciones" />
+        <activity android:name=".CursosActivity"></activity>
     </application>
 
 </manifest>

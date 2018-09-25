@@ -3,6 +3,7 @@ package tdp.siu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -77,9 +79,31 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
 
         addMaterias();
 
+        configurarClickMateria();
+
         configurarHTTPRequestSingleton();
 
         enviarRequestOferta();
+    }
+
+    private void configurarClickMateria() {
+        listaMaterias.setClickable(true);
+        listaMaterias.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
+                goCurso(adapter.getItem(position));
+            }
+        });
+    }
+
+    private void goCurso(String materia) {
+        Intent intent = new Intent(this, CursosActivity.class);
+        Bundle b = new Bundle();
+        b.putString("materia", materia);
+        intent.putExtras(b); //Put your id to your next Intent
+        startActivity(intent);
     }
 
     private void searchKeyboardClick() {
