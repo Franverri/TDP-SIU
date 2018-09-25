@@ -41,7 +41,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
         Inscripcion inscripcion = inscripcionList.get(position);
 
         //binding the data with the view holder views
-        holder.tvNombreMateria.setText(inscripcion.getNombreMateria() + " (" + inscripcion.getCodigoMateria() + ")");
+        holder.tvNombreMateria.setText(inscripcion.getNombreMateria() + inscripcion.getCodigoMateria());
         holder.tvNombreCatedra.setText(inscripcion.getNombreCatedra());
         holder.tvHorario.setText(inscripcion.getHorario());
         /*
