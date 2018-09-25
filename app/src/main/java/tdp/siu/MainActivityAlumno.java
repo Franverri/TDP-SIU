@@ -1,8 +1,10 @@
 package tdp.siu;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -190,10 +193,36 @@ public class MainActivityAlumno extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView tvPrioridad = (TextView) headerView.findViewById(R.id.tvPrioridad);
         if(prioridad.equals("undefined")){
-            tvPrioridad.setText("-");
+            tvPrioridad.setText("  Prioridad: -  ");
         } else {
-            tvPrioridad.setText(prioridad);
+            tvPrioridad.setText("  Prioridad: " + prioridad + "  ");
         }
+        tvPrioridad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mostrarDialog();
+            }
+        });
+    }
+
+    private void mostrarDialog() {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(MainActivityAlumno.this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(MainActivityAlumno.this);
+        }
+        builder.setTitle("Prioridad")
+                .setMessage("Fecha de inscripción \n" +
+                            "Día : 01/10/2018 \n" +
+                            "Hora: 15:00 horas \n \n" +
+                            "(Última actualización: 24/09/2018)")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
     }
 
     @Override
