@@ -155,7 +155,8 @@ public class MainActivityDocente extends AppCompatActivity
         }catch (JSONException e){
             Log.i("JSON","Error al parsear JSON");
         }
-        for (int i = 0; i < array.length(); i++) {
+        int cantCursos = array.length();
+        for (int i = 0; i < cantCursos; i++) {
             JSONObject jsonobject = null;
             try {
                 jsonobject = array.getJSONObject(i);
@@ -177,6 +178,10 @@ public class MainActivityDocente extends AppCompatActivity
             }
         }
         recyclerView.setAdapter(adapter);
+        if (cantCursos == 0){
+            Toast.makeText(MainActivityDocente.this, "No tiene ningún curso registrado",
+                    Toast.LENGTH_LONG).show();
+        }
 
     }
 
