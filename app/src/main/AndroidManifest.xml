@@ -17,6 +17,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,12 +32,16 @@
         <activity
             android:name=".AlumnosInscriptosActivity"
             android:label="Alumnos inscriptos" />
-        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".ProfileActivity" />
         <activity
             android:name=".OfertaAcademicaActivity"
-            android:label="Oferta académica"></activity>
-        <activity android:name=".InscripcionesActivity"
-            android:label="Inscripciones"></activity>
+            android:label="Oferta académica">
+        </activity>
+        <activity
+            android:name=".InscripcionesActivity"
+            android:label="Inscripciones">
+        </activity>
     </application>
 
 </manifest>
