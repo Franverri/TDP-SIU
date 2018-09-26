@@ -68,6 +68,10 @@ public class LoginActivity extends AppCompatActivity {
         actionBar.hide();
 
         setContentView(R.layout.activity_login);
+
+        //Fondo
+        getWindow().setBackgroundDrawableResource(R.drawable.fondo_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
