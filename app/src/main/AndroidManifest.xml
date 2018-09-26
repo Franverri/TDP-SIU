@@ -36,12 +36,11 @@
             android:name=".ProfileActivity" />
         <activity
             android:name=".OfertaAcademicaActivity"
-            android:label="Oferta académica">
-        </activity>
+            android:label="Oferta académica" />
         <activity
             android:name=".InscripcionesActivity"
-            android:label="Inscripciones">
-        </activity>
+            android:label="Inscripciones" />
+        <activity android:name=".CatedrasActivity"></activity>
     </application>
 
 </manifest>
