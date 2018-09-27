@@ -53,8 +53,6 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
-    //boolean estaEnPrincipal = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,13 +83,12 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
-
-        calcularPrioridad();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        calcularPrioridad();
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }

@@ -3,7 +3,10 @@ package tdp.siu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -48,13 +52,25 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/";
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
+    SwipeRefreshLayout pullToRefresh;
     ListView listaMaterias;
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
 
+    String padron;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        padron = sharedPref.getString("padron", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -83,7 +99,20 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
 
         configurarHTTPRequestSingleton();
 
-        enviarRequestOferta();
+        configurarRefresh();
+
+        enviarRequestOferta("");
+    }
+
+    private void configurarRefresh() {
+        pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                enviarRequestOferta(""); // your code
+                pullToRefresh.setRefreshing(false);
+            }
+        });
     }
 
     private void configurarClickMateria() {
@@ -99,11 +128,13 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     }
 
     private void goCurso(String materia) {
-        Intent intent = new Intent(this, CatedrasActivity.class);
-        Bundle b = new Bundle();
-        b.putString("materia", materia);
-        intent.putExtras(b); //Put your id to your next Intent
-        startActivity(intent);
+        if(!materia.equals("No existen coincidencias")){
+            Intent intent = new Intent(this, CatedrasActivity.class);
+            Bundle b = new Bundle();
+            b.putString("materia", materia);
+            intent.putExtras(b); //Put your id to your next Intent
+            startActivity(intent);
+        }
     }
 
     private void searchKeyboardClick() {
@@ -114,6 +145,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String strMateria = String.valueOf(etSearch.getText());
                     hideKeyboard(OfertaAcademicaActivity.this);
+                    etSearch.getText().clear();
                     filtrarMaterias(strMateria);
                     return true;
                 }
@@ -137,6 +169,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
                     if(event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         String strMateria = String.valueOf(etSearch.getText());
                         hideKeyboard(OfertaAcademicaActivity.this);
+                        etSearch.getText().clear();
                         filtrarMaterias(strMateria);
                         return true;
                     }
@@ -147,7 +180,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     }
 
     private void filtrarMaterias(String strMateria) {
-        //FALTA UN ENDPOINT MAS CON FILTRO EN LA API
+        enviarRequestOferta(strMateria);
     }
 
 
@@ -163,15 +196,24 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void enviarRequestOferta() {
+    private void enviarRequestOferta(String filtro) {
         progress = ProgressDialog.show(this, "Buscando materias",
                 "Recolectando datos...", true);
-        String url = APIUrl + "alumno/oferta";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        String url;
+
+        if(filtro.equals("")){
+            //url = APIUrl + "alumno/oferta/"+padron;
+            url = APIUrl + "alumno/oferta/96803";
+        } else {
+            //url = APIUrl + "alumno/oferta/"+padron;
+            url = APIUrl + "alumno/oferta/96803?filtro=" + filtro;
+        }
+
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarOferta(response);
                         progress.dismiss();
@@ -192,27 +234,25 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
 
-    private void actualizarOferta(JSONObject response) {
+    private void actualizarOferta(JSONArray response) {
         listItems.clear();
-        JSONArray array = null;
-        try {
-            array = response.getJSONArray("oferta");
-        }catch (JSONException e){
-            Log.i("JSON","Error al parsear JSON");
-        }
-        for (int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < response.length(); i++) {
             JSONObject jsonobject = null;
             try {
-                jsonobject = array.getJSONObject(i);
+                jsonobject = response.getJSONObject(i);
+                if(jsonobject.length() == 0){
+                    listItems.add("No existen coincidencias");
+                } else {
+                    try {
+                        String nombreMateria = jsonobject.getString("nombre");
+                        String codigoMateria = jsonobject.getString("codigo");
+                        listItems.add("(" + codigoMateria + ") " + nombreMateria);
+                    } catch (JSONException e) {
+                        Log.i("JSON","Error al obtener datos del JSON");
+                    }
+                }
             } catch (JSONException e) {
                 Log.i("JSON","Error al parsear JSON");
-            }
-            try {
-                String nombreMateria = jsonobject.getString("nombre");
-                String codigoMateria = jsonobject.getString("codigo");
-                listItems.add("(" + codigoMateria + ") " + nombreMateria);
-            } catch (JSONException e) {
-                Log.i("JSON","Error al obtener datos del JSON");
             }
         }
         adapter.notifyDataSetChanged();

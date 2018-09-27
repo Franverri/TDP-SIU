@@ -209,6 +209,22 @@ public class LoginActivity extends AppCompatActivity {
         } else if (email.contains("docente")){
             login = true;
             esAlumno = false;
+        } else if(email.equals("38324264")){
+            login = true;
+            esAlumno = true;
+            editorShared.putString("padron","95812");
+            editorShared.putString("nombre", "Franco Etcheverri");
+            editorShared.putString("dni", "38324264");
+            editorShared.putString("mail", "franco@gmail.com");
+            editorShared.apply();
+        } else if(email.equals("12345678")){
+            login = true;
+            esAlumno = true;
+            editorShared.putString("padron","12345");
+            editorShared.putString("nombre", "Agustin Luques");
+            editorShared.putString("dni", "12345678");
+            editorShared.putString("mail", "agustin@gmail.com");
+            editorShared.apply();
         }
         return login;
     }
