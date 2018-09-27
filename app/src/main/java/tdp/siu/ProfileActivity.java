@@ -3,6 +3,7 @@ package tdp.siu;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.TestLooperManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ public class ProfileActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
     private boolean esAlumno;
+
+    TextView tvNombre, tvDNI, tvPadron, tvMail, tvPSW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +50,25 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void configurarAtributos() {
         TextView tvAtributo = (TextView) findViewById(R.id.tvProfile_padron1);
+        tvNombre = (TextView) findViewById(R.id.tvProfile_nombre2);
+        tvDNI = (TextView) findViewById(R.id.tvProfile_DNI2);
+        tvPadron = (TextView) findViewById(R.id.tvProfile_padron2);
+        tvMail = (TextView) findViewById(R.id.tvProfile_mail2);
+        tvPSW = (TextView) findViewById(R.id.tvProfile_psw2);
         if(esAlumno){
             tvAtributo.setText("Padrón:");
         } else {
             tvAtributo.setText("Legajo:");
         }
+        completarCampos();
+    }
+
+    private void completarCampos() {
+        tvNombre.setText(sharedPref.getString("nombre", ""));
+        tvDNI.setText(sharedPref.getString("dni", ""));
+        tvPadron.setText(sharedPref.getString("padron", ""));
+        tvMail.setText(sharedPref.getString("mail", ""));
+
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
