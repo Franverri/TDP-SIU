@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
+    SwipeRefreshLayout pullToRefresh;
     ListView listaMaterias;
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
@@ -97,7 +99,20 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
 
         configurarHTTPRequestSingleton();
 
-        enviarRequestOferta();
+        configurarRefresh();
+
+        enviarRequestOferta("");
+    }
+
+    private void configurarRefresh() {
+        pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                enviarRequestOferta(""); // your code
+                pullToRefresh.setRefreshing(false);
+            }
+        });
     }
 
     private void configurarClickMateria() {
@@ -113,11 +128,13 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     }
 
     private void goCurso(String materia) {
-        Intent intent = new Intent(this, CatedrasActivity.class);
-        Bundle b = new Bundle();
-        b.putString("materia", materia);
-        intent.putExtras(b); //Put your id to your next Intent
-        startActivity(intent);
+        if(!materia.equals("No existen coincidencias")){
+            Intent intent = new Intent(this, CatedrasActivity.class);
+            Bundle b = new Bundle();
+            b.putString("materia", materia);
+            intent.putExtras(b); //Put your id to your next Intent
+            startActivity(intent);
+        }
     }
 
     private void searchKeyboardClick() {
@@ -128,6 +145,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String strMateria = String.valueOf(etSearch.getText());
                     hideKeyboard(OfertaAcademicaActivity.this);
+                    etSearch.getText().clear();
                     filtrarMaterias(strMateria);
                     return true;
                 }
@@ -151,6 +169,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
                     if(event.getRawX() >= (etSearch.getRight() - etSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         String strMateria = String.valueOf(etSearch.getText());
                         hideKeyboard(OfertaAcademicaActivity.this);
+                        etSearch.getText().clear();
                         filtrarMaterias(strMateria);
                         return true;
                     }
@@ -161,7 +180,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     }
 
     private void filtrarMaterias(String strMateria) {
-        //FALTA UN ENDPOINT MAS CON FILTRO EN LA API
+        enviarRequestOferta(strMateria);
     }
 
 
@@ -177,11 +196,19 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void enviarRequestOferta() {
+    private void enviarRequestOferta(String filtro) {
         progress = ProgressDialog.show(this, "Buscando materias",
                 "Recolectando datos...", true);
-        //String url = APIUrl + "alumno/oferta/"+padron;
-        String url = APIUrl + "alumno/oferta/96803";
+        String url;
+
+        if(filtro.equals("")){
+            //url = APIUrl + "alumno/oferta/"+padron;
+            url = APIUrl + "alumno/oferta/96803";
+        } else {
+            //url = APIUrl + "alumno/oferta/"+padron;
+            url = APIUrl + "alumno/oferta/96803?filtro=" + filtro;
+        }
+
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
@@ -213,15 +240,19 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
             JSONObject jsonobject = null;
             try {
                 jsonobject = response.getJSONObject(i);
+                if(jsonobject.length() == 0){
+                    listItems.add("No existen coincidencias");
+                } else {
+                    try {
+                        String nombreMateria = jsonobject.getString("nombre");
+                        String codigoMateria = jsonobject.getString("codigo");
+                        listItems.add("(" + codigoMateria + ") " + nombreMateria);
+                    } catch (JSONException e) {
+                        Log.i("JSON","Error al obtener datos del JSON");
+                    }
+                }
             } catch (JSONException e) {
                 Log.i("JSON","Error al parsear JSON");
-            }
-            try {
-                String nombreMateria = jsonobject.getString("nombre");
-                String codigoMateria = jsonobject.getString("codigo");
-                listItems.add("(" + codigoMateria + ") " + nombreMateria);
-            } catch (JSONException e) {
-                Log.i("JSON","Error al obtener datos del JSON");
             }
         }
         adapter.notifyDataSetChanged();
