@@ -3,7 +3,9 @@ package tdp.siu;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
@@ -48,13 +51,24 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/";
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
     ListView listaMaterias;
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
 
+    String padron;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        padron = sharedPref.getString("padron", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -166,12 +180,13 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     private void enviarRequestOferta() {
         progress = ProgressDialog.show(this, "Buscando materias",
                 "Recolectando datos...", true);
-        String url = APIUrl + "alumno/oferta";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        //String url = APIUrl + "alumno/oferta/"+padron;
+        String url = APIUrl + "alumno/oferta/96803";
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarOferta(response);
                         progress.dismiss();
@@ -192,18 +207,12 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
 
-    private void actualizarOferta(JSONObject response) {
+    private void actualizarOferta(JSONArray response) {
         listItems.clear();
-        JSONArray array = null;
-        try {
-            array = response.getJSONArray("oferta");
-        }catch (JSONException e){
-            Log.i("JSON","Error al parsear JSON");
-        }
-        for (int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < response.length(); i++) {
             JSONObject jsonobject = null;
             try {
-                jsonobject = array.getJSONObject(i);
+                jsonobject = response.getJSONObject(i);
             } catch (JSONException e) {
                 Log.i("JSON","Error al parsear JSON");
             }
