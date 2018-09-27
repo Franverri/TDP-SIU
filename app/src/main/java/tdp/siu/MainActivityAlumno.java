@@ -53,7 +53,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
-    //boolean estaEnPrincipal = true;
+    String padron;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,9 @@ public class MainActivityAlumno extends AppCompatActivity
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Obtengo padron
+        padron = sharedPref.getString("padron", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -85,13 +88,12 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
-
-        calcularPrioridad();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        calcularPrioridad();
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
