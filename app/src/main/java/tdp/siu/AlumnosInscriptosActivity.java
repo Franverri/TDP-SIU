@@ -96,16 +96,21 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                Log.i("DEBUG","path: " + csv);
                 try {
                     CSVWriter writer = new CSVWriter(new FileWriter(csv));
+                    Log.i("DEBUG","FileWriter y CSVWriter inicializados");
                     List<String[]> data = new ArrayList<String[]>();
                     for (Alumno al : alumnosList){
                         data.add(new String[] {al.getNombre(), String.valueOf(al.getPadron()), String.valueOf(al.getPrioridad())});
                     }
+                    Log.i("DEBUG","Data lista para ser escrita");
                     writer.writeAll(data);
+                    Log.i("DEBUG","Data escrita en archivo");
                     writer.close();
                 } catch (IOException e) {
                     Log.i("IO","Error al inicializar el FileWriter");
+                    Log.i("IO",e.getMessage());
                     Toast.makeText(AlumnosInscriptosActivity.this, "No fue posible exportar el archivo csv",
                             Toast.LENGTH_LONG).show();
                 }
