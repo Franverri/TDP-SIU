@@ -11,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+import android.widget.ImageButton;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -26,10 +28,15 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import com.opencsv.CSVWriter;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,11 +81,36 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+
+        configurarCsvButton();
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
         super.onBackPressed();
         return true;
+    }
+
+    private void configurarCsvButton(){
+        ImageButton ib = (ImageButton) findViewById(R.id.csv_alumnos_button);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                try {
+                    CSVWriter writer = new CSVWriter(new FileWriter(csv));
+                    List<String[]> data = new ArrayList<String[]>();
+                    for (Alumno al : alumnosList){
+                        data.add(new String[] {al.getNombre(), String.valueOf(al.getPadron()), String.valueOf(al.getPrioridad())});
+                    }
+                    writer.writeAll(data);
+                    writer.close();
+                } catch (IOException e) {
+                    Log.i("IO","Error al inicializar el FileWriter");
+                    Toast.makeText(AlumnosInscriptosActivity.this, "No fue posible exportar el archivo csv",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void configurarRecyclerView() {
