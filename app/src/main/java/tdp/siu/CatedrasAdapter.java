@@ -44,7 +44,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
         final Catedra catedra = catedraList.get(position);
 
         //binding the data with the view holder views
-        holder.tvCurso.setText(catedra.getCurso());
+        holder.tvCurso.setText(catedra.getCurso() + " - [" + catedra.getCupos() + " cupos restantes]");
         holder.tvNombreCatedra.setText(catedra.getCatedra());
         holder.tvHorario.setText(catedra.getHorario());
         holder.cvInscrpcionCard.setOnClickListener(new View.OnClickListener() {

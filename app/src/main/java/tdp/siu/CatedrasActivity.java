@@ -151,7 +151,7 @@ public class CatedrasActivity extends AppCompatActivity {
                 String aulas = jsonobject.getString("aulas");
                 String dias = jsonobject.getString("dias");
                 String horarios = jsonobject.getString("horarios");
-                catedrasList.add(new Catedra("Curso " + numeroCurso, docente, horarios));
+                catedrasList.add(new Catedra("Curso " + numeroCurso, docente, dias, horarios, sedes, aulas, cupos));
 
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
@@ -162,13 +162,6 @@ public class CatedrasActivity extends AppCompatActivity {
             Toast.makeText(CatedrasActivity.this, "No existe ningún curso registrado",
                     Toast.LENGTH_LONG).show();
         }
-    }
-
-    private String obtenerCodigoMateria(String materia) {
-        String first = materia.substring(1, 3);
-        String second = materia.substring(4, 6);
-        String codigo = first + second;
-        return codigo;
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -190,11 +183,6 @@ public class CatedrasActivity extends AppCompatActivity {
 
         enviarRequestCursos(idMateria);
 
-        //FALTARIA SINCRONIZAR CON LA API
-        //Reutilizo la CARD de Inscripciones
-        catedrasList.add(new Catedra("Curso 1", "Fontela", "Lunes 17:00 - 23:00"));
-        catedrasList.add(new Catedra("Curso 2",  "Fontela", "Martes 17:00 - 20:000 \n  Jueves 17:00 - 20:00"));
-        recyclerView.setAdapter(adapter);
     }
 
     private void mostrarDialog(String curso, String catedra) {
