@@ -209,11 +209,9 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         String url;
 
         if(filtro.equals("")){
-            //url = APIUrl + "alumno/oferta/"+padron;
-            url = APIUrl + "alumno/oferta/96803";
+            url = APIUrl + "alumno/oferta/"+padron;
         } else {
-            //url = APIUrl + "alumno/oferta/" + padron + "?filtro=" + filtro;
-            url = APIUrl + "alumno/oferta/96803?filtro=" + filtro;
+            url = APIUrl + "alumno/oferta/" + padron + "?filtro=" + filtro;
         }
 
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
