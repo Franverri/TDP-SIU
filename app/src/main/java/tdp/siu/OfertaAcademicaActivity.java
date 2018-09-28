@@ -138,6 +138,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
             b.putString("nombreMateria", nombre);
             b.putString("idMateria", id);
             b.putString("codigoMateria", codigo);
+            b.putString("padron", padron);
             intent.putExtras(b); //Put your id to your next Intent
             startActivity(intent);
         }
@@ -211,7 +212,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
             //url = APIUrl + "alumno/oferta/"+padron;
             url = APIUrl + "alumno/oferta/96803";
         } else {
-            //url = APIUrl + "alumno/oferta/"+padron;
+            //url = APIUrl + "alumno/oferta/" + padron + "?filtro=" + filtro;
             url = APIUrl + "alumno/oferta/96803?filtro=" + filtro;
         }
 
