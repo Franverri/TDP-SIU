@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class CatedrasActivity extends AppCompatActivity {
 
-    private String codigoMateria;
+    private String idMateria, codigoMateria, nombreMateria;
 
     List<Catedra> catedrasList;
     CatedrasAdapter adapter;
@@ -41,17 +42,20 @@ public class CatedrasActivity extends AppCompatActivity {
         setTitle("Cursos disponibles");
 
         Bundle b = getIntent().getExtras();
-        String materia = ""; // or other values
         if(b != null){
-            materia = b.getString("materia");
+            idMateria = b.getString("idMateria");
+            //Log.i("PRUEBA", "ID    : " + idMateria);
+            codigoMateria = b.getString("codigoMateria");
+            //Log.i("PRUEBA", "Codigo: " + codigoMateria);
+            nombreMateria = b.getString("nombreMateria");
+            //Log.i("PRUEBA", "Nombre: " + nombreMateria);
         }
 
-        configurarRecyclerView(materia);
+        configurarRecyclerView(idMateria);
     }
 
     private void enviarRequestCursos(String materia) {
-        String codigoMateria = obtenerCodigoMateria(materia);
-        //Toast.makeText(this, codigoMateria, Toast.LENGTH_LONG).show();
+
     }
 
     private String obtenerCodigoMateria(String materia) {
@@ -66,7 +70,7 @@ public class CatedrasActivity extends AppCompatActivity {
         return true;
     }
 
-    private void configurarRecyclerView(String materia) {
+    private void configurarRecyclerView(String idMateria) {
         //getting the recyclerview from xml
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView_catedras);
         recyclerView.setHasFixedSize(true);
@@ -78,7 +82,7 @@ public class CatedrasActivity extends AppCompatActivity {
         //creating recyclerview adapter
         adapter = new CatedrasAdapter(this, catedrasList);
 
-        enviarRequestCursos(materia);
+        enviarRequestCursos(idMateria);
 
         //FALTARIA SINCRONIZAR CON LA API
         //Reutilizo la CARD de Inscripciones

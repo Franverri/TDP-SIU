@@ -57,6 +57,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
 
     SwipeRefreshLayout pullToRefresh;
     ListView listaMaterias;
+    ArrayList<Materia> listMateriaAux = new ArrayList<Materia>();
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
 
@@ -122,16 +123,21 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
-                goCurso(adapter.getItem(position));
+                goCurso(adapter.getItem(position),
+                        listMateriaAux.get(position).getId(),
+                        listMateriaAux.get(position).getCodigo(),
+                        listMateriaAux.get(position).getNombre());
             }
         });
     }
 
-    private void goCurso(String materia) {
+    private void goCurso(String materia, String id, String codigo, String nombre) {
         if(!materia.equals("No existen coincidencias")){
             Intent intent = new Intent(this, CatedrasActivity.class);
             Bundle b = new Bundle();
-            b.putString("materia", materia);
+            b.putString("nombreMateria", nombre);
+            b.putString("idMateria", id);
+            b.putString("codigoMateria", codigo);
             intent.putExtras(b); //Put your id to your next Intent
             startActivity(intent);
         }
@@ -246,6 +252,8 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
                     try {
                         String nombreMateria = jsonobject.getString("nombre");
                         String codigoMateria = jsonobject.getString("codigo");
+                        String idMateria = jsonobject.getString("id");
+                        listMateriaAux.add(new Materia(idMateria, codigoMateria, nombreMateria));
                         listItems.add("(" + codigoMateria + ") " + nombreMateria);
                     } catch (JSONException e) {
                         Log.i("JSON","Error al obtener datos del JSON");
