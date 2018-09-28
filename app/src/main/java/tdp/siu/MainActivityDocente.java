@@ -170,9 +170,9 @@ public class MainActivityDocente extends AppCompatActivity
                 //TODO
                 //int numeroCurso = jsonobject.getInt("numero");
                 int numeroCurso = 1;
-                int inscriptos = jsonobject.getInt("total_inscriptos");
-                int vacantesRestantes = jsonobject.getInt("cupos_totales") - inscriptos;
-                cursosList.add(new Curso(nombreCurso, codigoCurso, idCurso, numeroCurso, inscriptos, vacantesRestantes));
+                int regulares = jsonobject.getInt("regulares");
+                int vacantesRestantes = jsonobject.getInt("vacantes");
+                cursosList.add(new Curso(nombreCurso, codigoCurso, idCurso, numeroCurso, regulares, vacantesRestantes));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }
