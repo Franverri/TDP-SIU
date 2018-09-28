@@ -34,7 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -95,10 +95,12 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                Log.i("DEBUG","path: " + csv);
+                String parent = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                String child = String.valueOf(idCurso) + ".csv";
+                File f = new File(parent, child);
+                Log.i("DEBUG","path: " + f.getAbsolutePath());
                 try {
-                    CSVWriter writer = new CSVWriter(new FileWriter(csv));
+                    CSVWriter writer = new CSVWriter(new FileWriter(f));
                     Log.i("DEBUG","FileWriter y CSVWriter inicializados");
                     List<String[]> data = new ArrayList<String[]>();
                     for (Alumno al : alumnosList){
