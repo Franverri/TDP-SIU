@@ -42,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivityAlumno extends AppCompatActivity
@@ -177,14 +178,13 @@ public class MainActivityAlumno extends AppCompatActivity
                     public void onResponse(JSONArray response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarPrioridad(response);
-                        //SACAR CUANDO NO ESTE HARDCODEADO
                         boolean periodoHabilitado = true;
-                        String dia = "28/09/2018";
-                        String hora = "17:00";
-                        editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
-                        editorShared.putString("diaPrioridad", dia);
-                        editorShared.putString("horaPrioridad", hora);
-                        editorShared.apply();
+                        //String dia = "28/09/2018";
+                        //String hora = "17:00";
+                        //editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
+                        //editorShared.putString("diaPrioridad", dia);
+                        //editorShared.putString("horaPrioridad", hora);
+                        //editorShared.apply();
                     }
                 }, new Response.ErrorListener() {
 
@@ -217,6 +217,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     obtenerDiaHoraInscripcion(fechaInscripcion);
                     fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
                     modificarPrioridad(prioridad);
+                    validezPeriodoInscripcion(fechaCierrePeriodo);
                 } else {
                     modificarPrioridad(" - ");
                 }
@@ -226,6 +227,47 @@ public class MainActivityAlumno extends AppCompatActivity
         }
     }
 
+    private void validezPeriodoInscripcion(String fechaCierrePeriodo) {
+        boolean periodoValido = false;
+        int dia = Integer.parseInt(fechaCierrePeriodo.substring(8,10));
+        int mes = Integer.parseInt(fechaCierrePeriodo.substring(5,7));
+        int año = Integer.parseInt(fechaCierrePeriodo.substring(0,4));
+        int hora = Integer.parseInt(fechaCierrePeriodo.substring(11,13));
+        int minutos = Integer.parseInt(fechaCierrePeriodo.substring(14,16));
+        Calendar currentTime = Calendar.getInstance();
+        if(año > currentTime.get(Calendar.YEAR)){
+            periodoValido = true;
+        } else if (año < currentTime.get(Calendar.YEAR)){
+            periodoValido = false;
+        } else { //Años iguales
+            if(mes > (currentTime.get(Calendar.MONTH)+1)){
+                periodoValido = true;
+            } else if(mes < (currentTime.get(Calendar.MONTH)+1)){
+                periodoValido = false;
+            } else { //Mes igual
+                if(dia > currentTime.get(Calendar.DAY_OF_MONTH)){
+                    periodoValido = true;
+                } else if(dia < currentTime.get(Calendar.DAY_OF_MONTH)){
+                    periodoValido = false;
+                } else { //Dia igual
+                    if(hora > currentTime.get(Calendar.HOUR_OF_DAY)){
+                        periodoValido = true;
+                    } else if(hora < currentTime.get(Calendar.HOUR_OF_DAY)){
+                        periodoValido = false;
+                    } else { //Hora igual
+                        if(minutos > currentTime.get(Calendar.MINUTE)){
+                            periodoValido = true;
+                        } else if(minutos <= currentTime.get(Calendar.MINUTE)){
+                            periodoValido = false;
+                        }
+                    }
+                }
+            }
+        }
+        editorShared.putBoolean("periodoHabilitado", periodoValido);
+        editorShared.apply();
+    }
+
     private void obtenerDiaHoraInscripcion(String fechaInscripcion) {
         String dia = fechaInscripcion.substring(8,10);
         String mes = fechaInscripcion.substring(5,7);
@@ -233,6 +275,9 @@ public class MainActivityAlumno extends AppCompatActivity
         String hora = fechaInscripcion.substring(11,16);
         diaInscripcion = (dia + "/" + mes + "/" + año);
         horaInscripcion = hora;
+        editorShared.putString("diaPrioridad", diaInscripcion);
+        editorShared.putString("horaPrioridad", horaInscripcion);
+        editorShared.apply();
     }
 
     private String getFechaActualizacion(String fechaActualizacion) {
