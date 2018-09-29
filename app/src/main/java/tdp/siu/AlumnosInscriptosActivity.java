@@ -183,7 +183,7 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
                 Log.i("JSON","Error al parsear JSON");
             }
             try {
-                String nombreAlumno = jsonobject.getString("nombre");
+                String nombreAlumno = jsonobject.getString("apellido_y_nombre");
                 int padronAlumno = jsonobject.getInt("padron");
                 int prioridadAlumno = jsonobject.getInt("prioridad");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno));
