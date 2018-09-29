@@ -205,18 +205,24 @@ public class MainActivityAlumno extends AppCompatActivity
         } catch (JSONException e) {
             Log.i("JSON","Error al parsear JSON");
         }
-        try {
-            if (jsonobject != null) {
-                prioridad = jsonobject.getString("prioridad");
-                String fechaActualizacion = jsonobject.getString("fecha_actualizacion");
-                diaActualizacion = getFechaActualizacion(fechaActualizacion);
-                String fechaInscripcion = jsonobject.getString("fecha_inicio");
-                obtenerDiaHoraInscripcion(fechaInscripcion);
-                fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
-                modificarPrioridad(prioridad);
+        if(jsonobject.length() == 0){
+            modificarPrioridad("-");
+        } else {
+            try {
+                if (jsonobject != null) {
+                    prioridad = jsonobject.getString("prioridad");
+                    String fechaActualizacion = jsonobject.getString("fecha_actualizacion");
+                    diaActualizacion = getFechaActualizacion(fechaActualizacion);
+                    String fechaInscripcion = jsonobject.getString("fecha_inicio");
+                    obtenerDiaHoraInscripcion(fechaInscripcion);
+                    fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
+                    modificarPrioridad(prioridad);
+                } else {
+                    modificarPrioridad(" - ");
+                }
+            } catch (JSONException e) {
+                Log.i("JSON","Error al obtener datos del JSON");
             }
-        } catch (JSONException e) {
-            Log.i("JSON","Error al obtener datos del JSON");
         }
     }
 
