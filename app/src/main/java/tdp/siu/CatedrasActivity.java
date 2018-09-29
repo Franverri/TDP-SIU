@@ -143,16 +143,18 @@ public class CatedrasActivity extends AppCompatActivity {
                 Log.i("JSON","Error al parsear JSON");
             }
             Log.i("JSON", String.valueOf(jsonobject));
+            Log.i("JSON", String.valueOf(jsonobject.getClass()));
             try {
-                String numeroCurso = jsonobject.getString("id");
-                String docente = jsonobject.getString("docente");
-                String cupos = jsonobject.getString("cupos");
-                String sedes = jsonobject.getString("sede");
-                String aulas = jsonobject.getString("aulas");
-                String dias = jsonobject.getString("dias");
-                String horarios = jsonobject.getString("horarios");
-                catedrasList.add(new Catedra("Curso " + numeroCurso, docente, dias, horarios, sedes, aulas, cupos));
-
+                if (jsonobject != null) {
+                    String numeroCurso = jsonobject.getString("id");
+                    String docente = jsonobject.getString("docente");
+                    String cupos = jsonobject.getString("vacantes");
+                    String sedes = jsonobject.getString("sede");
+                    String aulas = jsonobject.getString("aulas");
+                    String dias = jsonobject.getString("dias");
+                    String horarios = jsonobject.getString("horarios");
+                    catedrasList.add(new Catedra("Curso " + numeroCurso, docente, dias, horarios, sedes, aulas, cupos));
+                }
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }
