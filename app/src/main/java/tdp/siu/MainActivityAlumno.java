@@ -170,7 +170,11 @@ public class MainActivityAlumno extends AppCompatActivity
                             String prioridad = response.getString("prioridad");
                             //Obtengo mas datos
                             boolean periodoHabilitado = true;
+                            String dia = "28/09/2018";
+                            String hora = "17:00";
                             editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
+                            editorShared.putString("diaPrioridad", dia);
+                            editorShared.putString("horaPrioridad", hora);
                             editorShared.apply();
                             modificarPrioridad(prioridad);
                         } catch (JSONException e) {
@@ -215,8 +219,8 @@ public class MainActivityAlumno extends AppCompatActivity
         }
         builder.setTitle("Prioridad")
                 .setMessage("Fecha de inscripción \n" +
-                            "Día : 01/10/2018 \n" +
-                            "Hora: 15:00 horas \n \n" +
+                            "Día : 29/09/2018 \n" +
+                            "Hora: 17:00 horas \n \n" +
                             "(Última actualización: 24/09/2018)")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
