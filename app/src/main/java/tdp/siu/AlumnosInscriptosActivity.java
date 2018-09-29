@@ -34,7 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
 
     RequestQueue queue;
     ProgressDialog progress;
-    String APIUrl ="https://siu-api.herokuapp.com/";
+    String APIUrl ="https://siu-api.herokuapp.com/docente/";
     int idCurso = -1;
 
     SharedPreferences sharedPref;
@@ -95,10 +95,12 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                Log.i("DEBUG","path: " + csv);
+                String parent = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+                String child = String.valueOf(idCurso) + ".csv";
+                File f = new File(parent, child);
+                Log.i("DEBUG","path: " + f.getAbsolutePath());
                 try {
-                    CSVWriter writer = new CSVWriter(new FileWriter(csv));
+                    CSVWriter writer = new CSVWriter(new FileWriter(f));
                     Log.i("DEBUG","FileWriter y CSVWriter inicializados");
                     List<String[]> data = new ArrayList<String[]>();
                     for (Alumno al : alumnosList){
@@ -131,23 +133,23 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         adapter = new AlumnosInscriptosAdapter(this, alumnosList);
 
         //Aca se manda el request al server
-        //enviarRequestInscriptos();
+        enviarRequestInscriptos();
 
         //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
-        JSONObject value = exampleJSON();
-        actualizarAlumnosInscriptos(value);
+        //JSONObject value = exampleJSON();
+        //actualizarAlumnosInscriptos(value);
     }
 
     private void enviarRequestInscriptos() {
 
         String url = APIUrl + "inscriptos/" + idCurso;
+        Log.i("API", "url: " + url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("RESPUESTA","Response: " + response.toString());
-                        progress.dismiss();
+                        Log.i("API","Response: " + response.toString());
                         actualizarAlumnosInscriptos(response);
 
                     }
@@ -156,7 +158,6 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("Error.Response", String.valueOf(error));
-                        progress.dismiss();
                         Toast.makeText(AlumnosInscriptosActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();
                     }
@@ -182,7 +183,7 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
                 Log.i("JSON","Error al parsear JSON");
             }
             try {
-                String nombreAlumno = jsonobject.getString("nombre");
+                String nombreAlumno = jsonobject.getString("apellido_y_nombre");
                 int padronAlumno = jsonobject.getInt("padron");
                 int prioridadAlumno = jsonobject.getInt("prioridad");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno));

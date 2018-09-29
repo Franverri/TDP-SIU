@@ -38,7 +38,7 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         //getting the product of the specified position
-        Curso curso = cursoList.get(position);
+        final Curso curso = cursoList.get(position);
 
         //binding the data with the view holder views
         holder.tvNombreCurso.setText(curso.getNombreCurso() + " (" + curso.getCodigoCurso() + ")");
@@ -50,7 +50,7 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
             public void onClick(View view) {
                 Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
                 Bundle b = new Bundle();
-                b.putInt("id", 1); //Your id
+                b.putInt("id", curso.getIdCurso()); //Your id
                 intent.putExtras(b); //Put your id to your next Intent
                 mCtx.startActivity(intent);
             }
