@@ -125,7 +125,7 @@ public class CatedrasActivity extends AppCompatActivity {
         String url = APIUrl + "alumno/oferta/"+padron+"?id_materia="+idMateria;
         Log.i("PRUEBA", "URL: " + url);
 
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
                     @Override
@@ -147,7 +147,7 @@ public class CatedrasActivity extends AppCompatActivity {
                 });
 
         // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);
+        queue.add(jsonArrayRequest);
 
     }
 
@@ -161,8 +161,6 @@ public class CatedrasActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 Log.i("JSON","Error al parsear JSON");
             }
-            Log.i("JSON", String.valueOf(jsonobject));
-            Log.i("JSON", String.valueOf(jsonobject.getClass()));
             try {
                 if (jsonobject != null) {
                     String numeroCurso = jsonobject.getString("id");

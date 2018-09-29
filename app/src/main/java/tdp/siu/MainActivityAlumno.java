@@ -35,8 +35,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +55,9 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
+    String padron;
+    String prioridad, diaActualizacion, diaInscripcion, horaInscripcion, fechaCierrePeriodo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +65,8 @@ public class MainActivityAlumno extends AppCompatActivity
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        padron = sharedPref.getString("padron", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -158,28 +165,22 @@ public class MainActivityAlumno extends AppCompatActivity
 
     private void formularRequest() {
 
-        String url = APIUrl + "alumno/prioridad/10101";
-        //String url = APIUrl + "alumno/prioridad/95812";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        String url = APIUrl + "alumno/prioridad/" + padron;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
-                        try {
-                            String prioridad = response.getString("prioridad");
-                            //Obtengo mas datos
-                            boolean periodoHabilitado = true;
-                            String dia = "28/09/2018";
-                            String hora = "17:00";
-                            editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
-                            editorShared.putString("diaPrioridad", dia);
-                            editorShared.putString("horaPrioridad", hora);
-                            editorShared.apply();
-                            modificarPrioridad(prioridad);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        actualizarPrioridad(response);
+                        //SACAR CUANDO NO ESTE HARDCODEADO
+                        boolean periodoHabilitado = true;
+                        String dia = "28/09/2018";
+                        String hora = "17:00";
+                        editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
+                        editorShared.putString("diaPrioridad", dia);
+                        editorShared.putString("horaPrioridad", hora);
+                        editorShared.apply();
                     }
                 }, new Response.ErrorListener() {
 
@@ -190,7 +191,45 @@ public class MainActivityAlumno extends AppCompatActivity
                 });
 
         // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);
+        queue.add(jsonArrayRequest);
+    }
+
+    private void actualizarPrioridad(JSONArray response) {
+        JSONObject jsonobject = null;
+        try {
+            jsonobject = response.getJSONObject(0);
+        } catch (JSONException e) {
+            Log.i("JSON","Error al parsear JSON");
+        }
+        try {
+            if (jsonobject != null) {
+                prioridad = jsonobject.getString("prioridad");
+                String fechaActualizacion = jsonobject.getString("fecha_actualizacion");
+                diaActualizacion = getFechaActualizacion(fechaActualizacion);
+                String fechaInscripcion = jsonobject.getString("fecha_inicio");
+                obtenerDiaHoraInscripcion(fechaInscripcion);
+                fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
+                modificarPrioridad(prioridad);
+            }
+        } catch (JSONException e) {
+            Log.i("JSON","Error al obtener datos del JSON");
+        }
+    }
+
+    private void obtenerDiaHoraInscripcion(String fechaInscripcion) {
+        String dia = fechaInscripcion.substring(8,10);
+        String mes = fechaInscripcion.substring(5,7);
+        String año = fechaInscripcion.substring(0,4);
+        String hora = fechaInscripcion.substring(11,15);
+        diaInscripcion = (dia + "/" + mes + "/" + año);
+        horaInscripcion = hora;
+    }
+
+    private String getFechaActualizacion(String fechaActualizacion) {
+        String dia = fechaActualizacion.substring(8,10);
+        String mes = fechaActualizacion.substring(5,7);
+        String año = fechaActualizacion.substring(0,5);
+        return (dia + "/" + mes + "/" + año);
     }
 
     private void modificarPrioridad(String prioridad) {
@@ -219,9 +258,9 @@ public class MainActivityAlumno extends AppCompatActivity
         }
         builder.setTitle("Prioridad")
                 .setMessage("Fecha de inscripción \n" +
-                            "Día : 29/09/2018 \n" +
-                            "Hora: 17:00 horas \n \n" +
-                            "(Última actualización: 24/09/2018)")
+                            "Día : " + diaInscripcion + "\n" +
+                            "Hora: " + horaInscripcion +" horas \n \n" +
+                            "(Última actualización: " + diaActualizacion + ")")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -236,19 +275,7 @@ public class MainActivityAlumno extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-            /*
-
-            if(estaEnPrincipal){
-                super.onBackPressed();
-                finish();
-            } else {
-                estaEnPrincipal = true;
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }*/
-        }
+            super.onBackPressed();        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -273,23 +300,11 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void goInscripciones() {
-        /*
-        estaEnPrincipal = false;
-        InscripcionesFragment inscripcionesFragment = new InscripcionesFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragments_alumno, inscripcionesFragment).addToBackStack(null).commit();
-        */
         Intent intent = new Intent(this, InscripcionesActivity.class);
         startActivity(intent);
     }
 
     private void goOfertaAcademica() {
-        /*
-        estaEnPrincipal = false;
-        OfertaAcademicaFragment ofertaAcademicaFragment = new OfertaAcademicaFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragments_alumno, ofertaAcademicaFragment).addToBackStack(null).commit();
-        */
         Intent intent = new Intent(this, OfertaAcademicaActivity.class);
         startActivity(intent);
     }
