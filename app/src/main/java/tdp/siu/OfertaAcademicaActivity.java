@@ -62,6 +62,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     ArrayAdapter<String> adapter;
 
     String padron;
+    Boolean periodoHabilitado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         editorShared = sharedPref.edit();
 
         padron = sharedPref.getString("padron", null);
+        periodoHabilitado = sharedPref.getBoolean("periodoHabilitado", false);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -123,10 +125,16 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
-                goCurso(adapter.getItem(position),
-                        listMateriaAux.get(position).getId(),
-                        listMateriaAux.get(position).getCodigo(),
-                        listMateriaAux.get(position).getNombre());
+                if(periodoHabilitado){
+                    goCurso(adapter.getItem(position),
+                            listMateriaAux.get(position).getId(),
+                            listMateriaAux.get(position).getCodigo(),
+                            listMateriaAux.get(position).getNombre());
+                } else {
+                    Toast.makeText(OfertaAcademicaActivity.this, "El período de inscripción aún no se encuentra habilitado",
+                            Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }

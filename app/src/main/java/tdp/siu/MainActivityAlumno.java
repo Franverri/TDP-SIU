@@ -168,6 +168,10 @@ public class MainActivityAlumno extends AppCompatActivity
                         Log.i("RESPUESTA","Response: " + response.toString());
                         try {
                             String prioridad = response.getString("prioridad");
+                            //Obtengo mas datos
+                            boolean periodoHabilitado = true;
+                            editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
+                            editorShared.apply();
                             modificarPrioridad(prioridad);
                         } catch (JSONException e) {
                             e.printStackTrace();
