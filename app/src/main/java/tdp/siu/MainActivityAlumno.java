@@ -264,6 +264,8 @@ public class MainActivityAlumno extends AppCompatActivity
                 }
             }
         }
+        //HARDCODEADO PARA PRUEBA
+        //periodoValido = true;
         editorShared.putBoolean("periodoHabilitado", periodoValido);
         editorShared.apply();
     }

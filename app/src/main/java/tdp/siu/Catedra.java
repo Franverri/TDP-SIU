@@ -60,7 +60,7 @@ public class Catedra {
         strAulas = strAulas.replace("]", "");
         String[] arrayAulas = strAulas.split(",");
         for (int i = 0; i < arrayDias.length; i++) {
-            strFinal = strFinal + arrayDias[i] + " " + arrayHorario[i] + " [" + arraySedes[i] + " - " + /*arrayAulas[i] +*/ "] \n";
+            strFinal = strFinal + arrayDias[i] + " " + arrayHorario[i] + " [" + arraySedes[i] + " - " + arrayAulas[i] + "] \n";
         }
 
         return strFinal;
