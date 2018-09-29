@@ -67,6 +67,8 @@ public class MainActivityAlumno extends AppCompatActivity
         editorShared = sharedPref.edit();
 
         padron = sharedPref.getString("padron", null);
+        String nombre = sharedPref.getString("nombre", null);
+        String mail = sharedPref.getString("mail", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -90,6 +92,8 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
+
+        actualizarDatosMenuLateral(nombre, mail);
     }
 
     @Override
@@ -220,7 +224,7 @@ public class MainActivityAlumno extends AppCompatActivity
         String dia = fechaInscripcion.substring(8,10);
         String mes = fechaInscripcion.substring(5,7);
         String año = fechaInscripcion.substring(0,4);
-        String hora = fechaInscripcion.substring(11,15);
+        String hora = fechaInscripcion.substring(11,16);
         diaInscripcion = (dia + "/" + mes + "/" + año);
         horaInscripcion = hora;
     }
@@ -228,7 +232,7 @@ public class MainActivityAlumno extends AppCompatActivity
     private String getFechaActualizacion(String fechaActualizacion) {
         String dia = fechaActualizacion.substring(8,10);
         String mes = fechaActualizacion.substring(5,7);
-        String año = fechaActualizacion.substring(0,5);
+        String año = fechaActualizacion.substring(0,4);
         return (dia + "/" + mes + "/" + año);
     }
 
@@ -236,17 +240,22 @@ public class MainActivityAlumno extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_alumno);
         View headerView = navigationView.getHeaderView(0);
         TextView tvPrioridad = (TextView) headerView.findViewById(R.id.tvPrioridad);
-        if(prioridad.equals("undefined")){
-            tvPrioridad.setText("  Prioridad: -  ");
-        } else {
-            tvPrioridad.setText("  Prioridad: " + prioridad + "  ");
-        }
+        tvPrioridad.setText("  Prioridad: " + prioridad + "  ");
         tvPrioridad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarDialog();
             }
         });
+    }
+
+    private void actualizarDatosMenuLateral(String nombre, String mail) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_alumno);
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvNombre = (TextView) headerView.findViewById(R.id.tvMenuNombre);
+        TextView tvMail = (TextView) headerView.findViewById(R.id.tvMenuMail);
+        tvNombre.setText(nombre);
+        tvMail.setText(mail);
     }
 
     private void mostrarDialog() {
