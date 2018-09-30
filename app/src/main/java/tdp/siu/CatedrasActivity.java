@@ -1,7 +1,9 @@
 package tdp.siu;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapter.ActualizadorCursos {
@@ -40,7 +43,11 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
     String APIUrl ="https://siu-api.herokuapp.com/";
     String padron;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
     private String idMateria, codigoMateria, nombreMateria;
+    private String diaPrioridad, horaPrioridad;
 
     List<Catedra> catedrasList;
     CatedrasAdapter adapter;
@@ -49,6 +56,18 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        diaPrioridad = sharedPref.getString("diaPrioridad", null);
+        horaPrioridad = sharedPref.getString("horaPrioridad", null);
+
+        boolean puedeInscribirse = puedeInscribirse();
+        Log.i("PRUEBA", "PUEDE: " + puedeInscribirse);
+        editorShared.putBoolean("puedeInscribirse", puedeInscribirse);
+        editorShared.apply();
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -106,7 +125,7 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
         String url = APIUrl + "alumno/oferta/"+padron+"?id_materia="+idMateria;
         Log.i("PRUEBA", "URL: " + url);
 
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
                     @Override
@@ -128,7 +147,7 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
                 });
 
         // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);
+        queue.add(jsonArrayRequest);
 
     }
 
@@ -142,8 +161,6 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
             } catch (JSONException e) {
                 Log.i("JSON","Error al parsear JSON");
             }
-            Log.i("JSON", String.valueOf(jsonobject));
-            Log.i("JSON", String.valueOf(jsonobject.getClass()));
             try {
                 if (jsonobject != null) {
                     String numeroCurso = jsonobject.getString("id");
@@ -185,5 +202,46 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
 
         enviarRequestCursos(idMateria);
 
+    }
+
+
+    private boolean puedeInscribirse() {
+        boolean puedeInscribirse = true;
+        int intDiaPrioridad = Integer.parseInt(diaPrioridad.substring(0,2));
+        int intMesPrioridad = Integer.parseInt(diaPrioridad.substring(3,5));
+        int intAñoPrioridad = Integer.parseInt(diaPrioridad.substring(6,10));
+        int intHoras = Integer.parseInt(horaPrioridad.substring(0,2));
+        int intMinutos = Integer.parseInt(horaPrioridad.substring(3,5));
+        Calendar currentTime = Calendar.getInstance();
+        if(intAñoPrioridad > currentTime.get(Calendar.YEAR)){
+            puedeInscribirse = false;
+        } else if (intAñoPrioridad < currentTime.get(Calendar.YEAR)){
+            puedeInscribirse = true;
+        } else { //Años iguales
+            if(intMesPrioridad > (currentTime.get(Calendar.MONTH)+1)){
+                puedeInscribirse = false;
+            } else if(intMesPrioridad < (currentTime.get(Calendar.MONTH)+1)){
+                puedeInscribirse = true;
+            } else { //Mes igual
+                if(intDiaPrioridad > currentTime.get(Calendar.DAY_OF_MONTH)){
+                    puedeInscribirse = false;
+                } else if(intDiaPrioridad < currentTime.get(Calendar.DAY_OF_MONTH)){
+                    puedeInscribirse = true;
+                } else { //Dia igual
+                    if(intHoras > currentTime.get(Calendar.HOUR_OF_DAY)){
+                        puedeInscribirse = false;
+                    } else if(intHoras < currentTime.get(Calendar.HOUR_OF_DAY)){
+                        puedeInscribirse = true;
+                    } else { //Hora igual
+                        if(intMinutos > currentTime.get(Calendar.MINUTE)){
+                            puedeInscribirse = false;
+                        } else if(intMinutos <= currentTime.get(Calendar.MINUTE)){
+                            puedeInscribirse = true;
+                        }
+                    }
+                }
+            }
+        }
+        return puedeInscribirse;
     }
 }

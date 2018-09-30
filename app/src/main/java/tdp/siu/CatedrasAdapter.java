@@ -5,9 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.util.Calendar;
 import java.util.List;
 
 public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.ProductViewHolder> {
@@ -46,9 +51,12 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
 
     //this context we will use to inflate the layout
     private Context mCtx;
+    private boolean puede;
 
     //we are storing all the products in a list
     private List<Catedra> catedraList;
+
+    public static final String SHARED_PREF_NAME = "myloginapp";
 
     //getting the context and product list with constructor
     public CatedrasAdapter(Context mCtx, List<Catedra> catedraList, String padron, RequestQueue queue, ActualizadorCursos act, String idMateria) {
@@ -65,6 +73,8 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.card_catedra_layout, null);
+        SharedPreferences sharedPref = mCtx.getSharedPreferences(mCtx.getString(R.string.saved_data), Context.MODE_PRIVATE);
+        puede = sharedPref.getBoolean("puedeInscribirse", false);
         return new ProductViewHolder(view);
     }
 
@@ -83,18 +93,17 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
             holder.cvInscrpcionCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if(puede){
                     mostrarDialog(catedra.getCurso(), catedra.getCatedra());
+                    } else {
+                        Toast.makeText(mCtx, "Prioridad insuficiente para inscribirse",
+                            Toast.LENGTH_LONG).show();
                 }
             });
         } else{
             holder.cvInscrpcionCard.setCardBackgroundColor(ResourcesCompat.getColor(mCtx.getResources(), R.color.colorUnclickableGrey, null));
         }
     }
-
-
-    @Override
-    public int getItemCount() {
-        return catedraList.size();
     }
 
 
