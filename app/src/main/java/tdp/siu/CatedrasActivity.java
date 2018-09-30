@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CatedrasActivity extends AppCompatActivity {
+public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapter.ActualizadorCursos {
 
     ProgressDialog progress;
     RequestQueue queue;
@@ -99,7 +99,7 @@ public class CatedrasActivity extends AppCompatActivity {
 
     }
 
-    private void enviarRequestCursos(String idMateria) {
+    public void enviarRequestCursos(String idMateria) {
         progress = ProgressDialog.show(this, "Buscando materias",
                 "Recolectando datos...", true);
 
@@ -153,7 +153,7 @@ public class CatedrasActivity extends AppCompatActivity {
                     String aulas = jsonobject.getString("aulas");
                     String dias = jsonobject.getString("dias");
                     String horarios = jsonobject.getString("horarios");
-                    catedrasList.add(new Catedra("Curso " + numeroCurso, docente, dias, horarios, sedes, aulas, cupos));
+                    catedrasList.add(new Catedra(numeroCurso, docente, dias, horarios, sedes, aulas, cupos));
                 }
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
@@ -181,31 +181,9 @@ public class CatedrasActivity extends AppCompatActivity {
         catedrasList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new CatedrasAdapter(this, catedrasList);
+        adapter = new CatedrasAdapter(this, catedrasList, padron, queue, this, idMateria);
 
         enviarRequestCursos(idMateria);
 
-    }
-
-    private void mostrarDialog(String curso, String catedra) {
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(CatedrasActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(CatedrasActivity.this);
-        }
-        builder.setTitle(curso + " - " + catedra)
-                .setMessage("¿Confirmar inscripción?")
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Confirmar inscripción
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Simplemente se cierra
-                    }
-                })
-                .show();
     }
 }

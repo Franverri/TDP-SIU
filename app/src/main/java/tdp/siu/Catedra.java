@@ -1,5 +1,9 @@
 package tdp.siu;
 
+import android.util.Log;
+
+import java.util.Objects;
+
 public class Catedra {
 
     private String curso;
@@ -35,7 +39,10 @@ public class Catedra {
     public String getHorario() {
 
         String strFinal = "";
-
+        if (sedes.equals("[\".\"]")){
+            return "CONDICIONAL";
+        }
+        Log.i("DEBUG", sedes);
         //Obtengo el/los dias
         String strDias =  this.dias.replace("\"", "");
         strDias = strDias.replace("[", "");
@@ -60,7 +67,7 @@ public class Catedra {
         strAulas = strAulas.replace("]", "");
         String[] arrayAulas = strAulas.split(",");
         for (int i = 0; i < arrayDias.length; i++) {
-            strFinal = strFinal + arrayDias[i] + " " + arrayHorario[i] + " [" + arraySedes[i] + " - " + /*arrayAulas[i] +*/ "] \n";
+            strFinal = strFinal + arrayDias[i] + " " + arrayHorario[i] + " [" + arraySedes[i] + " - " + arrayAulas[i] + "] \n";
         }
 
         return strFinal;
