@@ -220,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if(email.equals("12345678")){
             login = true;
             esAlumno = true;
-            editorShared.putString("padron","12345");
+            editorShared.putString("padron","00001");
             editorShared.putString("nombre", "Agustin Luques");
             editorShared.putString("dni", "12345678");
             editorShared.putString("mail", "agustin@gmail.com");
