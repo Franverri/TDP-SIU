@@ -99,11 +99,16 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                         Toast.makeText(mCtx, "Prioridad insuficiente para inscribirse",
                             Toast.LENGTH_LONG).show();
                 }
+            };
             });
-        } else{
+        }else{
             holder.cvInscrpcionCard.setCardBackgroundColor(ResourcesCompat.getColor(mCtx.getResources(), R.color.colorUnclickableGrey, null));
         }
     }
+
+    @Override
+    public int getItemCount() {
+        return catedraList.size();
     }
 
 
