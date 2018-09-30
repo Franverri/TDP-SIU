@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -73,15 +74,45 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
         final Catedra catedra = catedraList.get(position);
 
         //binding the data with the view holder views
-        holder.tvCurso.setText("Curso " + catedra.getCurso() + " - [" + catedra.getCupos() + " cupos restantes]");
+        holder.tvCurso.setText("Curso " + catedra.getCurso());
         holder.tvNombreCatedra.setText(catedra.getCatedra());
         holder.tvHorario.setText(catedra.getHorario());
-        holder.cvInscrpcionCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mostrarDialog(catedra.getCurso(), catedra.getCatedra());
-            }
-        });
+        holder.tvCupos.setText(catedra.getCupos());
+
+        if (Integer.parseInt(catedra.getCupos()) > 0) {
+            holder.cvInscrpcionCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mostrarDialog(catedra.getCurso(), catedra.getCatedra());
+                }
+            });
+        } else{
+            holder.cvInscrpcionCard.setCardBackgroundColor(ResourcesCompat.getColor(mCtx.getResources(), R.color.colorUnclickableGrey, null));
+        }
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return catedraList.size();
+    }
+
+
+    class ProductViewHolder extends RecyclerView.ViewHolder {
+
+        TextView tvCurso, tvNombreCatedra, tvHorario, tvCupos;
+        CardView cvInscrpcionCard;
+
+        public ProductViewHolder(View itemView) {
+            super(itemView);
+
+            tvCurso = itemView.findViewById(R.id.tvC_curso);
+            tvNombreCatedra = itemView.findViewById(R.id.tvC_nombreCatedra);
+            tvHorario = itemView.findViewById(R.id.tvC_horario);
+            tvCupos = itemView.findViewById(R.id.tvC_cupos);
+            cvInscrpcionCard = itemView.findViewById(R.id.cvCatedraCard);
+
+        }
     }
 
     private void mostrarDialog(final String curso, String catedra) {
@@ -95,7 +126,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                 .setMessage("¿Confirmar inscripción?")
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                    enviarRequestInscripcion(curso);
+                        enviarRequestInscripcion(curso);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -169,26 +200,4 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
         void enviarRequestCursos(String idMateria);
     }
 
-
-
-    @Override
-    public int getItemCount() {
-        return catedraList.size();
-    }
-
-
-    class ProductViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tvCurso, tvNombreCatedra, tvHorario;
-        CardView cvInscrpcionCard;
-
-        public ProductViewHolder(View itemView) {
-            super(itemView);
-
-            tvCurso = itemView.findViewById(R.id.tvC_curso);
-            tvNombreCatedra = itemView.findViewById(R.id.tvC_nombreCatedra);
-            tvHorario = itemView.findViewById(R.id.tvC_horario);
-            cvInscrpcionCard = itemView.findViewById(R.id.cvCatedraCard);
-        }
-    }
 }
