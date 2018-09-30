@@ -42,7 +42,7 @@ public class MainActivityDocente extends AppCompatActivity
 
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
-    int idDocente = 12345;
+    String idDocente;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -60,6 +60,8 @@ public class MainActivityDocente extends AppCompatActivity
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        idDocente = sharedPref.getString("legajo", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -123,7 +125,7 @@ public class MainActivityDocente extends AppCompatActivity
 
     private void enviarRequestCursos() {
 
-        String url = APIUrl + "cursos/" + String.valueOf(idDocente);
+        String url = APIUrl + "cursos/" + idDocente;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 

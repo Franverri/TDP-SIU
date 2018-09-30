@@ -16,6 +16,7 @@
     <string name="error_invalid_email">Usuario incorrecto</string>
     <string name="error_invalid_password">Contraseña incorrecta</string>
     <string name="error_incorrect_password">Contraseña incorrecta</string>
+    <string name="error_incorrect_user_or_password">Usuario o contraseña incorrecta</string>
     <string name="error_field_required">Obligatorio</string>
     <string name="saved_data" />
 

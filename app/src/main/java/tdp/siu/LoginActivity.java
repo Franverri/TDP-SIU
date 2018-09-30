@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,13 +20,21 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -38,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
     RequestQueue queue;
     ProgressDialog progress;
-    String APIUrl ="https://siu-api.herokuapp.com/";
+    String APIUrl ="https://siu-api.herokuapp.com/login";
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -137,24 +146,16 @@ public class LoginActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+        } else if (TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
         }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -165,28 +166,77 @@ public class LoginActivity extends AppCompatActivity {
             //showProgress(true);
             //mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
-            goMain();
+            enviarRequestLogin(email,password);
         }
     }
 
-    private void goMain() {
-        //Verificar si es un alumno o un docente
-        if(esAlumno){
-            //Almaceno boolean para mantener logueado
-            editorShared.putBoolean("logueadoAlumno",true);
-            editorShared.apply();
-            Intent intent = new Intent(this, MainActivityAlumno.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        } else {
-            //Almaceno boolean para mantener logueado
-            editorShared.putBoolean("logueadoDocente",true);
-            editorShared.apply();
-            Intent intent = new Intent(this, MainActivityDocente.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+    private void enviarRequestLogin(String username, String password) {
+
+        String url = APIUrl + "?usuario=" + username + "&contrasena=" + password;
+        Log.i("API","URL: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("API","Response: " + response.toString());
+                        procesarRespuestaLogin(response);
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(LoginActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+    }
+
+    private void procesarRespuestaLogin(JSONObject response){
+        int tipo = 0;
+        try {
+            tipo = response.getInt("tipo");
+        }catch (JSONException e){
+            Log.i("JSON","Error al parsear JSON");
+        }
+        if (tipo == 0){
+            mEmailView.setError(getString(R.string.error_incorrect_user_or_password));
+            mEmailView.requestFocus();
+        } else if (tipo == 1){ //ALUMNO
+            try {
+                editorShared.putString("padron",response.getString("padron"));
+                String nombre = response.getString("nombre");
+                String apellido = response.getString("apellido");
+                editorShared.putString("nombre", nombre + " " + apellido);
+                //TODO hardcode: dni y mail
+                editorShared.putString("dni", "38324264");
+                editorShared.putString("mail", "franco@gmail.com");
+                editorShared.putBoolean("logueadoAlumno",true);
+                editorShared.apply();
+                goMainAlumno();
+            } catch (JSONException e){
+                Log.i("JSON","Error al parsear JSON");
+            }
+        } else if (tipo == 2){ //DOCENTE
+            try {
+                editorShared.putString("legajo",response.getString("legajo"));
+                String nombre = response.getString("nombre");
+                String apellido = response.getString("apellido");
+                editorShared.putString("nombre", nombre + " " + apellido);
+                editorShared.putBoolean("logueadoDocente",true);
+                editorShared.apply();
+                goMainDocente();
+            } catch (JSONException e){
+                Log.i("JSON","Error al parsear JSON");
+            }
         }
     }
+
 
     private void goMainAlumno() {
         Intent intent = new Intent(this, MainActivityAlumno.class);
@@ -200,38 +250,5 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        boolean login = false;
-        if(email.contains("alumno")){
-            login = true;
-            esAlumno = true;
-        } else if (email.contains("docente")){
-            login = true;
-            esAlumno = false;
-        } else if(email.equals("38324264")){
-            login = true;
-            esAlumno = true;
-            editorShared.putString("padron","95812");
-            editorShared.putString("nombre", "Franco Etcheverri");
-            editorShared.putString("dni", "38324264");
-            editorShared.putString("mail", "franco@gmail.com");
-            editorShared.apply();
-        } else if(email.equals("12345678")){
-            login = true;
-            esAlumno = true;
-            editorShared.putString("padron","00001");
-            editorShared.putString("nombre", "Agustin Luques");
-            editorShared.putString("dni", "12345678");
-            editorShared.putString("mail", "agustin@gmail.com");
-            editorShared.apply();
-        }
-        return login;
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
 }
 
