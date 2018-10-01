@@ -37,10 +37,18 @@ public class AlumnosInscriptosAdapter extends RecyclerView.Adapter<AlumnosInscri
         //getting the product of the specified position
         Alumno alumno = alumnosList.get(position);
 
+        String condicion;
+        if (alumno.esCondicional()){
+            condicion = "Condicional";
+        } else {
+            condicion = "Regular";
+        }
+
         //binding the data with the view holder views
         holder.tvNombreAlumno.setText(alumno.getNombre());
         holder.tvPadronAlumno.setText(String.valueOf(alumno.getPadron()));
         holder.tvPrioridadAlumno.setText("Prioridad: " + String.valueOf(alumno.getPrioridad()));
+        holder.tvCondicionAlumno.setText(condicion);
     }
 
     @Override
@@ -51,7 +59,7 @@ public class AlumnosInscriptosAdapter extends RecyclerView.Adapter<AlumnosInscri
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvNombreAlumno, tvPadronAlumno, tvPrioridadAlumno;
+        TextView tvNombreAlumno, tvPadronAlumno, tvPrioridadAlumno, tvCondicionAlumno;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -59,6 +67,7 @@ public class AlumnosInscriptosAdapter extends RecyclerView.Adapter<AlumnosInscri
             tvNombreAlumno = itemView.findViewById(R.id.tvNombreAlumno);
             tvPadronAlumno = itemView.findViewById(R.id.tvPadronAlumno);
             tvPrioridadAlumno = itemView.findViewById(R.id.tvPrioridadAlumno);
+            tvCondicionAlumno = itemView.findViewById(R.id.tvCondicionAlumno);
         }
     }
 }
