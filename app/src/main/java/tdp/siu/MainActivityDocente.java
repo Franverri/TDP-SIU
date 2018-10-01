@@ -267,7 +267,7 @@ public class MainActivityDocente extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_cursos) {
-            // Handle the camera action
+            enviarRequestCursos();
         } else if (id == R.id.nav_cerrarSesionDocente) {
             editorShared.remove("logueadoDocente");
             editorShared.apply();
