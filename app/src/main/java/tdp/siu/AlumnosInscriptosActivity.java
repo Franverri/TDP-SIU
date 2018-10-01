@@ -110,6 +110,8 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
                     writer.writeAll(data);
                     Log.i("DEBUG","Data escrita en archivo");
                     writer.close();
+                    Toast.makeText(AlumnosInscriptosActivity.this, "El archivo se exportó a " + f.getAbsolutePath(),
+                            Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     Log.i("IO","Error al inicializar el FileWriter");
                     Log.i("IO",e.getMessage());
