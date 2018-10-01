@@ -161,17 +161,13 @@ public class LoginActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            //showProgress(true);
-            //mAuthTask = new UserLoginTask(email, password);
-            //mAuthTask.execute((Void) null);
             enviarRequestLogin(email,password);
         }
     }
 
     private void enviarRequestLogin(String username, String password) {
-
+        progress = ProgressDialog.show(this, "SIU",
+                "Validando datos...", true);
         String url = APIUrl + "?usuario=" + username + "&contrasena=" + password;
         Log.i("API","URL: " + url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -179,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(JSONObject response) {
+                        progress.dismiss();
                         Log.i("API","Response: " + response.toString());
                         procesarRespuestaLogin(response);
 
@@ -187,6 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progress.dismiss();
                         Log.i("Error.Response", String.valueOf(error));
                         Toast.makeText(LoginActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();

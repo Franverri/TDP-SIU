@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -62,6 +63,8 @@ public class MainActivityDocente extends AppCompatActivity
         editorShared = sharedPref.edit();
 
         idDocente = sharedPref.getString("legajo", null);
+        String nombre = sharedPref.getString("nombre", null);
+        String mail = sharedPref.getString("mail", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -85,6 +88,8 @@ public class MainActivityDocente extends AppCompatActivity
         configurarRecyclerView();
 
         configurarAccesoAPerfil();
+
+        actualizarDatosMenuLateral(nombre, mail);
     }
 
     private void configurarAccesoAPerfil() {
@@ -117,9 +122,6 @@ public class MainActivityDocente extends AppCompatActivity
         //Aca se manda el request al server
         enviarRequestCursos();
 
-        //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
-        //JSONObject value = exampleJSON();
-        //actualizarCursos(value);
     }
 
 
@@ -236,6 +238,15 @@ public class MainActivityDocente extends AppCompatActivity
         // Start the queue
         queue.start();
 
+    }
+
+    private void actualizarDatosMenuLateral(String nombre, String mail) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_docente);
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvNombre = (TextView) headerView.findViewById(R.id.tvMenuDNombre);
+        TextView tvMail = (TextView) headerView.findViewById(R.id.tvMenuDMail);
+        tvNombre.setText(nombre);
+        tvMail.setText(mail);
     }
 
 
