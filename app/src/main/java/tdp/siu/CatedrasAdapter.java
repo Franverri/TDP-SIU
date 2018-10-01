@@ -84,7 +84,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
         final Catedra catedra = catedraList.get(position);
 
         //binding the data with the view holder views
-        holder.tvCurso.setText("Curso " + catedra.getCurso());
+        holder.tvCurso.setText("Curso " + catedra.getNroCurso());
         holder.tvNombreCatedra.setText(catedra.getCatedra());
         holder.tvHorario.setText(catedra.getHorario());
         holder.tvCupos.setText(catedra.getCupos());
@@ -94,7 +94,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                 @Override
                 public void onClick(View view) {
                     if(puede){
-                    mostrarDialog(catedra.getCurso(), catedra.getCatedra());
+                    mostrarDialog(catedra.getIdCurso(), catedra.getNroCurso(), catedra.getCatedra());
                     } else {
                         Toast.makeText(mCtx, "Prioridad insuficiente para inscribirse",
                             Toast.LENGTH_LONG).show();
@@ -129,18 +129,18 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
         }
     }
 
-    private void mostrarDialog(final String curso, String catedra) {
+    private void mostrarDialog(final String idCurso, String nroCurso, String catedra) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(mCtx, android.R.style.Theme_Material_Dialog_Alert);
         } else {
             builder = new AlertDialog.Builder(mCtx);
         }
-        builder.setTitle("Curso " + curso + " - " + catedra)
+        builder.setTitle("Curso " + nroCurso + " - " + catedra)
                 .setMessage("¿Confirmar inscripción?")
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        enviarRequestInscripcion(curso);
+                        enviarRequestInscripcion(idCurso);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -192,6 +192,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                     Toast.makeText(mCtx, "La inscripción se realizó correctamente",
                             Toast.LENGTH_LONG).show();
                     Intent myIntent = new Intent(mCtx, OfertaAcademicaActivity.class);
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mCtx.startActivity(myIntent);
                     break;
                 case 2:

@@ -6,7 +6,8 @@ import java.util.Objects;
 
 public class Catedra {
 
-    private String curso;
+    private String idCurso;
+    private String nroCurso;
     private String catedra;
     private String horario;
     private String dias;
@@ -14,8 +15,9 @@ public class Catedra {
     private String aulas;
     private String cupos;
 
-    public Catedra(String curso, String catedra, String dias, String horario, String sedes, String aulas, String cupos) {
-        this.curso = curso;
+    public Catedra(String idCurso, String nroCurso, String catedra, String dias, String horario, String sedes, String aulas, String cupos) {
+        this.idCurso = idCurso;
+        this.nroCurso = nroCurso;
         this.catedra = catedra;
         this.horario = horario;
         this.dias = dias;
@@ -28,8 +30,12 @@ public class Catedra {
         return cupos;
     }
 
-    public String getCurso() {
-        return curso;
+    public String getIdCurso() {
+        return idCurso;
+    }
+
+    public String getNroCurso(){
+        return nroCurso;
     }
 
     public String getCatedra() {

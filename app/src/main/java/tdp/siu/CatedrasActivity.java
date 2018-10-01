@@ -163,14 +163,15 @@ public class CatedrasActivity extends AppCompatActivity implements CatedrasAdapt
             }
             try {
                 if (jsonobject != null) {
-                    String numeroCurso = jsonobject.getString("id");
+                    String idCurso = jsonobject.getString("id");
+                    String nroCurso = jsonobject.getString("nro_curso");
                     String docente = jsonobject.getString("docente");
                     String cupos = jsonobject.getString("vacantes");
                     String sedes = jsonobject.getString("sede");
                     String aulas = jsonobject.getString("aulas");
                     String dias = jsonobject.getString("dias");
                     String horarios = jsonobject.getString("horarios");
-                    catedrasList.add(new Catedra(numeroCurso, docente, dias, horarios, sedes, aulas, cupos));
+                    catedrasList.add(new Catedra(idCurso, nroCurso, docente, dias, horarios, sedes, aulas, cupos));
                 }
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
