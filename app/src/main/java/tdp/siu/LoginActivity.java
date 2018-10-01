@@ -214,9 +214,9 @@ public class LoginActivity extends AppCompatActivity {
                 String nombre = response.getString("nombre");
                 String apellido = response.getString("apellido");
                 editorShared.putString("nombre", nombre + " " + apellido);
-                String mail = response.getString("email");
+                //String mail = response.getString("email");
                 editorShared.putString("dni", usuario);
-                editorShared.putString("mail", mail);
+                editorShared.putString("mail", "ej@mail.com");
                 editorShared.putBoolean("logueadoAlumno",true);
                 editorShared.apply();
                 goMainAlumno();
