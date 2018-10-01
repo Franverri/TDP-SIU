@@ -2,10 +2,10 @@ package tdp.siu;
 
 public class Alumno {
     private String nombre;
-    private int padron;
-    private int prioridad;
+    private String padron;
+    private String prioridad;
 
-    public Alumno(String nombre, int padron, int prioridad) {
+    public Alumno(String nombre, String padron, String prioridad) {
         this.nombre = nombre;
         this.padron = padron;
         this.prioridad = prioridad;
@@ -15,11 +15,11 @@ public class Alumno {
         return nombre;
     }
 
-    public int getPadron() {
+    public String getPadron() {
         return padron;
     }
 
-    public int getPrioridad() {
+    public String getPrioridad() {
         return prioridad;
     }
 

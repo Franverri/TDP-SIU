@@ -186,8 +186,8 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
             }
             try {
                 String nombreAlumno = jsonobject.getString("apellido_y_nombre");
-                int padronAlumno = jsonobject.getInt("padron");
-                int prioridadAlumno = jsonobject.getInt("prioridad");
+                String padronAlumno = jsonobject.getString("padron");
+                String prioridadAlumno = jsonobject.getString("prioridad");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
