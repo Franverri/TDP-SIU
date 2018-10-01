@@ -216,11 +216,10 @@ public class MainActivityAlumno extends AppCompatActivity
                     String fechaInscripcion = jsonobject.getString("fecha_inicio");
                     obtenerDiaHoraInscripcion(fechaInscripcion);
                     fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
-                    modificarPrioridad(prioridad);
-                    validezPeriodoInscripcion(fechaCierrePeriodo);
                     String descripcionPeriodo = jsonobject.getString("descripcion_periodo");
                     editorShared.putString("descPeriodo", descripcionPeriodo);
                     editorShared.apply();
+                    modificarPrioridad(prioridad);
                 } else {
                     modificarPrioridad(" - ");
                 }
@@ -297,12 +296,19 @@ public class MainActivityAlumno extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView tvPrioridad = (TextView) headerView.findViewById(R.id.tvPrioridad);
         tvPrioridad.setText("  Prioridad: " + prioridad + "  ");
-        tvPrioridad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mostrarDialog();
-            }
-        });
+        if(prioridad.equals("-")){
+            editorShared.putBoolean("periodoHabilitado", false);
+            editorShared.putString("descPeriodo", "");
+            editorShared.apply();
+        } else {
+            validezPeriodoInscripcion(fechaCierrePeriodo);
+            tvPrioridad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mostrarDialog();
+                }
+            });
+        }
     }
 
     private void actualizarDatosMenuLateral(String nombre, String mail) {
