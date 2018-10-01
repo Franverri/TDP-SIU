@@ -52,6 +52,8 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
+    String usuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                    usuario = String.valueOf(mEmailView.getText());
                     attemptLogin();
                     return true;
                 }
@@ -211,9 +214,9 @@ public class LoginActivity extends AppCompatActivity {
                 String nombre = response.getString("nombre");
                 String apellido = response.getString("apellido");
                 editorShared.putString("nombre", nombre + " " + apellido);
-                //TODO hardcode: dni y mail
-                editorShared.putString("dni", "38324264");
-                editorShared.putString("mail", "franco@gmail.com");
+                String mail = response.getString("email");
+                editorShared.putString("dni", usuario);
+                editorShared.putString("mail", mail);
                 editorShared.putBoolean("logueadoAlumno",true);
                 editorShared.apply();
                 goMainAlumno();
