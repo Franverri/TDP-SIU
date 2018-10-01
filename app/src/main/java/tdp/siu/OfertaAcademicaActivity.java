@@ -63,6 +63,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
 
     String padron;
     Boolean periodoHabilitado;
+    String descPeriodo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
 
         padron = sharedPref.getString("padron", null);
         periodoHabilitado = sharedPref.getBoolean("periodoHabilitado", false);
+        descPeriodo = sharedPref.getString("descPeriodo", "");
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -84,6 +86,8 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_oferta_academica);
+
+        setTitle("Oferta académica " + descPeriodo);
 
         adapter = new ArrayAdapter<String>(
                 this,

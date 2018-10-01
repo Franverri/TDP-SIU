@@ -218,6 +218,9 @@ public class MainActivityAlumno extends AppCompatActivity
                     fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
                     modificarPrioridad(prioridad);
                     validezPeriodoInscripcion(fechaCierrePeriodo);
+                    String descripcionPeriodo = jsonobject.getString("descripcion_periodo");
+                    editorShared.putString("descPeriodo", descripcionPeriodo);
+                    editorShared.apply();
                 } else {
                     modificarPrioridad(" - ");
                 }
