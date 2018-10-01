@@ -33,6 +33,7 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,10 +55,13 @@ public class MainActivityDocente extends AppCompatActivity
     CursosAdapter adapter;
     RecyclerView recyclerView;
 
+    Random rand;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        rand = new Random();
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
@@ -173,7 +177,7 @@ public class MainActivityDocente extends AppCompatActivity
                 int idCurso = jsonobject.getInt("id_curso");
                 //TODO
                 //int numeroCurso = jsonobject.getInt("numero");
-                int numeroCurso = 1;
+                int numeroCurso = rand.nextInt(4) + 1;
                 int inscriptos = jsonobject.getInt("alumnos_totales");
                 int vacantesRestantes = jsonobject.getInt("vacantes");
                 cursosList.add(new Curso(nombreCurso, codigoCurso, idCurso, numeroCurso, inscriptos, vacantesRestantes));
