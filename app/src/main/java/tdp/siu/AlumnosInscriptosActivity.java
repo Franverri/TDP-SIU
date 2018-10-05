@@ -3,6 +3,7 @@ package tdp.siu;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -95,9 +96,8 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String parent = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-                String child = String.valueOf(idCurso) + ".csv";
-                File f = new File(parent, child);
+                File path = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+                File f = new File(path, "Curso" + String.valueOf(idCurso) + ".csv");
                 Log.i("DEBUG","path: " + f.getAbsolutePath());
                 try {
                     CSVWriter writer = new CSVWriter(new FileWriter(f));
@@ -110,6 +110,8 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
                     writer.writeAll(data);
                     Log.i("DEBUG","Data escrita en archivo");
                     writer.close();
+                    MediaScannerConnection
+                            .scanFile(AlumnosInscriptosActivity.this , new String[] {f.getAbsolutePath()},null , null);
                     Toast.makeText(AlumnosInscriptosActivity.this, "El archivo se exportó a " + f.getAbsolutePath(),
                             Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
