@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder holder, int position) {
+    public void onBindViewHolder(ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         Inscripcion inscripcion = inscripcionList.get(position);
 
@@ -44,17 +46,16 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
         holder.tvNombreMateria.setText(inscripcion.getNombreMateria() + " (" + inscripcion.getCodigoMateria() + ")");
         holder.tvNombreCatedra.setText(inscripcion.getNombreCatedra());
         holder.tvHorario.setText(inscripcion.getHorario());
-        /*
-        holder.cvCursoCard.setOnClickListener(new View.OnClickListener() {
+        holder.ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
-                Bundle b = new Bundle();
-                b.putInt("id", 1); //Your id
-                intent.putExtras(b); //Put your id to your next Intent
-                mCtx.startActivity(intent);
+                inscripcionList.remove(position);
+                notifyDataSetChanged();
+                //FALTARIA PEGARLE A LA API PARA DESINCRIBIR
+                Toast.makeText(mCtx, "Desinscripción exitosa!",
+                        Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
     }
 
 
@@ -67,6 +68,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvNombreMateria, tvNombreCatedra, tvHorario;
+        ImageView ivCancel;
         CardView cvInscrpcionCard;
 
         public ProductViewHolder(View itemView) {
@@ -76,6 +78,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
             tvNombreCatedra = itemView.findViewById(R.id.tvI_nombreCatedra);
             tvHorario = itemView.findViewById(R.id.tvI_horario);
             cvInscrpcionCard = itemView.findViewById(R.id.cvInscripcionCard);
+            ivCancel = itemView.findViewById(R.id.tvI_cancelButton);
         }
     }
 }
