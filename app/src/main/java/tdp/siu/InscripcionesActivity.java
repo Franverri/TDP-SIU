@@ -112,8 +112,6 @@ public class InscripcionesActivity extends AppCompatActivity {
 
         //FALTARIA SINCRONIZAR CON LA API
         buscarMateriasInscripto();
-        inscripcionList.add(new Inscripcion("TDP2", "7546", "Fontela", "Lunes 17:00 - 23:00"));
-        inscripcionList.add(new Inscripcion("Algo 3", "7504", "Fontela", "Martes 17:00 - 20:000 \n  Jueves 17:00 - 20:00"));
         recyclerView.setAdapter(adapter);
     }
 
