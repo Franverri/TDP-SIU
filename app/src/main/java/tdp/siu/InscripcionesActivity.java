@@ -119,8 +119,8 @@ public class InscripcionesActivity extends AppCompatActivity {
 
     private void buscarMateriasInscripto() {
         if(padron != null){
-            progress = ProgressDialog.show(this, "SIU",
-                    "Validando datos...", true);
+            progress = ProgressDialog.show(this, "Inscripciones",
+                    "Recolectando datos...", true);
             String url = APIUrl + padron;
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
