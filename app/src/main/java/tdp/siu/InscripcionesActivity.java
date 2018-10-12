@@ -110,7 +110,6 @@ public class InscripcionesActivity extends AppCompatActivity {
         //creating recyclerview adapter
         adapter = new InscripcionAdapter(this, inscripcionList);
 
-        //FALTARIA SINCRONIZAR CON LA API
         buscarMateriasInscripto();
         recyclerView.setAdapter(adapter);
     }
