@@ -56,8 +56,6 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
     //we are storing all the products in a list
     private List<Catedra> catedraList;
 
-    public static final String SHARED_PREF_NAME = "myloginapp";
-
     //getting the context and product list with constructor
     public CatedrasAdapter(Context mCtx, List<Catedra> catedraList, String padron, RequestQueue queue, ActualizadorCursos act, String idMateria) {
         this.mCtx = mCtx;
