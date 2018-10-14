@@ -193,37 +193,6 @@ public class MainActivityDocente extends AppCompatActivity
 
     }
 
-    private JSONObject exampleJSON() {
-        JSONObject curso1 = new JSONObject();
-        try{
-            curso1.put("nombre", "Analisis Matemático II");
-            curso1.put("numero", 1);
-            curso1.put("inscriptos", 18);
-            curso1.put("vacantes", 42);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONObject curso2 = new JSONObject();
-        try{
-            curso2.put("nombre", "Física II");
-            curso2.put("numero", 2);
-            curso2.put("inscriptos", 5);
-            curso2.put("vacantes", 25);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONArray arr = new JSONArray();
-        arr.put(curso1);
-        arr.put(curso2);
-        JSONObject obj = new JSONObject();
-        try{
-            obj.put("cursos", arr);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        return obj;
-    }
-
     private void configurarHTTPRequestSingleton() {
 
         // Get RequestQueue Singleton

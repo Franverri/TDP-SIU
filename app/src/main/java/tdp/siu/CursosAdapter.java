@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -36,7 +38,7 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder holder, int position) {
+    public void onBindViewHolder(final ProductViewHolder holder, int position) {
         //getting the product of the specified position
         final Curso curso = cursoList.get(position);
 
@@ -48,11 +50,34 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
         holder.cvCursoCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
-                Bundle b = new Bundle();
-                b.putInt("id", curso.getIdCurso()); //Your id
-                intent.putExtras(b); //Put your id to your next Intent
-                mCtx.startActivity(intent);
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(mCtx, holder.cvCursoCard);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.menu_curso_docente);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu1:
+                                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
+                                Bundle b = new Bundle();
+                                b.putInt("id", curso.getIdCurso()); //Your id
+                                intent.putExtras(b); //Put your id to your next Intent
+                                mCtx.startActivity(intent);
+                                break;
+                            case R.id.menu2:
+                                //handle menu2 click
+                                break;
+                            case R.id.menu3:
+                                //handle menu3 click
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
             }
         });
     }
