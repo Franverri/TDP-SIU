@@ -1,17 +1,17 @@
 package tdp.siu;
 
 public class FechaExamen {
-    private int id;
+    private String id;
     private String fecha;
     private String hora;
 
-    public FechaExamen(int id, String fecha, String hora){
+    public FechaExamen(String id, String fecha, String hora){
         this.id = id;
         this.fecha = fecha;
         this.hora = hora;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

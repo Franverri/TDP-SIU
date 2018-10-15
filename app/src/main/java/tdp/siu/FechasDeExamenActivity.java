@@ -133,6 +133,10 @@ public class FechasDeExamenActivity extends AppCompatActivity {
 
         //Aca se manda el request al server
         enviarRequestFechas();
+
+        //TODO Eliminar
+        fechasList.add(new FechaExamen("1","10/02/2019","11:00"));
+        recyclerView.setAdapter(adapter);
     }
 
     private void configurarHTTPRequestSingleton() {
