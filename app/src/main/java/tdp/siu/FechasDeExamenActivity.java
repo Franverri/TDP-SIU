@@ -82,10 +82,10 @@ public class FechasDeExamenActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.button_add) {
             // do something here
-        } else {
+        } else if (id == android.R.id.home) { //BackPressed
             super.onBackPressed();
         }
-        return super.onOptionsItemSelected(item); //True?
+        return super.onOptionsItemSelected(item);
     }
 
     private void enviarRequestFechas() {
