@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
@@ -71,9 +72,20 @@ public class FechasDeExamenActivity extends AppCompatActivity {
         configurarRecyclerView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_fechas_examen, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     public boolean onOptionsItemSelected(MenuItem item){
-        super.onBackPressed();
-        return true;
+        int id = item.getItemId();
+        if (id == R.id.button_add) {
+            // do something here
+        } else {
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item); //True?
     }
 
     private void enviarRequestFechas() {
