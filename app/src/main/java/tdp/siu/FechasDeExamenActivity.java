@@ -31,7 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FechasDeExamenActivity extends AppCompatActivity {
+public class FechasDeExamenActivity extends AppCompatActivity implements FechasDeExamenAdapter.ActualizadorFechas{
     RequestQueue queue;
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
@@ -88,7 +88,7 @@ public class FechasDeExamenActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void enviarRequestFechas() {
+    public void enviarRequestFechas() {
 
         String url = APIUrl + "finales/" + idCurso;
         Log.i("API", "url: " + url);
@@ -129,13 +129,14 @@ public class FechasDeExamenActivity extends AppCompatActivity {
         fechasList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new FechasDeExamenAdapter(this, fechasList);
+        adapter = new FechasDeExamenAdapter(this, fechasList, queue, this);
 
         //Aca se manda el request al server
         enviarRequestFechas();
 
         //TODO Eliminar
         fechasList.add(new FechaExamen("1","10/02/2019","11:00"));
+        fechasList.add(new FechaExamen("2","17/02/2019","18:00"));
         recyclerView.setAdapter(adapter);
     }
 
