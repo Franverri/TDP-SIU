@@ -51,7 +51,7 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
             @Override
             public void onClick(View view) {
                 //creating a popup menu
-                PopupMenu popup = new PopupMenu(mCtx, holder.cvCursoCard);
+                PopupMenu popup = new PopupMenu(mCtx, view);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.menu_curso_docente);
                 //adding click listener
@@ -59,18 +59,19 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            case R.id.menu1:
+                            case R.id.menu_alumnos_inscriptos:
                                 Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
                                 Bundle b = new Bundle();
                                 b.putInt("id", curso.getIdCurso()); //Your id
                                 intent.putExtras(b); //Put your id to your next Intent
                                 mCtx.startActivity(intent);
                                 break;
-                            case R.id.menu2:
-                                //handle menu2 click
-                                break;
-                            case R.id.menu3:
-                                //handle menu3 click
+                            case R.id.menu_fechas_examen:
+                                intent = new Intent(mCtx, FechasDeExamenActivity.class);
+                                b = new Bundle();
+                                b.putInt("id", curso.getIdCurso()); //Your id
+                                intent.putExtras(b); //Put your id to your next Intent
+                                mCtx.startActivity(intent);
                                 break;
                         }
                         return false;
