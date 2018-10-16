@@ -34,6 +34,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -113,8 +114,7 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.i("DEBUG","Fecha: " + inputFecha.getText().toString());
-                Log.i("DEBUG","Hora: " + inputHora.getText().toString());
+                enviarRequestAgregarFecha(inputFecha.getText().toString(), inputHora.getText().toString());
             }
         });
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -126,7 +126,51 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         builder.show();
     }
 
-    public void enviarRequestFechas() {
+    public void enviarRequestAgregarFecha(final String fecha, final String hora){
+        String url = APIUrl + "finales";
+        Log.i("API", "url: " + url);
+        JSONObject request = new JSONObject();
+        try{
+            request.put("id_curso", idCurso);
+            request.put("fecha", fecha);
+            request.put("hora", hora);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, request, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("API","Response: " + response.toString());
+                        agregarFecha(response, fecha, hora);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(FechasDeExamenActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+    }
+
+    private void agregarFecha(JSONObject response, String fecha, String hora){
+        try{
+            String id = response.getString("id_final");
+            fechasList.add(new FechaExamen(id, fecha, hora));
+            adapter.notifyDataSetChanged();
+            enviarRequestGetFechas();
+        } catch (JSONException e){
+            Log.i("JSON","Error al parsear el JSON");
+        }
+    }
+
+    public void enviarRequestGetFechas() {
 
         String url = APIUrl + "finales/" + idCurso;
         Log.i("API", "url: " + url);
@@ -170,7 +214,7 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         adapter = new FechasDeExamenAdapter(this, fechasList, queue, this);
 
         //Aca se manda el request al server
-        enviarRequestFechas();
+        enviarRequestGetFechas();
 
         //TODO Eliminar
         fechasList.add(new FechaExamen("1","10/02/2019","11:00"));

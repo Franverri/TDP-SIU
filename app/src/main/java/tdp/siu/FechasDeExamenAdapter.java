@@ -81,7 +81,7 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
                         //TODO Está bien removerlo instantaneamente y actualizar luego? Otra forma?
                         notifyDataSetChanged();
                         informarFechaEliminada(id);
-                        mActualizadorFechas.enviarRequestFechas();
+                        mActualizadorFechas.enviarRequestGetFechas();
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -127,7 +127,7 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
     }
 
     public static interface ActualizadorFechas {
-        void enviarRequestFechas();
+        void enviarRequestGetFechas();
     }
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
