@@ -78,9 +78,9 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
                 .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         fechasList.remove(position);
+                        //TODO Está bien removerlo instantaneamente y actualizar luego? Otra forma?
                         notifyDataSetChanged();
                         informarFechaEliminada(id);
-                        //TODO Es necesario?
                         mActualizadorFechas.enviarRequestFechas();
                     }
                 })

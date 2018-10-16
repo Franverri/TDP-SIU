@@ -2,17 +2,25 @@ package tdp.siu;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -81,11 +89,41 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == R.id.button_add) {
-            // do something here
+            DialogAgregarFecha();
         } else if (id == android.R.id.home) { //BackPressed
             super.onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void DialogAgregarFecha(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Nueva Fecha de Examen");
+
+        View viewInflated = LayoutInflater.from(this).inflate(R.layout.nueva_fecha_examen_dialog,(ViewGroup) findViewById(android.R.id.content), false);
+        // Set up the input
+        final EditText inputFecha = (EditText) viewInflated.findViewById(R.id.fecha_examen);
+        final EditText inputHora = (EditText) viewInflated.findViewById(R.id.hora_examen);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        builder.setView(viewInflated);
+
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("DEBUG","Fecha: " + inputFecha.getText().toString());
+                Log.i("DEBUG","Hora: " + inputHora.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
     public void enviarRequestFechas() {
