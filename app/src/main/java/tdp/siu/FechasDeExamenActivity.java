@@ -97,6 +97,18 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         return super.onOptionsItemSelected(item);
     }
 
+    private JSONObject mockJSON(){
+        JSONObject mock = new JSONObject();
+        try{
+            mock.put("id_final", 1);
+            mock.put("estado", true);
+            return mock;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private void DialogAgregarFecha(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -114,7 +126,9 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                enviarRequestAgregarFecha(inputFecha.getText().toString(), inputHora.getText().toString());
+                //TODO Eliminar mock cuando este configurado el server
+                //enviarRequestAgregarFecha(inputFecha.getText().toString(), inputHora.getText().toString());
+                agregarFecha(mockJSON(),inputFecha.getText().toString(), inputHora.getText().toString());
             }
         });
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
