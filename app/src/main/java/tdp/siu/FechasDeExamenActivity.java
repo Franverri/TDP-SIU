@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FechasDeExamenActivity extends AppCompatActivity implements FechasDeExamenAdapter.ActualizadorFechas{
     RequestQueue queue;
@@ -52,6 +55,9 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
     List<FechaExamen> fechasList;
     FechasDeExamenAdapter adapter;
     RecyclerView recyclerView;
+
+    private DateValidator dateValidator;
+    private TimeValidator timeValidator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,9 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+
+        dateValidator = new DateValidator();
+        timeValidator = new TimeValidator();
     }
 
     @Override
@@ -121,23 +130,45 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         builder.setView(viewInflated);
 
+        builder.setPositiveButton("OK", null);
+        builder.setNegativeButton("Cancelar", null);
 
-        // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        final AlertDialog alertDialog = builder.create();
+
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //TODO Eliminar mock cuando este configurado el server
-                //enviarRequestAgregarFecha(inputFecha.getText().toString(), inputHora.getText().toString());
-                agregarFecha(mockJSON(),inputFecha.getText().toString(), inputHora.getText().toString());
+            public void onShow(final DialogInterface dialog) {
+                Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String fecha = inputFecha.getText().toString();
+                        String time = inputHora.getText().toString();
+                        if (dateValidator.validate(fecha)){
+                            if (timeValidator.validate(time)){
+                                //TODO Eliminar mock cuando este configurado el server
+                                //enviarRequestAgregarFecha(inputFecha.getText().toString(), inputHora.getText().toString());
+                                agregarFecha(mockJSON(), fecha, time);
+                                dialog.dismiss();
+                            } else{
+                                Toast.makeText(FechasDeExamenActivity.this, "Hora inválida", Toast.LENGTH_LONG).show();
+                            }
+                        }else{
+                            Toast.makeText(FechasDeExamenActivity.this, "Fecha inválida", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
+                Button negativeButton = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
+        alertDialog.show();
     }
 
     public void enviarRequestAgregarFecha(final String fecha, final String hora){
@@ -255,4 +286,79 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         queue.start();
     }
 
+    public class DateValidator{
+
+        private Pattern pattern;
+        private Matcher matcher;
+
+        private static final String DATE_PATTERN =
+                "(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/((19|20)\\d\\d)";
+
+        public DateValidator(){
+            pattern = Pattern.compile(DATE_PATTERN);
+        }
+
+        /**
+         * Validate date format with regular expression
+         * @param date date address for validation
+         * @return true valid date fromat, false invalid date format
+         */
+        public boolean validate(final String date){
+            matcher = pattern.matcher(date);
+            if(matcher.matches()){
+                matcher.reset();
+                if(matcher.find()){
+                    String day = matcher.group(1);
+                    String month = matcher.group(2);
+                    int year = Integer.parseInt(matcher.group(3));
+
+                    if (day.equals("31") &&
+                            (month.equals("4") || month .equals("6") || month.equals("9") ||
+                                    month.equals("11") || month.equals("04") || month .equals("06") ||
+                                    month.equals("09"))) {
+                        return false; // only 1,3,5,7,8,10,12 has 31 days
+                    } else if (month.equals("2") || month.equals("02")) {
+                        //leap year
+                        if(year % 4==0){
+                            if(day.equals("30") || day.equals("31")){
+                                return false;
+                            }else{
+                                return true;
+                            }
+                        }else{
+                            if(day.equals("29")||day.equals("30")||day.equals("31")){
+                                return false;
+                            }else{
+                                return true;
+                            }
+                        }
+                    }else{
+                        return true;
+                    }
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }
+    }
+
+    public class TimeValidator{
+
+        private Pattern pattern;
+        private Matcher matcher;
+
+        private static final String TIME_PATTERN =
+                "([01][0-9]|2[0-3]):([0-5][0-9])";
+
+        public TimeValidator(){
+            pattern = Pattern.compile(TIME_PATTERN);
+        }
+
+        public boolean validate(final String time){
+            matcher = pattern.matcher(time);
+            return matcher.matches();
+        }
+    }
 }
