@@ -58,7 +58,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.card_inscripcion_layout, null);
+        View view = inflater.inflate(R.layout.card_final_layout, null);
         SharedPreferences sharedPref = mCtx.getSharedPreferences(mCtx.getString(R.string.saved_data), Context.MODE_PRIVATE);
         padron = sharedPref.getString("padron", null);
         idFinal = sharedPref.getString("idFinalDesinscribir", null);
@@ -169,16 +169,16 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
 
         TextView tvNombreMateria, tvNombreCatedra, tvHorario;
         ImageView ivCancel;
-        CardView cvInscrpcionCard;
+        CardView cvFinalCard;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
 
-            tvNombreMateria = itemView.findViewById(R.id.tvI_nombreMateria);
-            tvNombreCatedra = itemView.findViewById(R.id.tvI_nombreCatedra);
-            tvHorario = itemView.findViewById(R.id.tvI_horario);
-            cvInscrpcionCard = itemView.findViewById(R.id.cvInscripcionCard);
-            ivCancel = itemView.findViewById(R.id.tvI_cancelButton);
+            tvNombreMateria = itemView.findViewById(R.id.tvF_nombreMateria);
+            tvNombreCatedra = itemView.findViewById(R.id.tvF_nombreCatedra);
+            tvHorario = itemView.findViewById(R.id.tvF_horario);
+            cvFinalCard = itemView.findViewById(R.id.cvFinalCard);
+            ivCancel = itemView.findViewById(R.id.tvF_cancelButton);
         }
     }
 }
