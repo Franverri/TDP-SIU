@@ -99,13 +99,17 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         holder.tvNombreMateria.setText(finalActual.getNombreMateria() + " (" + finalActual.getCodigoMateria() + ")");
         holder.tvNombreCatedra.setText(finalActual.getNombreCatedra());
         holder.tvHorario.setText(finalActual.getHorario());
-        holder.ivCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                estadoDesinscripcion = false;
-                //desincribirse(padron, idFinal);
-            }
-        });
+        if(puedoClickear){
+            holder.ivCancel.setVisibility(View.GONE);
+        } else {
+            holder.ivCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    estadoDesinscripcion = false;
+                    //desincribirse(padron, idFinal);
+                }
+            });
+        }
         holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
