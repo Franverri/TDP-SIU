@@ -47,7 +47,8 @@
         <activity
             android:name=".FinalesActivity"
             android:label="Finales" />
-        <activity android:name=".OfertaFinalesActivity"></activity>
+        <activity android:name=".OfertaFinalesActivity" />
+        <activity android:name=".FinalesOpcionesActivity"></activity>
     </application>
 
 </manifest>
