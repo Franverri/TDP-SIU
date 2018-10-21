@@ -111,6 +111,8 @@ public class FinalesActivity extends AppCompatActivity {
 
         //buscarFinalesInscripto();
         finalList.add(new Final("1", "Materia", "00.00", "Catedra", "Lunes 18 - 17:00 hs"));
+        finalList.add(new Final("1", "Materia", "00.00", "Catedra", "Lunes 18 - 17:00 hs"));
+        finalList.add(new Final("1", "Materia", "00.00", "Catedra", "Lunes 18 - 17:00 hs"));
         recyclerView.setAdapter(adapter);
     }
 
