@@ -48,6 +48,10 @@ public class FinalesActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Guardo para saber si puedo clickear o no
+        editorShared.putBoolean("clickTarjetaFinal", false);
+        editorShared.apply();
+
         padron = sharedPref.getString("padron", null);
 
         //Remove notification bar

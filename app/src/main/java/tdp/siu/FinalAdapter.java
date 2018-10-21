@@ -37,6 +37,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     String padron;
     String idFinal;
     Boolean estadoDesinscripcion;
+    Boolean puedoClickear;
     int positionClick;
     String APIUrl ="https://siu-api.herokuapp.com/alumno/desinscribir";
     RequestQueue queue;
@@ -62,6 +63,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         SharedPreferences sharedPref = mCtx.getSharedPreferences(mCtx.getString(R.string.saved_data), Context.MODE_PRIVATE);
         padron = sharedPref.getString("padron", null);
         idFinal = sharedPref.getString("idFinalDesinscribir", null);
+        puedoClickear = sharedPref.getBoolean("clickTarjetaFinal", false);
         configurarHTTPRequestSingleton();
         return new ProductViewHolder(view);
     }
@@ -102,6 +104,15 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
             public void onClick(View view) {
                 estadoDesinscripcion = false;
                 //desincribirse(padron, idFinal);
+            }
+        });
+        holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(puedoClickear){
+                    Toast.makeText(mCtx, "Tarjeta " + position,
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
