@@ -2,12 +2,14 @@ package tdp.siu;
 
 public class Inscripcion {
 
+    private String idCurso;
     private String nombreMateria;
     private String codigoMateria;
     private String nombreCatedra;
     private String horario;
 
-    public Inscripcion(String nombreMateria, String codigoMateria, String nombreCatedra, String horario) {
+    public Inscripcion(String idCurso, String nombreMateria, String codigoMateria, String nombreCatedra, String horario) {
+        this.idCurso = idCurso;
         this.nombreMateria = nombreMateria;
         this.codigoMateria = codigoMateria;
         this.nombreCatedra = nombreCatedra;
@@ -28,5 +30,9 @@ public class Inscripcion {
 
     public String getHorario() {
         return horario;
+    }
+
+    public String getIdCurso() {
+        return idCurso;
     }
 }
