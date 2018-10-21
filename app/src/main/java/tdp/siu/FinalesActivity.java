@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -72,7 +73,7 @@ public class FinalesActivity extends AppCompatActivity {
     }
 
     private void configurarClickNuevoFinal() {
-        Button button = (Button) findViewById(R.id.btn_nuevoFinal);
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.btn_nuevoFinal);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
