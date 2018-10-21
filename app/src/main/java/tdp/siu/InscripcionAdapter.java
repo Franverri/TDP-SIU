@@ -2,9 +2,12 @@ package tdp.siu;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -89,7 +92,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
     @Override
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         //getting the product of the specified position
-        Inscripcion inscripcion = inscripcionList.get(position);
+        final Inscripcion inscripcion = inscripcionList.get(position);
         idCurso = inscripcion.getIdCurso();
         positionClick = position;
 
@@ -100,10 +103,32 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
         holder.ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                estadoDesinscripcion = false;
-                desincribirse(padron, idCurso);
+                mostrarDialog(inscripcion.getNombreMateria());
             }
         });
+    }
+
+    private void mostrarDialog(String nombreMateria) {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(mCtx, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(mCtx);
+        }
+        builder.setTitle("Desincripcion a " + nombreMateria)
+                .setMessage("¿Confirmar desinscripción?")
+                .setPositiveButton("Desinscribirme", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        estadoDesinscripcion = false;
+                        desincribirse(padron, idCurso);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Simplemente se cierra
+                    }
+                })
+                .show();
     }
 
     private void desincribirse(String padron, String idCurso) {
