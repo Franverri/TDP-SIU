@@ -161,6 +161,7 @@ public class InscripcionesActivity extends AppCompatActivity {
                 Log.i("JSON","Error al parsear JSON");
             }
             try {
+                String idCurso = jsonobject.getString("id_curso");
                 String nombreCurso = jsonobject.getString("nombre");
                 String codigoCurso = jsonobject.getString("codigo");
                 String docente = jsonobject.getString("docente");
@@ -172,7 +173,7 @@ public class InscripcionesActivity extends AppCompatActivity {
                 horarios = jsonobject.getString("horarios");
                 horarioFinal = calcularHorarioFinal(sede,aulas,dias,horarios);
 
-                inscripcionList.add(new Inscripcion(nombreCurso,codigoCurso,docente,horarioFinal));
+                inscripcionList.add(new Inscripcion(idCurso, nombreCurso,codigoCurso,docente,horarioFinal));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }

@@ -26,6 +26,8 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -34,6 +36,8 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
 
     String padron;
     String idCurso;
+    Boolean estadoDesinscripcion;
+    int positionClick;
     String APIUrl ="https://siu-api.herokuapp.com/alumno/desinscribir";
     RequestQueue queue;
     ProgressDialog progress;
@@ -86,6 +90,8 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         Inscripcion inscripcion = inscripcionList.get(position);
+        idCurso = inscripcion.getIdCurso();
+        positionClick = position;
 
         //binding the data with the view holder views
         holder.tvNombreMateria.setText(inscripcion.getNombreMateria() + " (" + inscripcion.getCodigoMateria() + ")");
@@ -94,13 +100,8 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
         holder.ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //FALTARIA PEGARLE A LA API PARA DESINCRIBIR
+                estadoDesinscripcion = false;
                 desincribirse(padron, idCurso);
-                //ESTO DE ABAJO MOVERLO A CUANDO EL REQUEST SEA EXITOSO
-                Toast.makeText(mCtx, "Desinscripción exitosa!",
-                        Toast.LENGTH_LONG).show();
-                inscripcionList.remove(position);
-                notifyDataSetChanged();
             }
         });
     }
@@ -110,7 +111,50 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
             progress = ProgressDialog.show(mCtx, "Desinscripción",
                     "Desinscribiendose de materia...", true);
             String url = APIUrl + "?curso=" + idCurso + "&padron=" + padron;
-            //FALTA DEFINIR EL POST
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.i("API","Response: " + response.toString());
+                    procesarRespuesta(response);
+                    progress.dismiss();
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progress.dismiss();
+                    Log.i("Error.Response", String.valueOf(error));
+                    Toast.makeText(mCtx, "No fue posible conectarse al servidor, por favor intente más tarde",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
+            // Add the request to the RequestQueue.
+            queue.add(jsonObjectRequest);
+
+        } else {
+            estadoDesinscripcion = false;
+        }
+    }
+
+    private void procesarRespuesta(JSONObject response) {
+        try {
+            estadoDesinscripcion = response.getBoolean("estado");
+            Log.i("PRUEBAAA", String.valueOf(estadoDesinscripcion));
+        } catch (JSONException e) {
+            Log.i("JSON","Error al parsear JSON");
+        }
+
+        if(estadoDesinscripcion == true){
+            Toast.makeText(mCtx, "Desinscripción exitosa!",
+                    Toast.LENGTH_LONG).show();
+            inscripcionList.remove(positionClick);
+            notifyDataSetChanged();
+        } else {
+            Toast.makeText(mCtx, "Error al intentar desincribirse!",
+                    Toast.LENGTH_LONG).show();
         }
     }
 
