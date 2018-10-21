@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_inscriptions"
             android:title="Inscripciones" />
         <item
+            android:id="@+id/nav_finales"
+            android:icon="@drawable/ic_finales"
+            android:title="Finales" />
+        <item
             android:id="@+id/nav_cerrarSesionAlumno"
             android:icon="@drawable/ic_cross"
             android:title="Cerrar sesión" />

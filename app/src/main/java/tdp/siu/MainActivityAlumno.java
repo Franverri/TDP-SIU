@@ -110,6 +110,7 @@ public class MainActivityAlumno extends AppCompatActivity
         CardView tPerfil = (CardView) findViewById(R.id.tarjeta_perfil);
         CardView tOferta = (CardView) findViewById(R.id.tarjeta_ofertaAcademica);
         CardView tInscripciones = (CardView) findViewById(R.id.tarjeta_inscripciones);
+        CardView tFinales = (CardView) findViewById(R.id.tarjeta_finales);
 
         tPerfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +130,13 @@ public class MainActivityAlumno extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 goInscripciones();
+            }
+        });
+
+        tFinales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goFinales();
             }
         });
     }
@@ -363,6 +371,8 @@ public class MainActivityAlumno extends AppCompatActivity
             editorShared.remove("logueadoAlumno");
             editorShared.apply();
             goLogin();
+        } else if (id == R.id.nav_finales){
+            goFinales();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_alumno);
@@ -383,6 +393,11 @@ public class MainActivityAlumno extends AppCompatActivity
     private void goLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void goFinales() {
+        Intent intent = new Intent(this, FinalesActivity.class);
         startActivity(intent);
     }
 

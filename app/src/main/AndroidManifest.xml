@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo_fiuba_fondo"
@@ -17,8 +18,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,18 +35,22 @@
             android:label="Alumnos inscriptos" />
         <activity
             android:name=".FechasDeExamenActivity"
-            android:label="Fechas de examen"/>
-        <activity
-            android:name=".ProfileActivity" />
+            android:label="Fechas de examen" />
+        <activity android:name=".ProfileActivity" />
         <activity
             android:name=".OfertaAcademicaActivity"
             android:label="Oferta académica" />
         <activity
             android:name=".InscripcionesActivity"
             android:label="Inscripciones" />
+        <activity android:name=".CatedrasActivity" />
         <activity
-            android:name=".CatedrasActivity">
-        </activity>
+            android:name=".FinalesActivity"
+            android:label="Finales" />
+        <activity android:name=".OfertaFinalesActivity" />
+        <activity
+            android:name=".FinalesOpcionesActivity"
+            android:label="Finales" />
     </application>
 
 </manifest>
