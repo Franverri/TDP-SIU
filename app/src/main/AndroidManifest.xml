@@ -43,10 +43,11 @@
         <activity
             android:name=".InscripcionesActivity"
             android:label="Inscripciones" />
-        <activity android:name=".CatedrasActivity"></activity>
+        <activity android:name=".CatedrasActivity" />
         <activity
             android:name=".FinalesActivity"
             android:label="Finales" />
+        <activity android:name=".OfertaFinalesActivity"></activity>
     </application>
 
 </manifest>
