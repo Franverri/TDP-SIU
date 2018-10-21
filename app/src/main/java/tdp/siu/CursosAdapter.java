@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -48,11 +50,35 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
         holder.cvCursoCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
-                Bundle b = new Bundle();
-                b.putInt("id", curso.getIdCurso()); //Your id
-                intent.putExtras(b); //Put your id to your next Intent
-                mCtx.startActivity(intent);
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(mCtx, view);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.menu_curso_docente);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_alumnos_inscriptos:
+                                Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
+                                Bundle b = new Bundle();
+                                b.putInt("id", curso.getIdCurso()); //Your id
+                                intent.putExtras(b); //Put your id to your next Intent
+                                mCtx.startActivity(intent);
+                                break;
+                            case R.id.menu_fechas_examen:
+                                intent = new Intent(mCtx, FechasDeExamenActivity.class);
+                                b = new Bundle();
+                                b.putInt("id", curso.getIdCurso()); //Your id
+                                intent.putExtras(b); //Put your id to your next Intent
+                                mCtx.startActivity(intent);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
             }
         });
     }
@@ -77,16 +103,6 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
             tvAlumnosInscriptos = itemView.findViewById(R.id.tvCursoAlumnos);
             tvVacantes = itemView.findViewById(R.id.tvCursoVacantes);
             cvCursoCard = itemView.findViewById(R.id.cvCursoCard);
-            /*itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mCtx, AlumnosInscriptosActivity.class);
-                    Bundle b = new Bundle();
-                    b.putInt("id", 1); //Your id
-                    intent.putExtras(b); //Put your id to your next Intent
-                    mCtx.startActivity(intent);
-                }
-            });*/
         }
     }
 }

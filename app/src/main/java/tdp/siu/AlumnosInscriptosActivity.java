@@ -2,14 +2,17 @@ package tdp.siu;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
+import android.Manifest;
 import android.media.MediaScannerConnection;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +44,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlumnosInscriptosActivity extends AppCompatActivity{
+public class AlumnosInscriptosActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     RequestQueue queue;
     ProgressDialog progress;
@@ -91,11 +94,40 @@ public class AlumnosInscriptosActivity extends AppCompatActivity{
         return true;
     }
 
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.i("I/O","Permission is granted");
+                return true;
+            } else {
+
+                Log.i("I/O","Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.i("I/O","Permission is granted");
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.i("I/O","Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
+        }
+    }
+
     private void configurarCsvButton(){
         ImageButton ib = (ImageButton) findViewById(R.id.csv_alumnos_button);
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isStoragePermissionGranted(); //Check permissions
                 File path = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
                 File f = new File(path, "Curso" + String.valueOf(idCurso) + ".csv");
                 Log.i("DEBUG","path: " + f.getAbsolutePath());
