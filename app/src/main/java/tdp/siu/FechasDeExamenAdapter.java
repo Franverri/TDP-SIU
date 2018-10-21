@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -77,11 +78,10 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
                 .setMessage("¿Quiere eliminar esta fecha?")
                 .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        fechasList.remove(position);
-                        //TODO Está bien removerlo instantaneamente y actualizar luego? Otra forma?
-                        notifyDataSetChanged();
+                        //TODO Verficar que funcione así
                         informarFechaEliminada(id);
-                        mActualizadorFechas.enviarRequestGetFechas();
+                        fechasList.remove(position);
+                        notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -103,7 +103,17 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
-                        //TODO Procesar respuesta?
+                        try{
+                            boolean estado = response.getBoolean("estado");
+                            if (estado) {
+                                mActualizadorFechas.enviarRequestGetFechas();
+                            } else {
+                                Toast.makeText(mCtx, "No fue posible eliminar la fecha, error en el servidor",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            Log.i("JSON", "Error en al parsear el JSON");
+                        }
 
                     }
                 }, new Response.ErrorListener() {

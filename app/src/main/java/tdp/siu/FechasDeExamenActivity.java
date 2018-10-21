@@ -35,6 +35,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -146,9 +147,7 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
                         String time = inputHora.getText().toString();
                         if (dateValidator.validate(fecha)){
                             if (timeValidator.validate(time)){
-                                //TODO Eliminar mock cuando este configurado el server
-                                //enviarRequestAgregarFecha(inputFecha.getText().toString(), inputHora.getText().toString());
-                                agregarFecha(mockJSON(), fecha, time);
+                                enviarRequestAgregarFecha(fecha, time);
                                 dialog.dismiss();
                             } else{
                                 Toast.makeText(FechasDeExamenActivity.this, "Hora inválida", Toast.LENGTH_LONG).show();
@@ -206,10 +205,17 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
 
     private void agregarFecha(JSONObject response, String fecha, String hora){
         try{
-            String id = response.getString("id_final");
-            fechasList.add(new FechaExamen(id, fecha, hora));
-            adapter.notifyDataSetChanged();
-            enviarRequestGetFechas();
+            boolean estado = response.getBoolean("estado");
+            if (estado){
+                //TODO Verificar que funcione así
+                //fechasList.add(new FechaExamen(id, fecha, hora));
+                //adapter.notifyDataSetChanged();
+                enviarRequestGetFechas();
+            }
+            else {
+                Toast.makeText(FechasDeExamenActivity.this, "No fue posible agregar la fecha, error en el servidor",
+                        Toast.LENGTH_LONG).show();
+            }
         } catch (JSONException e){
             Log.i("JSON","Error al parsear el JSON");
         }
@@ -242,8 +248,26 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         queue.add(jsonObjectRequest);
     }
 
-    private void actualizarFechas(JSONObject obj){
-
+    private void actualizarFechas(JSONObject response){
+        fechasList.clear();
+        try {
+            JSONArray fechasFinal = response.getJSONArray("fechas");
+            int cantFechas = fechasFinal.length();
+            for (int i = 0; i < cantFechas; i++) {
+                JSONObject fechaFinal = fechasFinal.getJSONObject(i);
+                String idFinal = fechaFinal.getString("id_final");
+                String fecha = fechaFinal.getString("fecha");
+                String hora = fechaFinal.getString("hora");
+                fechasList.add(new FechaExamen(idFinal,fecha,hora));
+            }
+            recyclerView.setAdapter(adapter);
+            if (cantFechas == 0){
+                Toast.makeText(FechasDeExamenActivity.this, "No hay fechas de final registradas",
+                        Toast.LENGTH_LONG).show();
+            }
+        }catch (JSONException e){
+            Log.i("JSON","Error al parsear JSON");
+        }
     }
 
     private void configurarRecyclerView() {
@@ -261,9 +285,6 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         //Aca se manda el request al server
         enviarRequestGetFechas();
 
-        //TODO Eliminar
-        fechasList.add(new FechaExamen("1","10/02/2019","11:00"));
-        fechasList.add(new FechaExamen("2","17/02/2019","18:00"));
         recyclerView.setAdapter(adapter);
     }
 
