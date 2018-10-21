@@ -44,7 +44,9 @@
             android:name=".InscripcionesActivity"
             android:label="Inscripciones" />
         <activity android:name=".CatedrasActivity"></activity>
-        <activity android:name=".FinalesActivity"></activity>
+        <activity
+            android:name=".FinalesActivity"
+            android:label="Finales" />
     </application>
 
 </manifest>
