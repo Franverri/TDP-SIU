@@ -153,6 +153,18 @@ public class MainActivityDocente extends AppCompatActivity
                     //editorShared.putBoolean("estaEnCursadas", true);
                     editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
                     Log.i("PERIODOS", "Cursada: " + estaEnCursadas);
+
+                    String fechaInicioFinales = jsonobject.getString("fechaInicioFinales");
+                    String diaFinales = obtenerDiaFecha(fechaInicioFinales);
+                    String horaFinales = obtenerHoraFecha(fechaInicioFinales);
+                    editorShared.putString("diaInicioFinales", diaFinales);
+                    editorShared.putString("horaInicioFinales", horaFinales);
+
+                    String fechaCierreFinales = jsonobject.getString("fechaFinFinales");
+                    String diaFinFinales = obtenerDiaFecha(fechaCierreFinales);
+                    String horaFinFinales = obtenerHoraFecha(fechaCierreFinales);
+                    editorShared.putString("diaFinFinales", diaFinFinales);
+                    editorShared.putString("horaFinFinales", horaFinFinales);
                     editorShared.apply();
                 }
             } catch (JSONException e) {

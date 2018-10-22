@@ -4,14 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,13 +35,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.Hours;
+import org.joda.time.Minutes;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -54,8 +53,13 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
     int idCurso = -1;
-    boolean periodoHabilitado;
 
+    boolean periodoHabilitado;
+    DateTime inicioFinales;
+    DateTime finFinales;
+
+
+    String DATE_PATTERN = "dd/MM/yyyy HH:mm";
     int SEPARACION_DIAS = 4;
 
     SharedPreferences sharedPref;
@@ -82,6 +86,9 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         editorShared = sharedPref.edit();
 
         periodoHabilitado = sharedPref.getBoolean("estaEnCursadas", false);
+        inicioFinales = obtenerDateTime(sharedPref.getString("diaInicioFinales",null),sharedPref.getString("horaInicioFinales",null));
+        finFinales = obtenerDateTime(sharedPref.getString("diaFinFinales",null),sharedPref.getString("horaFinFinales",null));
+        Log.i("PERIODOS","PERIODO FINALES: " + inicioFinales.toString(DATE_PATTERN) +" - "+ finFinales.toString(DATE_PATTERN));
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -121,13 +128,12 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         return super.onOptionsItemSelected(item);
     }
 
-    private JSONObject mockJSON(){
-        JSONObject mock = new JSONObject();
-        try{
-            mock.put("id_final", 1);
-            mock.put("estado", true);
-            return mock;
-        } catch (JSONException e) {
+    private DateTime obtenerDateTime(String date, String time){
+        SimpleDateFormat formato = new SimpleDateFormat(DATE_PATTERN);
+        String formattedString = date + " " + time;
+        try {
+            return new DateTime(formato.parse(formattedString));
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -162,11 +168,9 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
                         if (dateValidator.validate(fecha)){
                             if (timeValidator.validate(time)){
                                 //FORMATO VALIDADO
-                                if (verificarSeparacionFechas(fecha,time)) {
+                                if (verificarFechas(fecha,time)) {
                                     enviarRequestAgregarFecha(fecha, time);
                                     dialog.dismiss();
-                                } else {
-                                    Toast.makeText(FechasDeExamenActivity.this, "No cumple con la separación reglamentaria de fechas (96 hs)", Toast.LENGTH_LONG).show();
                                 }
                             } else{
                                 Toast.makeText(FechasDeExamenActivity.this, "Hora inválida", Toast.LENGTH_LONG).show();
@@ -189,27 +193,30 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         alertDialog.show();
     }
 
-    private boolean verificarSeparacionFechas(String fecha, String time){
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String newFinalDateStr = fecha + " " + time;
-        try {
-            Date newFinalDate = formato.parse(newFinalDateStr);
-            DateTime newFinalDateTime = new DateTime(newFinalDate);
-            for (int i = 0; i < fechasList.size(); i++) {
-                FechaExamen currentFinal = fechasList.get(i);
-                String currentFinalDateStr = currentFinal.getFecha() + " " + currentFinal.getHora();
-                Date currentFinalDate = formato.parse(currentFinalDateStr);
-                DateTime currentFinalDateTime = new DateTime(currentFinalDate);
-                int days = Days.daysBetween(newFinalDateTime,currentFinalDateTime).getDays();
-                if ((days > -SEPARACION_DIAS) && (days < SEPARACION_DIAS)){
-                    return false;
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
+    private boolean verificarFechas(String fecha, String time){
+        DateTime newFinalDateTime = obtenerDateTime(fecha,time);
+        //Verifica que la fecha corresponda al periodo de finales
+        int daysFromInicioFinales = Days.daysBetween(inicioFinales,newFinalDateTime).getDays();
+        int hoursFromInicioFinales = Hours.hoursBetween(inicioFinales,newFinalDateTime).getHours();
+        int minutesFromInicioFinales = Minutes.minutesBetween(inicioFinales,newFinalDateTime).getMinutes();
+        int daysToFinFinales = Days.daysBetween(newFinalDateTime,finFinales).getDays();
+        int hoursToFinFinales = Hours.hoursBetween(newFinalDateTime,finFinales).getHours();
+        int minutestoFinFinales = Minutes.minutesBetween(newFinalDateTime,finFinales).getMinutes();
+        if (daysFromInicioFinales < 0 || hoursFromInicioFinales < 0 || minutesFromInicioFinales < 0 || daysToFinFinales < 0 || hoursToFinFinales < 0 || minutestoFinFinales < 0 ){
+            Toast.makeText(FechasDeExamenActivity.this, "La fecha y hora ingresadas no están comprendidas en el período de finales", Toast.LENGTH_LONG).show();
             return false;
         }
+        //Verifica separación entre las fechas de final
+        for (int i = 0; i < fechasList.size(); i++) {
+            FechaExamen currentFinal = fechasList.get(i);
+            DateTime currentFinalDateTime = obtenerDateTime(currentFinal.getFecha(),currentFinal.getHora());
+            int days = Days.daysBetween(newFinalDateTime,currentFinalDateTime).getDays();
+            if ((days > -SEPARACION_DIAS) && (days < SEPARACION_DIAS)){
+                Toast.makeText(FechasDeExamenActivity.this, "No cumple con la separación reglamentaria de fechas (96 hs)", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        }
+        return true;
     }
 
     public void enviarRequestAgregarFecha(final String fecha, final String hora){
