@@ -35,11 +35,16 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +54,8 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
     int idCurso = -1;
+
+    int SEPARACION_DIAS = 4;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -147,8 +154,13 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
                         String time = inputHora.getText().toString();
                         if (dateValidator.validate(fecha)){
                             if (timeValidator.validate(time)){
-                                enviarRequestAgregarFecha(fecha, time);
-                                dialog.dismiss();
+                                //FORMATO VALIDADO
+                                if (verificarSeparacionFechas(fecha,time)) {
+                                    enviarRequestAgregarFecha(fecha, time);
+                                    dialog.dismiss();
+                                } else {
+                                    Toast.makeText(FechasDeExamenActivity.this, "No cumple con la separación reglamentaria de fechas (96 hs)", Toast.LENGTH_LONG).show();
+                                }
                             } else{
                                 Toast.makeText(FechasDeExamenActivity.this, "Hora inválida", Toast.LENGTH_LONG).show();
                             }
@@ -168,6 +180,29 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
             }
         });
         alertDialog.show();
+    }
+
+    private boolean verificarSeparacionFechas(String fecha, String time){
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String newFinalDateStr = fecha + " " + time;
+        try {
+            Date newFinalDate = formato.parse(newFinalDateStr);
+            DateTime newFinalDateTime = new DateTime(newFinalDate);
+            for (int i = 0; i < fechasList.size(); i++) {
+                FechaExamen currentFinal = fechasList.get(i);
+                String currentFinalDateStr = currentFinal.getFecha() + " " + currentFinal.getHora();
+                Date currentFinalDate = formato.parse(currentFinalDateStr);
+                DateTime currentFinalDateTime = new DateTime(currentFinalDate);
+                int days = Days.daysBetween(newFinalDateTime,currentFinalDateTime).getDays();
+                if ((days > -SEPARACION_DIAS) && (days < SEPARACION_DIAS)){
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void enviarRequestAgregarFecha(final String fecha, final String hora){
