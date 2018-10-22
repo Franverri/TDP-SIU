@@ -33,6 +33,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewHolder> {
@@ -100,16 +104,20 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
 
         final String nombreMateria = finalActual.getNombreMateria();
         final String idFinal = finalActual.getIdFinal();
+        final String fechaFinal = finalActual.getHorario();
         if(puedoClickear){
             holder.ivCancel.setVisibility(View.GONE);
         } else {
             holder.ivCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Log.i("PRUEBA", "ID: " + idFinal);
-                    //Log.i("PRUEBA", "Posicion: " + position);
-                    positionClick = position;
-                    mostrarDialog(nombreMateria, idFinal);
+                    if(estoy48hsAntes(fechaFinal)){
+                        positionClick = position;
+                        mostrarDialog(nombreMateria, idFinal);
+                    } else {
+                        Toast.makeText(mCtx, "No es posible desincribirse a menos de 48hs del final",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -121,6 +129,46 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                 }
             }
         });
+    }
+
+    private boolean estoy48hsAntes(String fechaFinal) {
+        boolean estoy48hsAntes;
+
+        String fecha = fechaFinal.substring(0,10);
+        String hora = fechaFinal.substring(13,18);
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minutoActual = currentTime.get(Calendar.MINUTE);
+
+        String strDate = fecha + " " + hora;
+        //String strDate = "24/10/2018" + " " + "15:00";
+        String strDateActual = diaActual + "/" + mesActual + "/" + añoActual + " " + horaActual + ":" + minutoActual;
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        try {
+            Date date = format.parse(strDate);
+            Date dateActual = format.parse(strDateActual);
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(dateActual); // Now use today date.
+            c.add(Calendar.DATE, 2); // Adding 2 days
+            String output = format.format(c.getTime());
+
+            if(c.getTime().after(date)){
+                estoy48hsAntes = false;
+            } else {
+                estoy48hsAntes = true;
+            }
+        } catch (ParseException e) {
+            estoy48hsAntes = false;
+            e.printStackTrace();
+        }
+
+        return estoy48hsAntes;
+
     }
 
     private void mostrarDialogInscripcion(String nombreMateria, final String idFinal) {
