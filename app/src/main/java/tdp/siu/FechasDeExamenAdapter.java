@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +22,16 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Hours;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+
 
 public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAdapter.ProductViewHolder> {
     private Context mCtx;
@@ -73,23 +81,51 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
         } else {
             builder = new AlertDialog.Builder(mCtx);
         }
-        String numero = String.valueOf(position + 1);
-        builder.setTitle("Fecha " + numero + " - " + fecha)
-                .setMessage("¿Quiere eliminar esta fecha?")
-                .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO Verficar que funcione así
-                        informarFechaEliminada(id);
-                        fechasList.remove(position);
-                        notifyDataSetChanged();
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Simplemente se cierra
-                    }
-                })
-                .show();
+        if (verificarFechaActual(position, fecha)){
+            String numero = String.valueOf(position + 1);
+            builder.setTitle("Fecha " + numero + " - " + fecha)
+                    .setMessage("¿Quiere eliminar esta fecha?")
+                    .setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //TODO Verficar que funcione así
+                            informarFechaEliminada(id);
+                            fechasList.remove(position);
+                            notifyDataSetChanged();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Simplemente se cierra
+                        }
+                    })
+                    .show();
+        } else {
+            Toast.makeText(mCtx, "No es posible cancelar la fecha, faltan menos de 48 hs",
+                    Toast.LENGTH_LONG).show();
+        }
+
+
+
+    }
+
+    private boolean verificarFechaActual(int position, String fecha) {
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String finalDateStr = fecha + " " + fechasList.get(position).getHora();
+        String currentDateStr = formato.format(Calendar.getInstance().getTime());
+        Log.i("DEBUG","Fecha final: " + finalDateStr +". Fecha actual: " + currentDateStr);
+        try {
+            Date finalDate = formato.parse(finalDateStr);
+            Date currentDate = formato.parse(currentDateStr);
+
+            DateTime finalDateTime = new DateTime(finalDate);
+            DateTime currentDateTime = new DateTime(currentDate);
+            int days = Days.daysBetween(currentDateTime, finalDateTime).getDays();
+            Log.i("DEBUG","Días entre fechas: " + String.valueOf(days));
+            return (days >= 2);
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private void informarFechaEliminada(String idFecha) {
