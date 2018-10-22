@@ -8,7 +8,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cvInscripcionCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="140dp"
         android:layout_margin="5dp"
         android:clickable="true"
         card_view:cardCornerRadius="2dp">
@@ -18,47 +18,40 @@
             android:layout_height="wrap_content"
             android:padding="8dp">
 
-            <LinearLayout
-                android:weightSum="100"
-                android:id="@+id/ll_Inscripcion"
-                android:orientation="horizontal"
+            <TextView
+                android:id="@+id/tvI_nombreMateria"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:gravity="center_horizontal"
+                android:textColor="#000000" />
 
-                <TextView
-                    android:id="@+id/tvI_nombreMateria"
-                    android:layout_width="0dp"
-                    android:layout_weight="90"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal"
-                    android:textColor="#000000" />
-
-                <ImageView
-                    android:id="@+id/tvI_cancelButton"
-                    android:layout_width="0dp"
-                    android:layout_weight="10"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/cancel"/>
-
-            </LinearLayout>
-
+            <ImageView
+                android:id="@+id/tvI_cancelButton"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/cancel"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:adjustViewBounds="true"
+                android:foregroundGravity="center_vertical"/>
 
             <TextView
                 android:id="@+id/tvI_nombreCatedra"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ll_Inscripcion"
-                android:gravity="center_horizontal"
+                android:layout_below="@id/tvI_nombreMateria"
+                android:gravity="center"
                 android:layout_marginTop="5dp"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvI_horario"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@id/tvI_nombreCatedra"
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:layout_marginTop="5dp"
                 android:textSize="15sp" />
 
