@@ -239,6 +239,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnInscripcion = validezPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
                     Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
+                    //editorShared.putBoolean("estaEnInscripcion", true);
                     editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
 
                     //-------------
@@ -259,6 +260,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnDesinscripcion = validezPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
                     Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
+                    //editorShared.putBoolean("estaEnDesinscripcion", true);
                     editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
 
                     //---------------
@@ -279,6 +281,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnFinales = validezPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
+                    //editorShared.putBoolean("estaEnFinales", false);
                     editorShared.putBoolean("estaEnFinales", estaEnFinales);
 
                     //---------------
@@ -351,50 +354,6 @@ public class MainActivityAlumno extends AppCompatActivity
 
         return periodoValido;
     }
-
-    /*
-    private void validezPeriodoInscripcion(String fechaCierrePeriodo) {
-        boolean periodoValido = false;
-        int dia = Integer.parseInt(fechaCierrePeriodo.substring(8,10));
-        int mes = Integer.parseInt(fechaCierrePeriodo.substring(5,7));
-        int año = Integer.parseInt(fechaCierrePeriodo.substring(0,4));
-        int hora = Integer.parseInt(fechaCierrePeriodo.substring(11,13));
-        int minutos = Integer.parseInt(fechaCierrePeriodo.substring(14,16));
-        Calendar currentTime = Calendar.getInstance();
-        if(año > currentTime.get(Calendar.YEAR)){
-            periodoValido = true;
-        } else if (año < currentTime.get(Calendar.YEAR)){
-            periodoValido = false;
-        } else { //Años iguales
-            if(mes > (currentTime.get(Calendar.MONTH)+1)){
-                periodoValido = true;
-            } else if(mes < (currentTime.get(Calendar.MONTH)+1)){
-                periodoValido = false;
-            } else { //Mes igual
-                if(dia > currentTime.get(Calendar.DAY_OF_MONTH)){
-                    periodoValido = true;
-                } else if(dia < currentTime.get(Calendar.DAY_OF_MONTH)){
-                    periodoValido = false;
-                } else { //Dia igual
-                    if(hora > currentTime.get(Calendar.HOUR_OF_DAY)){
-                        periodoValido = true;
-                    } else if(hora < currentTime.get(Calendar.HOUR_OF_DAY)){
-                        periodoValido = false;
-                    } else { //Hora igual
-                        if(minutos > currentTime.get(Calendar.MINUTE)){
-                            periodoValido = true;
-                        } else if(minutos <= currentTime.get(Calendar.MINUTE)){
-                            periodoValido = false;
-                        }
-                    }
-                }
-            }
-        }
-        //HARDCODEADO PARA PRUEBA
-        periodoValido = true;
-        editorShared.putBoolean("periodoHabilitado", periodoValido);
-        editorShared.apply();
-    }*/
 
     private String obtenerDiaFecha(String fecha){
         String dia = fecha.substring(8,10);

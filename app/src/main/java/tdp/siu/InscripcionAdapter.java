@@ -40,6 +40,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
     String padron;
     String idCurso;
     Boolean estadoDesinscripcion;
+    Boolean periodoHabilitado;
     int positionClick;
     String APIUrl ="https://siu-api.herokuapp.com/alumno/desinscribir";
     RequestQueue queue;
@@ -65,6 +66,7 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
         SharedPreferences sharedPref = mCtx.getSharedPreferences(mCtx.getString(R.string.saved_data), Context.MODE_PRIVATE);
         padron = sharedPref.getString("padron", null);
         idCurso = sharedPref.getString("idCursoDesinscribir", null);
+        periodoHabilitado = sharedPref.getBoolean("estaEnDesinscripcion", false);
         configurarHTTPRequestSingleton();
         return new ProductViewHolder(view);
     }
@@ -103,7 +105,13 @@ public class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.
         holder.ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mostrarDialog(inscripcion.getNombreMateria());
+                if(periodoHabilitado){
+                    mostrarDialog(inscripcion.getNombreMateria());
+                } else {
+                    Toast.makeText(mCtx, "No se encuentra habilitado el periodo de desincripción a cursadas",
+                            Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }

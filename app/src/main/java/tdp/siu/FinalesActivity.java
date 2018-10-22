@@ -50,6 +50,7 @@ public class FinalesActivity extends AppCompatActivity {
     SharedPreferences.Editor editorShared;
 
     String padron;
+    Boolean periodoHabilitado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class FinalesActivity extends AppCompatActivity {
         editorShared.apply();
 
         padron = sharedPref.getString("padron", null);
+        periodoHabilitado = sharedPref.getBoolean("estaEnFinales", false);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -87,7 +89,12 @@ public class FinalesActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goOfertaFinal();
+                if(periodoHabilitado){
+                    goOfertaFinal();
+                } else {
+                    Toast.makeText(FinalesActivity.this, "No se encuentra habilitado el período de inscripción a finales",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

@@ -135,7 +135,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
                             listMateriaAux.get(position).getCodigo(),
                             listMateriaAux.get(position).getNombre());
                 } else {
-                    Toast.makeText(OfertaAcademicaActivity.this, "El período de inscripción aún no se encuentra habilitado",
+                    Toast.makeText(OfertaAcademicaActivity.this, "No se encuentra habilitado el período de inscripción a cursadas",
                             Toast.LENGTH_LONG).show();
                 }
 
