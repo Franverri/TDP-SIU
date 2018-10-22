@@ -38,7 +38,6 @@ import java.util.List;
 public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewHolder> {
 
     String padron;
-    String idFinal;
     Boolean estadoDesinscripcion;
     Boolean puedoClickear;
     int positionClick;
@@ -64,7 +63,6 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         View view = inflater.inflate(R.layout.card_final_layout, null);
         SharedPreferences sharedPref = mCtx.getSharedPreferences(mCtx.getString(R.string.saved_data), Context.MODE_PRIVATE);
         padron = sharedPref.getString("padron", null);
-        idFinal = sharedPref.getString("idFinalDesinscribir", null);
         puedoClickear = sharedPref.getBoolean("clickTarjetaFinal", false);
         configurarHTTPRequestSingleton();
         return new ProductViewHolder(view);
@@ -94,8 +92,6 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     public void onBindViewHolder(ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         Final finalActual = finalList.get(position);
-        idFinal = finalActual.getIdFinal();
-        positionClick = position;
 
         //binding the data with the view holder views
         holder.tvNombreMateria.setText(finalActual.getNombreMateria() + " (" + finalActual.getCodigoMateria() + ")");
@@ -103,13 +99,17 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         holder.tvHorario.setText(finalActual.getHorario());
 
         final String nombreMateria = finalActual.getNombreMateria();
+        final String idFinal = finalActual.getIdFinal();
         if(puedoClickear){
             holder.ivCancel.setVisibility(View.GONE);
         } else {
             holder.ivCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mostrarDialog(nombreMateria);
+                    //Log.i("PRUEBA", "ID: " + idFinal);
+                    //Log.i("PRUEBA", "Posicion: " + position);
+                    positionClick = position;
+                    mostrarDialog(nombreMateria, idFinal);
                 }
             });
         }
@@ -124,7 +124,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         });
     }
 
-    private void mostrarDialog(String nombreMateria) {
+    private void mostrarDialog(String nombreMateria, final String idFinal) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(mCtx, android.R.style.Theme_Material_Dialog_Alert);
@@ -136,7 +136,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                 .setPositiveButton("Desinscribirme", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         estadoDesinscripcion = false;
-                        //desincribirse(padron, idCurso);
+                        desincribirse(padron, idFinal);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -147,18 +147,19 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                 .show();
     }
 
-    private void desincribirse(String padron, String idCurso) {
-        if(padron != null && idCurso != null) {
+    private void desincribirse(String padron, String idFinal) {
+        if(padron != null && idFinal != null) {
             progress = ProgressDialog.show(mCtx, "Desinscripción",
                     "Desinscribiendose de materia...", true);
-            String url = APIUrl + "?curso=" + idCurso + "&padron=" + padron;
+            String url = APIUrl + "?final=" + idFinal + "&padron=" + padron;
+            Log.i("URL", url);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.i("API","Response: " + response.toString());
-                    //procesarRespuesta(response);
+                    procesarRespuesta(response);
                     progress.dismiss();
                 }
             }, new Response.ErrorListener() {
@@ -180,7 +181,6 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         }
     }
 
-    /*
     private void procesarRespuesta(JSONObject response) {
         try {
             estadoDesinscripcion = response.getBoolean("estado");
@@ -192,13 +192,13 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         if(estadoDesinscripcion == true){
             Toast.makeText(mCtx, "Desinscripción exitosa!",
                     Toast.LENGTH_LONG).show();
-            inscripcionList.remove(positionClick);
+            finalList.remove(positionClick);
             notifyDataSetChanged();
         } else {
             Toast.makeText(mCtx, "Error al intentar desincribirse!",
                     Toast.LENGTH_LONG).show();
         }
-    }*/
+    }
 
     @Override
     public int getItemCount() {
