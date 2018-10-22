@@ -327,6 +327,9 @@ public class MainActivityDocente extends AppCompatActivity
                 int numeroCurso = rand.nextInt(4) + 1;
                 int inscriptos = jsonobject.getInt("alumnos_totales");
                 int vacantesRestantes = jsonobject.getInt("vacantes");
+                if (vacantesRestantes < 0){
+                    vacantesRestantes = 0;
+                }
                 cursosList.add(new Curso(nombreCurso, codigoCurso, idCurso, numeroCurso, inscriptos, vacantesRestantes));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
