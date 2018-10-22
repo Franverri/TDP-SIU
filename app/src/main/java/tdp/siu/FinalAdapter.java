@@ -38,10 +38,10 @@ import java.util.List;
 public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewHolder> {
 
     String padron;
-    Boolean estadoDesinscripcion;
+    Boolean estadoDesinscripcion, estadoInscripcion;
     Boolean puedoClickear;
     int positionClick;
-    String APIUrl ="https://siu-api.herokuapp.com/alumno/desinscribir";
+    String APIUrl ="https://siu-api.herokuapp.com/alumno";
     RequestQueue queue;
     ProgressDialog progress;
 
@@ -117,11 +117,90 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
             @Override
             public void onClick(View view) {
                 if(puedoClickear){
-                    Toast.makeText(mCtx, "Tarjeta " + position,
-                            Toast.LENGTH_LONG).show();
+                    mostrarDialogInscripcion(nombreMateria, idFinal);
                 }
             }
         });
+    }
+
+    private void mostrarDialogInscripcion(String nombreMateria, final String idFinal) {
+
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(mCtx, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(mCtx);
+        }
+        builder.setTitle("Inscipción al final de " + nombreMateria)
+                .setMessage("¿Confirmar inscripción?")
+                .setPositiveButton("Inscribirme", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        estadoInscripcion = false;
+                        inscribirse(padron, idFinal);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Simplemente se cierra
+                    }
+                })
+                .show();
+
+    }
+
+    private void inscribirse(String padron, String idFinal) {
+        String url = APIUrl + "/inscribir?final="+ idFinal +"&padron=" + padron;
+        Log.i("PRUEBA", "URL: " + url);
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        procesarRespuestaInscripcion(response);
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(mCtx, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+    }
+
+    private void procesarRespuestaInscripcion(JSONObject response) {
+
+        try {
+            estadoInscripcion = response.getBoolean("estado");
+            Log.i("PRUEBAAA", String.valueOf(estadoInscripcion));
+        } catch (JSONException e) {
+            Log.i("JSON","Error al parsear JSON");
+        }
+
+        if(estadoInscripcion == true){
+            Toast.makeText(mCtx, "Inscripción exitosa!",
+                    Toast.LENGTH_LONG).show();
+            goMain();
+        } else {
+            Toast.makeText(mCtx, "Error al intentar desincribirse!",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void goMain() {
+
+        Intent intent = new Intent(mCtx, MainActivityAlumno.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mCtx.startActivity(intent);
+
     }
 
     private void mostrarDialog(String nombreMateria, final String idFinal) {
@@ -151,7 +230,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         if(padron != null && idFinal != null) {
             progress = ProgressDialog.show(mCtx, "Desinscripción",
                     "Desinscribiendose de materia...", true);
-            String url = APIUrl + "?final=" + idFinal + "&padron=" + padron;
+            String url = APIUrl + "/desinscribir?final=" + idFinal + "&padron=" + padron;
             Log.i("URL", url);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.DELETE, url, null, new Response.Listener<JSONObject>() {
