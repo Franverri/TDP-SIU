@@ -57,7 +57,12 @@ public class MainActivityAlumno extends AppCompatActivity
     NavigationView navigationView;
 
     String padron;
-    String prioridad, diaActualizacion, diaInscripcion, horaInscripcion, fechaCierrePeriodo;
+    String prioridad;
+    String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioFinales, fechaCierreFinales;
+    String diaInscripcion, diaFinInscripcion, horaInscripcion, horaFinInscripcion;
+    String diaDesinscripcion, diaFinDesinscripcion, horaDesinscripcion, horaFinDesinscripcion;
+    String diaFinales, diaFinFinales, horaFinales, horaFinFinales;
+    String diaActualizacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,12 +192,6 @@ public class MainActivityAlumno extends AppCompatActivity
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarPrioridad(response);
                         boolean periodoHabilitado = true;
-                        //String dia = "28/09/2018";
-                        //String hora = "17:00";
-                        //editorShared.putBoolean("periodoHabilitado", periodoHabilitado);
-                        //editorShared.putString("diaPrioridad", dia);
-                        //editorShared.putString("horaPrioridad", hora);
-                        //editorShared.apply();
                     }
                 }, new Response.ErrorListener() {
 
@@ -220,11 +219,66 @@ public class MainActivityAlumno extends AppCompatActivity
                 if (jsonobject != null) {
                     prioridad = jsonobject.getString("prioridad");
                     String fechaActualizacion = jsonobject.getString("fecha_actualizacion");
-                    diaActualizacion = getFechaActualizacion(fechaActualizacion);
-                    String fechaInscripcion = jsonobject.getString("fecha_inicio");
-                    obtenerDiaHoraInscripcion(fechaInscripcion);
-                    fechaCierrePeriodo = jsonobject.getString("fecha_cierre");
+                    diaActualizacion = obtenerDiaFecha(fechaActualizacion);
                     String descripcionPeriodo = jsonobject.getString("descripcion_periodo");
+
+                    //Inscripcion
+
+                    fechaInicioInscripcion = jsonobject.getString("fechaInicioInscripcionCursadas");
+                    diaInscripcion = obtenerDiaFecha(fechaInicioInscripcion);
+                    horaInscripcion = obtenerHoraFecha(fechaInicioInscripcion);
+                    editorShared.putString("diaPrioridad", diaInscripcion);
+                    editorShared.putString("horaPrioridad", horaInscripcion);
+
+                    fechaCierreInscripcion = jsonobject.getString("fechaFinInscripcionCursadas");
+                    diaFinInscripcion = obtenerDiaFecha(fechaCierreInscripcion);
+                    horaFinInscripcion = obtenerHoraFecha(fechaCierreInscripcion);
+                    editorShared.putString("diaFinPrioridad", diaFinInscripcion);
+                    editorShared.putString("horaFinPrioridad", horaFinInscripcion);
+
+                    Boolean estaEnInscripcion = validezPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
+                    Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
+
+                    //-------------
+
+                    //DESINSCRIPCION
+
+                    fechaInicioDesinscripcion = jsonobject.getString("fechaInicioDesinscripcionCursadas");
+                    diaDesinscripcion = obtenerDiaFecha(fechaInicioDesinscripcion);
+                    horaDesinscripcion = obtenerHoraFecha(fechaInicioDesinscripcion);
+                    editorShared.putString("diaDesinscripcion", diaDesinscripcion);
+                    editorShared.putString("horaDesinscripcion", horaDesinscripcion);
+
+                    fechaCierreDesinscripcion = jsonobject.getString("fechaFinDesinscripcionCursadas");
+                    diaFinDesinscripcion = obtenerDiaFecha(fechaCierreDesinscripcion);
+                    horaFinDesinscripcion = obtenerHoraFecha(fechaCierreDesinscripcion);
+                    editorShared.putString("diaFinDesinscripcion", diaFinDesinscripcion);
+                    editorShared.putString("horaFinDesinscripcion", horaFinDesinscripcion);
+
+                    Boolean estaEnDesinscripcion = validezPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
+                    Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
+
+                    //---------------
+
+                    //FINALES
+
+                    fechaInicioFinales = jsonobject.getString("fechaInicioFinales");
+                    diaFinales = obtenerDiaFecha(fechaInicioFinales);
+                    horaFinales = obtenerHoraFecha(fechaInicioFinales);
+                    editorShared.putString("diaFinales", diaFinales);
+                    editorShared.putString("horaFinales", horaFinales);
+
+                    fechaCierreFinales = jsonobject.getString("fechaFinFinales");
+                    diaFinFinales = obtenerDiaFecha(fechaCierreFinales);
+                    horaFinFinales = obtenerHoraFecha(fechaCierreFinales);
+                    editorShared.putString("diaFinFinales", diaFinFinales);
+                    editorShared.putString("horaFinFinales", horaFinFinales);
+
+                    Boolean estaEnFinales = validezPeriodo(fechaInicioFinales, fechaCierreFinales);
+                    Log.d("FECHAS", "Finales: " + estaEnFinales);
+
+                    //---------------
+
                     editorShared.putString("descPeriodo", descripcionPeriodo);
                     editorShared.apply();
                     modificarPrioridad(prioridad);
@@ -235,6 +289,63 @@ public class MainActivityAlumno extends AppCompatActivity
                 Log.i("JSON","Error al obtener datos del JSON");
             }
         }
+    }
+
+    private Boolean validezPeriodo(String fechaInicio, String fechaCierre) {
+        boolean periodoValido = false;
+
+        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
+        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
+        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
+        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
+        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
+
+        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
+        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
+        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
+        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
+        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minutoActual = currentTime.get(Calendar.MINUTE);
+
+        if((año1 <= añoActual) && (añoActual <= año2)){
+
+            if(((año1 == año2) && (mes1 <= mesActual) && (mesActual <= mes2)) || (añoActual < año2)){
+
+                if(((dia1 <= diaActual) && (diaActual <= dia2))||(mesActual < mes2)){
+
+                    if(((hora1 <= horaActual) && (horaActual <= hora2))||(diaActual < dia2)){
+
+                        if(((minutos1 <= minutoActual) && (minutoActual <= minutos2))||(horaActual < hora2)){
+
+                            periodoValido = true;
+
+                        } else {
+                            periodoValido = false;
+                        }
+
+                    } else {
+                        periodoValido = false;
+                    }
+
+                } else {
+                    periodoValido = false;
+                }
+
+            } else {
+                periodoValido = false;
+            }
+
+        } else {
+            periodoValido = false;
+        }
+
+        return periodoValido;
     }
 
     private void validezPeriodoInscripcion(String fechaCierrePeriodo) {
@@ -280,6 +391,20 @@ public class MainActivityAlumno extends AppCompatActivity
         editorShared.apply();
     }
 
+    private String obtenerDiaFecha(String fecha){
+        String dia = fecha.substring(8,10);
+        String mes = fecha.substring(5,7);
+        String año = fecha.substring(0,4);
+        String strDia = (dia + "/" + mes + "/" + año);
+        return strDia;
+    }
+
+    private String obtenerHoraFecha(String fecha){
+        String hora = fecha.substring(11,16);
+        return hora;
+    }
+
+    /*
     private void obtenerDiaHoraInscripcion(String fechaInscripcion) {
         String dia = fechaInscripcion.substring(8,10);
         String mes = fechaInscripcion.substring(5,7);
@@ -290,7 +415,7 @@ public class MainActivityAlumno extends AppCompatActivity
         editorShared.putString("diaPrioridad", diaInscripcion);
         editorShared.putString("horaPrioridad", horaInscripcion);
         editorShared.apply();
-    }
+    }*/
 
     private String getFechaActualizacion(String fechaActualizacion) {
         String dia = fechaActualizacion.substring(8,10);
@@ -309,7 +434,7 @@ public class MainActivityAlumno extends AppCompatActivity
             editorShared.putString("descPeriodo", "");
             editorShared.apply();
         } else {
-            validezPeriodoInscripcion(fechaCierrePeriodo);
+            validezPeriodoInscripcion(fechaCierreInscripcion);
             tvPrioridad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
