@@ -135,8 +135,9 @@ public class AlumnosInscriptosActivity extends AppCompatActivity implements Acti
                     CSVWriter writer = new CSVWriter(new FileWriter(f));
                     Log.i("DEBUG","FileWriter y CSVWriter inicializados");
                     List<String[]> data = new ArrayList<String[]>();
+                    data.add(new String[] {"Nombre", "Padrón", "Prioridad"});
                     for (Alumno al : alumnosList){
-                        data.add(new String[] {al.getNombre(), String.valueOf(al.getPadron()), String.valueOf(al.getPrioridad())});
+                        data.add(new String[] {al.getNombre(), al.getPadron(), al.getPrioridad()});
                     }
                     Log.i("DEBUG","Data lista para ser escrita");
                     writer.writeAll(data);
