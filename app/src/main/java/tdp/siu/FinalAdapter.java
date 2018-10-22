@@ -124,8 +124,11 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(puedoClickear){
+                if(puedoClickear && estoy48hsAntes(fechaFinal)){
                     mostrarDialogInscripcion(nombreMateria, idFinal);
+                } else {
+                    Toast.makeText(mCtx, "No es posible inscribirse a menos de 48hs del final",
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -145,7 +148,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         int minutoActual = currentTime.get(Calendar.MINUTE);
 
         String strDate = fecha + " " + hora;
-        //String strDate = "24/10/2018" + " " + "15:00";
+        //String strDate = "24/10/2018" + " " + "19:00";
         String strDateActual = diaActual + "/" + mesActual + "/" + añoActual + " " + horaActual + ":" + minutoActual;
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         try {
