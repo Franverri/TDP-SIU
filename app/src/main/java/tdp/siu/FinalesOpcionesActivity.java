@@ -9,18 +9,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +43,13 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
 
     RequestQueue queue;
     ProgressDialog progress;
-    String APIUrl ="https://siu-api.herokuapp.com/alumno/finales/";
+    String APIUrl ="https://siu-api.herokuapp.com/alumno/finales?id_materia=";
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
     String padron;
+    String idMateria, codigoMateria, nombreMateria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +74,19 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_finales_opciones);
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            idMateria = b.getString("idMateria");
+            //Log.i("PRUEBA", "ID    : " + idMateria);
+            codigoMateria = b.getString("codigoMateria");
+            //Log.i("PRUEBA", "Codigo: " + codigoMateria);
+            nombreMateria = b.getString("nombreMateria");
+            //Log.i("PRUEBA", "Nombre: " + nombreMateria);
+            padron = b.getString("padron");
+        }
+
+        setTitle("Finales " + nombreMateria);
 
         configurarHTTPRequestSingleton();
 
@@ -106,27 +130,23 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
         //creating recyclerview adapter
         adapter = new FinalAdapter(this, finalList);
 
-        //buscarFinales();
-        finalList.add(new Final("1", "Materia", "00.00", "Catedra", "Lunes 18 - 17:00 hs"));
-        finalList.add(new Final("1", "Materia", "00.00", "Catedra", "Lunes 18 - 17:00 hs"));
-        finalList.add(new Final("1", "Materia", "00.00", "Catedra", "Lunes 18 - 17:00 hs"));
+        buscarFinales();
         recyclerView.setAdapter(adapter);
     }
 
-    /*
     private void buscarFinales() {
         if(padron != null){
             progress = ProgressDialog.show(this, "Inscripciones",
                     "Recolectando datos...", true);
-            String url = APIUrl + padron;
+            String url = APIUrl + idMateria;
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                 @Override
                 public void onResponse(JSONObject response) {
-                    progress.dismiss();
                     Log.i("API","Response: " + response.toString());
                     procesarRespuesta(response);
+                    progress.dismiss();
                 }
             }, new Response.ErrorListener() {
 
@@ -134,7 +154,7 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     progress.dismiss();
                     Log.i("Error.Response", String.valueOf(error));
-                    Toast.makeText(InscripcionesActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                    Toast.makeText(FinalesOpcionesActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -142,19 +162,18 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
             // Add the request to the RequestQueue.
             queue.add(jsonObjectRequest);
         }
-    }*/
+    }
 
-    /*
     private void procesarRespuesta(JSONObject response) {
-        inscripcionList.clear();
+        finalList.clear();
         JSONArray array = null;
         try {
-            array = response.getJSONArray("cursos");
+            array = response.getJSONArray("finales");
         }catch (JSONException e){
             Log.i("JSON","Error al parsear JSON");
         }
-        int cantCursos = array.length();
-        for (int i = 0; i < cantCursos; i++) {
+        int cantFinales = array.length();
+        for (int i = 0; i < cantFinales; i++) {
             JSONObject jsonobject = null;
             try {
                 jsonobject = array.getJSONObject(i);
@@ -162,29 +181,24 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
                 Log.i("JSON","Error al parsear JSON");
             }
             try {
-                String idCurso = jsonobject.getString("id_curso");
+                String idFinal = jsonobject.getString("id_final");
                 String nombreCurso = jsonobject.getString("nombre");
                 String codigoCurso = jsonobject.getString("codigo");
                 String docente = jsonobject.getString("docente");
-                String horarioFinal = "";
-                String sede, aulas, dias, horarios;
-                sede = jsonobject.getString("sede");
-                aulas = jsonobject.getString("aulas");
-                dias = jsonobject.getString("dias");
-                horarios = jsonobject.getString("horarios");
-                horarioFinal = calcularHorarioFinal(sede,aulas,dias,horarios);
-
-                inscripcionList.add(new Inscripcion(idCurso, nombreCurso,codigoCurso,docente,horarioFinal));
+                String dia = jsonobject.getString("fecha");
+                String hora = jsonobject.getString("horario");
+                String horarioFinal = dia +  " - " + hora;
+                finalList.add(new Final(idFinal, nombreMateria, codigoMateria, docente, horarioFinal));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }
         }
         recyclerView.setAdapter(adapter);
-        if (cantCursos == 0){
-            Toast.makeText(InscripcionesActivity.this, "Sin inscripciones",
+        if (cantFinales == 0){
+            Toast.makeText(FinalesOpcionesActivity.this, "Sin inscripciones",
                     Toast.LENGTH_LONG).show();
         }
-    }*/
+    }
 
     private String calcularHorarioFinal(String sede, String aulas, String dias, String horarios) {
         String horarioFinal = "";

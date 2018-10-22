@@ -52,6 +52,8 @@ public class OfertaFinalesActivity extends AppCompatActivity {
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/";
 
+    String materia, id, codigo, nombre;
+
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
@@ -130,7 +132,10 @@ public class OfertaFinalesActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
                 if(periodoHabilitado){
-                    goOpcionesFinales();
+                    goOpcionesFinales(adapter.getItem(position),
+                            listMateriaAux.get(position).getId(),
+                            listMateriaAux.get(position).getCodigo(),
+                            listMateriaAux.get(position).getNombre());
                 } else {
                     Toast.makeText(OfertaFinalesActivity.this, "El período de inscripción aún no se encuentra habilitado",
                             Toast.LENGTH_LONG).show();
@@ -140,9 +145,17 @@ public class OfertaFinalesActivity extends AppCompatActivity {
         });
     }
 
-    private void goOpcionesFinales() {
-        Intent intent = new Intent(this, FinalesOpcionesActivity.class);
-        startActivity(intent);
+    private void goOpcionesFinales(String materia, String id, String codigo, String nombre) {
+        if(!materia.equals("No existen coincidencias")){
+            Intent intent = new Intent(this, FinalesOpcionesActivity.class);
+            Bundle b = new Bundle();
+            b.putString("nombreMateria", nombre);
+            b.putString("idMateria", id);
+            b.putString("codigoMateria", codigo);
+            b.putString("padron", padron);
+            intent.putExtras(b); //Put your id to your next Intent
+            startActivity(intent);
+        }
     }
 
     private void searchKeyboardClick() {
