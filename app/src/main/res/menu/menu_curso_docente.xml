@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_alumnos_inscriptos"
-        android:title="Alumnos Inscriptos" />
+        android:title="Alumnos Inscriptos"
+        android:icon="@drawable/ic_alumno"/>
 
     <item
         android:id="@+id/menu_fechas_examen"
-        android:title="Fechas de Examen" />
+        android:title="Fechas de Examen"
+        android:icon="@drawable/ic_fechas"/>
 
 </menu>
