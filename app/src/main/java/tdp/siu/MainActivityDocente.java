@@ -28,10 +28,12 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -94,6 +96,139 @@ public class MainActivityDocente extends AppCompatActivity
         configurarAccesoAPerfil();
 
         actualizarDatosMenuLateral(nombre, mail);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        obtenerPeriodos();
+    }
+
+    private void obtenerPeriodos() {
+        String url = APIUrl + "periodos";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        cargarPeriodos(response);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonArrayRequest);
+    }
+
+    private void cargarPeriodos(JSONArray response) {
+        JSONObject jsonobject = null;
+        try {
+            jsonobject = response.getJSONObject(0);
+        } catch (JSONException e) {
+            Log.i("JSON","Error al parsear JSON");
+        }
+        if(jsonobject.length() == 0){
+
+        } else {
+            try {
+                if (jsonobject != null) {
+
+                    //CURSADA
+
+                    String fechaInicioCursada = jsonobject.getString("fechaInicioCursadas");
+                    String diaCursadas = obtenerDiaFecha(fechaInicioCursada);
+                    String horaCursadas = obtenerHoraFecha(fechaInicioCursada);
+
+                    String fechaCierreCursada = jsonobject.getString("fechaFinCursadas");
+                    String diaFinCursadas = obtenerDiaFecha(fechaCierreCursada);
+                    String horaFinCursadas = obtenerHoraFecha(fechaCierreCursada);
+
+                    Boolean estaEnCursadas = validezPeriodo(fechaInicioCursada, fechaCierreCursada);
+                    //editorShared.putBoolean("estaEnCursadas", true);
+                    editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
+                    Log.i("PERIODOS", "Cursada: " + estaEnCursadas);
+                    editorShared.apply();
+                }
+            } catch (JSONException e) {
+                Log.i("JSON","Error al obtener datos del JSON");
+            }
+        }
+    }
+
+    private Boolean validezPeriodo(String fechaInicio, String fechaCierre) {
+        boolean periodoValido = false;
+
+        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
+        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
+        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
+        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
+        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
+
+        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
+        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
+        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
+        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
+        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minutoActual = currentTime.get(Calendar.MINUTE);
+
+        if((año1 <= añoActual) && (añoActual <= año2)){
+
+            if(((año1 == año2) && (mes1 <= mesActual) && (mesActual <= mes2)) || (añoActual < año2)){
+
+                if(((dia1 <= diaActual) && (diaActual <= dia2))||(mesActual < mes2)){
+
+                    if(((hora1 <= horaActual) && (horaActual <= hora2))||(diaActual < dia2)){
+
+                        if(((minutos1 <= minutoActual) && (minutoActual <= minutos2))||(horaActual < hora2)){
+
+                            periodoValido = true;
+
+                        } else {
+                            periodoValido = false;
+                        }
+
+                    } else {
+                        periodoValido = false;
+                    }
+
+                } else {
+                    periodoValido = false;
+                }
+
+            } else {
+                periodoValido = false;
+            }
+
+        } else {
+            periodoValido = false;
+        }
+
+        return periodoValido;
+    }
+
+    private String obtenerDiaFecha(String fecha){
+        String dia = fecha.substring(8,10);
+        String mes = fecha.substring(5,7);
+        String año = fecha.substring(0,4);
+        String strDia = (dia + "/" + mes + "/" + año);
+        return strDia;
+    }
+
+    private String obtenerHoraFecha(String fecha){
+        String hora = fecha.substring(11,16);
+        return hora;
     }
 
     private void configurarAccesoAPerfil() {

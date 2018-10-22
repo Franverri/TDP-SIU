@@ -54,6 +54,7 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
     ProgressDialog progress;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
     int idCurso = -1;
+    boolean periodoHabilitado;
 
     int SEPARACION_DIAS = 4;
 
@@ -79,6 +80,8 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        periodoHabilitado = sharedPref.getBoolean("estaEnCursadas", false);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -107,7 +110,11 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == R.id.button_add) {
-            DialogAgregarFecha();
+            if(periodoHabilitado){
+                DialogAgregarFecha();
+            } else {
+                Toast.makeText(FechasDeExamenActivity.this, "No se encuentra habilitado el periodo de cursadas", Toast.LENGTH_LONG).show();
+            }
         } else if (id == android.R.id.home) { //BackPressed
             super.onBackPressed();
         }
