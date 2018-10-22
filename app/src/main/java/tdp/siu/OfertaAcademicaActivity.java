@@ -74,7 +74,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         editorShared = sharedPref.edit();
 
         padron = sharedPref.getString("padron", null);
-        periodoHabilitado = sharedPref.getBoolean("periodoHabilitado", false);
+        periodoHabilitado = sharedPref.getBoolean("estaEnInscripcion", false);
         descPeriodo = sharedPref.getString("descPeriodo", "");
 
         //Remove notification bar

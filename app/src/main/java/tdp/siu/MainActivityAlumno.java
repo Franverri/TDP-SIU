@@ -63,6 +63,7 @@ public class MainActivityAlumno extends AppCompatActivity
     String diaDesinscripcion, diaFinDesinscripcion, horaDesinscripcion, horaFinDesinscripcion;
     String diaFinales, diaFinFinales, horaFinales, horaFinFinales;
     String diaActualizacion;
+    Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnFinales;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,8 +237,9 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("diaFinPrioridad", diaFinInscripcion);
                     editorShared.putString("horaFinPrioridad", horaFinInscripcion);
 
-                    Boolean estaEnInscripcion = validezPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
+                    estaEnInscripcion = validezPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
                     Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
+                    editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
 
                     //-------------
 
@@ -255,8 +257,9 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("diaFinDesinscripcion", diaFinDesinscripcion);
                     editorShared.putString("horaFinDesinscripcion", horaFinDesinscripcion);
 
-                    Boolean estaEnDesinscripcion = validezPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
+                    estaEnDesinscripcion = validezPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
                     Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
+                    editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
 
                     //---------------
 
@@ -274,8 +277,9 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("diaFinFinales", diaFinFinales);
                     editorShared.putString("horaFinFinales", horaFinFinales);
 
-                    Boolean estaEnFinales = validezPeriodo(fechaInicioFinales, fechaCierreFinales);
+                    estaEnFinales = validezPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
+                    editorShared.putBoolean("estaEnFinales", estaEnFinales);
 
                     //---------------
 
@@ -348,6 +352,7 @@ public class MainActivityAlumno extends AppCompatActivity
         return periodoValido;
     }
 
+    /*
     private void validezPeriodoInscripcion(String fechaCierrePeriodo) {
         boolean periodoValido = false;
         int dia = Integer.parseInt(fechaCierrePeriodo.substring(8,10));
@@ -389,7 +394,7 @@ public class MainActivityAlumno extends AppCompatActivity
         periodoValido = true;
         editorShared.putBoolean("periodoHabilitado", periodoValido);
         editorShared.apply();
-    }
+    }*/
 
     private String obtenerDiaFecha(String fecha){
         String dia = fecha.substring(8,10);
@@ -404,19 +409,6 @@ public class MainActivityAlumno extends AppCompatActivity
         return hora;
     }
 
-    /*
-    private void obtenerDiaHoraInscripcion(String fechaInscripcion) {
-        String dia = fechaInscripcion.substring(8,10);
-        String mes = fechaInscripcion.substring(5,7);
-        String año = fechaInscripcion.substring(0,4);
-        String hora = fechaInscripcion.substring(11,16);
-        diaInscripcion = (dia + "/" + mes + "/" + año);
-        horaInscripcion = hora;
-        editorShared.putString("diaPrioridad", diaInscripcion);
-        editorShared.putString("horaPrioridad", horaInscripcion);
-        editorShared.apply();
-    }*/
-
     private String getFechaActualizacion(String fechaActualizacion) {
         String dia = fechaActualizacion.substring(8,10);
         String mes = fechaActualizacion.substring(5,7);
@@ -430,11 +422,11 @@ public class MainActivityAlumno extends AppCompatActivity
         TextView tvPrioridad = (TextView) headerView.findViewById(R.id.tvPrioridad);
         tvPrioridad.setText("  Prioridad: " + prioridad + "  ");
         if(prioridad.equals("-")){
-            editorShared.putBoolean("periodoHabilitado", false);
+            editorShared.putBoolean("estaEnInscripcion", false);
             editorShared.putString("descPeriodo", "");
             editorShared.apply();
         } else {
-            validezPeriodoInscripcion(fechaCierreInscripcion);
+            //validezPeriodoInscripcion(fechaCierreInscripcion);
             tvPrioridad.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
