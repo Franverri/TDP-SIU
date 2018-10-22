@@ -149,6 +149,8 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     }
 
     private void inscribirse(String padron, String idFinal) {
+        progress = ProgressDialog.show(mCtx, "Inscripción",
+                "Inscribiendose a final...", true);
         String url = APIUrl + "/inscribir?final="+ idFinal +"&padron=" + padron;
         Log.i("PRUEBA", "URL: " + url);
 
@@ -159,12 +161,14 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         procesarRespuestaInscripcion(response);
+                        progress.dismiss();
 
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progress.dismiss();
                         Log.i("Error.Response", String.valueOf(error));
                         Toast.makeText(mCtx, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();
@@ -229,7 +233,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     private void desincribirse(String padron, String idFinal) {
         if(padron != null && idFinal != null) {
             progress = ProgressDialog.show(mCtx, "Desinscripción",
-                    "Desinscribiendose de materia...", true);
+                    "Desinscribiendose de final...", true);
             String url = APIUrl + "/desinscribir?final=" + idFinal + "&padron=" + padron;
             Log.i("URL", url);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
