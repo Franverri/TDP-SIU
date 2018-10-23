@@ -183,17 +183,17 @@ public class MainActivityDocente extends AppCompatActivity
         boolean esValido = false;
 
 
-        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
-        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
-        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
-        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
-        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
+        String dia1 = fechaInicio.substring(8,10);
+        String mes1 = fechaInicio.substring(5,7);
+        String año1 = fechaInicio.substring(0,4);
+        String hora1 = fechaInicio.substring(11,13);
+        String minutos1 = fechaInicio.substring(14,16);
 
-        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
-        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
-        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
-        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
-        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
+        String dia2 = fechaCierre.substring(8,10);
+        String mes2 = fechaCierre.substring(5,7);
+        String año2 = fechaCierre.substring(0,4);
+        String hora2 = fechaCierre.substring(11,13);
+        String minutos2 = fechaCierre.substring(14,16);
 
         Calendar currentTime = Calendar.getInstance();
         int añoActual = currentTime.get(Calendar.YEAR);
@@ -202,24 +202,11 @@ public class MainActivityDocente extends AppCompatActivity
         int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
         int minutoActual = currentTime.get(Calendar.MINUTE);
         String minAux;
+
         if(minutoActual < 10){
             minAux = "0" + minutoActual;
         } else {
             minAux = String.valueOf(minutoActual);
-        }
-
-        String minIAux;
-        if(minutos1<10){
-            minIAux = "0" + minutos1;
-        } else {
-            minIAux = String.valueOf(minutos1);
-        }
-
-        String minFAux;
-        if(minutos2<10){
-            minFAux = "0" + minutos2;
-        } else {
-            minFAux = String.valueOf(minutos2);
         }
 
         String horaAux;
@@ -229,28 +216,27 @@ public class MainActivityDocente extends AppCompatActivity
             horaAux = String.valueOf(horaActual);
         }
 
-        String horaIAux;
-        if(hora1<10){
-            horaIAux = "0" + hora1;
+        String diaAux;
+        if(diaActual < 10){
+            diaAux = "0" + diaActual;
         } else {
-            horaIAux = String.valueOf(hora1);
+            diaAux = String.valueOf(diaActual);
         }
 
-        String horaFAux;
-        if(hora2<10){
-            horaFAux = "0" + hora2;
+        String mesAux;
+        if(diaActual < 10){
+            mesAux = "0" + mesActual;
         } else {
-            horaFAux = String.valueOf(hora2);
+            mesAux = String.valueOf(mesActual);
         }
 
 
-
-        String strFechaInicio = dia1+"/"+mes1+"/"+año1+" "+horaIAux+":"+minIAux;
-        String strFechaCierre = dia2+"/"+mes2+"/"+año2+" "+horaFAux+":"+minFAux;
+        String strFechaInicio = dia1+"/"+mes1+"/"+año1+" "+hora1+":"+minutos1;
+        String strFechaCierre = dia2+"/"+mes2+"/"+año2+" "+hora2+":"+minutos2;
         //Log.i("PERIODO", "Fecha inicio: " + strFechaInicio);
         //Log.i("PERIODO", "Fecha cierre: " + strFechaCierre);
 
-        String strDateActual = diaActual + "/" + mesActual + "/" + añoActual + " " + horaAux + ":" + minAux;
+        String strDateActual = diaAux + "/" + mesAux + "/" + añoActual + " " + horaAux + ":" + minAux;
         //Log.i("PERIODO", "Fecha actual: " + strDateActual);
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
