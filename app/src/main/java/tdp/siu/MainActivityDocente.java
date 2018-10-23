@@ -32,8 +32,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.VolleyError;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -149,10 +152,13 @@ public class MainActivityDocente extends AppCompatActivity
                     String diaFinCursadas = obtenerDiaFecha(fechaCierreCursada);
                     String horaFinCursadas = obtenerHoraFecha(fechaCierreCursada);
 
-                    Boolean estaEnCursadas = validezPeriodo(fechaInicioCursada, fechaCierreCursada);
+                    //Boolean estaEnCursadas = validezPeriodo(fechaInicioCursada, fechaCierreCursada);
+                    Boolean estaEnCursadas = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
                     //editorShared.putBoolean("estaEnCursadas", true);
                     editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
-                    Log.i("PERIODOS", "Cursada: " + estaEnCursadas);
+                    Log.i("PERIODOS", "Inicio Cursada: " + fechaInicioCursada);
+                    Log.i("PERIODOS", "Fin Cursada   : " + fechaCierreCursada);
+                    Log.i("PERIODOS", "Cursada       : " + estaEnCursadas);
 
                     String fechaInicioFinales = jsonobject.getString("fechaInicioFinales");
                     String diaFinales = obtenerDiaFecha(fechaInicioFinales);
@@ -173,8 +179,105 @@ public class MainActivityDocente extends AppCompatActivity
         }
     }
 
+    private boolean validarPeriodo(String fechaInicio, String fechaCierre) {
+        boolean esValido = false;
+
+
+        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
+        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
+        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
+        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
+        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
+
+        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
+        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
+        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
+        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
+        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minutoActual = currentTime.get(Calendar.MINUTE);
+        String minAux;
+        if(minutoActual < 10){
+            minAux = "0" + minutoActual;
+        } else {
+            minAux = String.valueOf(minutoActual);
+        }
+
+        String minIAux;
+        if(minutos1<10){
+            minIAux = "0" + minutos1;
+        } else {
+            minIAux = String.valueOf(minutos1);
+        }
+
+        String minFAux;
+        if(minutos2<10){
+            minFAux = "0" + minutos2;
+        } else {
+            minFAux = String.valueOf(minutos2);
+        }
+
+        String horaAux;
+        if(horaActual < 10){
+            horaAux = "0" + horaActual;
+        } else {
+            horaAux = String.valueOf(horaActual);
+        }
+
+        String horaIAux;
+        if(hora1<10){
+            horaIAux = "0" + hora1;
+        } else {
+            horaIAux = String.valueOf(hora1);
+        }
+
+        String horaFAux;
+        if(hora2<10){
+            horaFAux = "0" + hora2;
+        } else {
+            horaFAux = String.valueOf(hora2);
+        }
+
+
+
+        String strFechaInicio = dia1+"/"+mes1+"/"+año1+" "+horaIAux+":"+minIAux;
+        String strFechaCierre = dia2+"/"+mes2+"/"+año2+" "+horaFAux+":"+minFAux;
+        //Log.i("PERIODO", "Fecha inicio: " + strFechaInicio);
+        //Log.i("PERIODO", "Fecha cierre: " + strFechaCierre);
+
+        String strDateActual = diaActual + "/" + mesActual + "/" + añoActual + " " + horaAux + ":" + minAux;
+        //Log.i("PERIODO", "Fecha actual: " + strDateActual);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        try {
+            Date dateInicio = format.parse(strFechaInicio);
+            Date dateCierre = format.parse(strFechaCierre);
+            Date dateActual = format.parse(strDateActual);
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(dateActual); // Now use today date.
+
+            if(c.getTime().after(dateInicio) && c.getTime().before(dateCierre)){
+                esValido = true;
+            } else {
+                esValido = false;
+            }
+        } catch (ParseException e) {
+            esValido = false;
+            e.printStackTrace();
+        }
+
+        return esValido;
+
+    }
+
     private Boolean validezPeriodo(String fechaInicio, String fechaCierre) {
-        boolean periodoValido = false;
+        boolean periodoValido;
 
         int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
         int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
@@ -197,14 +300,21 @@ public class MainActivityDocente extends AppCompatActivity
 
         if((año1 <= añoActual) && (añoActual <= año2)){
 
+            Log.i("PERIODOS", "entra 1");
+
             if(((año1 == año2) && (mes1 <= mesActual) && (mesActual <= mes2)) || (añoActual < año2)){
-
+                Log.i("PERIODOS", "entra 2");
                 if(((dia1 <= diaActual) && (diaActual <= dia2))||(mesActual < mes2)){
-
+                    Log.i("PERIODOS", "entra 3");
                     if(((hora1 <= horaActual) && (horaActual <= hora2))||(diaActual < dia2)){
-
-                        if(((minutos1 <= minutoActual) && (minutoActual <= minutos2))||(horaActual < hora2)){
-
+                        Log.i("PERIODOS", "entra 4");
+                        Log.i("PERIODOS", "Minutos 1: " + minutos1);
+                        Log.i("PERIODOS", "Minutos 2: " + minutos2);
+                        Log.i("PERIODOS", "Minutos a: " + minutoActual);
+                        Log.i("PERIODOS", "Hora    2: " + hora2);
+                        Log.i("PERIODOS", "Hora    a: " + horaActual);
+                        if(((minutos1 <= minutoActual) && (minutoActual <= minutos2))||(horaActual <= hora2)){
+                            Log.i("PERIODOS", "entra 5");
                             periodoValido = true;
 
                         } else {
