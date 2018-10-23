@@ -42,7 +42,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivityAlumno extends AppCompatActivity
@@ -237,7 +240,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("diaFinPrioridad", diaFinInscripcion);
                     editorShared.putString("horaFinPrioridad", horaFinInscripcion);
 
-                    estaEnInscripcion = validezPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
+                    estaEnInscripcion = validarPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
                     Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
                     //editorShared.putBoolean("estaEnInscripcion", true);
                     editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
@@ -258,7 +261,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("diaFinDesinscripcion", diaFinDesinscripcion);
                     editorShared.putString("horaFinDesinscripcion", horaFinDesinscripcion);
 
-                    estaEnDesinscripcion = validezPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
+                    estaEnDesinscripcion = validarPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
                     Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
                     //editorShared.putBoolean("estaEnDesinscripcion", true);
                     editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
@@ -279,7 +282,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("diaFinFinales", diaFinFinales);
                     editorShared.putString("horaFinFinales", horaFinFinales);
 
-                    estaEnFinales = validezPeriodo(fechaInicioFinales, fechaCierreFinales);
+                    estaEnFinales = validarPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
                     //editorShared.putBoolean("estaEnFinales", false);
                     editorShared.putBoolean("estaEnFinales", estaEnFinales);
@@ -298,6 +301,104 @@ public class MainActivityAlumno extends AppCompatActivity
         }
     }
 
+    private boolean validarPeriodo(String fechaInicio, String fechaCierre) {
+        boolean esValido = false;
+
+
+        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
+        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
+        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
+        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
+        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
+
+        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
+        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
+        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
+        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
+        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minutoActual = currentTime.get(Calendar.MINUTE);
+        String minAux;
+        if(minutoActual < 10){
+            minAux = "0" + minutoActual;
+        } else {
+            minAux = String.valueOf(minutoActual);
+        }
+
+        String minIAux;
+        if(minutos1<10){
+            minIAux = "0" + minutos1;
+        } else {
+            minIAux = String.valueOf(minutos1);
+        }
+
+        String minFAux;
+        if(minutos2<10){
+            minFAux = "0" + minutos2;
+        } else {
+            minFAux = String.valueOf(minutos2);
+        }
+
+        String horaAux;
+        if(horaActual < 10){
+            horaAux = "0" + horaActual;
+        } else {
+            horaAux = String.valueOf(horaActual);
+        }
+
+        String horaIAux;
+        if(hora1<10){
+            horaIAux = "0" + hora1;
+        } else {
+            horaIAux = String.valueOf(hora1);
+        }
+
+        String horaFAux;
+        if(hora2<10){
+            horaFAux = "0" + hora2;
+        } else {
+            horaFAux = String.valueOf(hora2);
+        }
+
+
+
+        String strFechaInicio = dia1+"/"+mes1+"/"+año1+" "+horaIAux+":"+minIAux;
+        String strFechaCierre = dia2+"/"+mes2+"/"+año2+" "+horaFAux+":"+minFAux;
+        //Log.i("PERIODO", "Fecha inicio: " + strFechaInicio);
+        //Log.i("PERIODO", "Fecha cierre: " + strFechaCierre);
+
+        String strDateActual = diaActual + "/" + mesActual + "/" + añoActual + " " + horaAux + ":" + minAux;
+        //Log.i("PERIODO", "Fecha actual: " + strDateActual);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        try {
+            Date dateInicio = format.parse(strFechaInicio);
+            Date dateCierre = format.parse(strFechaCierre);
+            Date dateActual = format.parse(strDateActual);
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(dateActual); // Now use today date.
+
+            if(c.getTime().after(dateInicio) && c.getTime().before(dateCierre)){
+                esValido = true;
+            } else {
+                esValido = false;
+            }
+        } catch (ParseException e) {
+            esValido = false;
+            e.printStackTrace();
+        }
+
+        return esValido;
+
+    }
+
+    /*
     private Boolean validezPeriodo(String fechaInicio, String fechaCierre) {
         boolean periodoValido = false;
 
@@ -353,7 +454,7 @@ public class MainActivityAlumno extends AppCompatActivity
         }
 
         return periodoValido;
-    }
+    }*/
 
     private String obtenerDiaFecha(String fecha){
         String dia = fecha.substring(8,10);
