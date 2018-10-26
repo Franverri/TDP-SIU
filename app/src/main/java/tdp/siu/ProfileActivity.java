@@ -136,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
             url = APIUrl + "docente/perfil" + sharedPref.getString("legajo", "");
         }
 
-        String mailIngresado = String.valueOf(etMail.getText());
+        String mailIngresado = String.valueOf(etMail.getText()).toLowerCase();
         String pswActual = String.valueOf(etPSW.getText());
         String pswNueva = String.valueOf(etPSWnueva.getText());
         boolean mailValido = validarMail(mailIngresado);
@@ -163,6 +163,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
         if(exitoso){
             //enviarRequest();
+            editorShared.putString("mail", mailIngresado);
+            editorShared.apply();
             Toast.makeText(this, "Cambios guardados!",
                     Toast.LENGTH_LONG).show();
             super.onBackPressed();
