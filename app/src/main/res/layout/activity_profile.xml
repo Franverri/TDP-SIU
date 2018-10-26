@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="DNI: "/>
+                android:text="Usuario: "/>
 
             <TextView
                 android:paddingLeft="10dp"

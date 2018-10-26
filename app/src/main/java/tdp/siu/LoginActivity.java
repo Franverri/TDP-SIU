@@ -213,10 +213,12 @@ public class LoginActivity extends AppCompatActivity {
                 editorShared.putString("padron",response.getString("padron"));
                 String nombre = response.getString("nombre");
                 String apellido = response.getString("apellido");
+                String email = response.getString("email");
+                String carrera = String.valueOf(response.getInt("carrera"));
                 editorShared.putString("nombre", nombre + " " + apellido);
-                //String mail = response.getString("email");
-                editorShared.putString("dni", usuario);
-                editorShared.putString("mail", "ej@mail.com");
+                editorShared.putString("usuario", usuario);
+                editorShared.putString("mail", email);
+                editorShared.putString("carrera", carrera);
                 editorShared.putBoolean("logueadoAlumno",true);
                 editorShared.apply();
                 goMainAlumno();
@@ -228,8 +230,11 @@ public class LoginActivity extends AppCompatActivity {
                 editorShared.putString("legajo",response.getString("legajo"));
                 String nombre = response.getString("nombre");
                 String apellido = response.getString("apellido");
+                String email = response.getString("email");
+                editorShared.putString("usuario", usuario);
                 editorShared.putString("nombre", nombre + " " + apellido);
                 editorShared.putBoolean("logueadoDocente",true);
+                editorShared.putString("mail", email);
                 editorShared.apply();
                 goMainDocente();
             } catch (JSONException e){

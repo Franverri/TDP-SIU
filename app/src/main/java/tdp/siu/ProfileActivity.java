@@ -65,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void completarCampos() {
         tvNombre.setText(sharedPref.getString("nombre", ""));
-        tvDNI.setText(sharedPref.getString("dni", ""));
+        tvDNI.setText(sharedPref.getString("usuario", ""));
         if(esAlumno){
             tvPadron.setText(sharedPref.getString("padron", ""));
         } else {
