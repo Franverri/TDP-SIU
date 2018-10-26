@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,8 @@ public class ProfileActivity extends AppCompatActivity {
     SharedPreferences.Editor editorShared;
     private boolean esAlumno;
 
-    TextView tvNombre, tvDNI, tvPadron, tvMail, tvPSW;
+    TextView tvNombre, tvDNI, tvPadron;
+    EditText etMail, etPSW, etPSWnueva;
 
     RequestQueue queue;
     ProgressDialog progress;
@@ -96,8 +98,9 @@ public class ProfileActivity extends AppCompatActivity {
         tvNombre = (TextView) findViewById(R.id.tvProfile_nombre2);
         tvDNI = (TextView) findViewById(R.id.tvProfile_DNI2);
         tvPadron = (TextView) findViewById(R.id.tvProfile_padron2);
-        tvMail = (TextView) findViewById(R.id.tvProfile_mail2);
-        tvPSW = (TextView) findViewById(R.id.tvProfile_psw2);
+        etMail = (EditText) findViewById(R.id.tvProfile_mail2);
+        etPSW = (EditText) findViewById(R.id.tvProfile_psw2);
+        etPSWnueva = (EditText) findViewById(R.id.tvProfile_pswNueva2);
         if(esAlumno){
             tvAtributo.setText("Padrón:");
         } else {
@@ -114,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             tvPadron.setText(sharedPref.getString("legajo", ""));
         }
-        tvMail.setText(sharedPref.getString("mail", ""));
+        etMail.setText(sharedPref.getString("mail", ""));
 
     }
 
@@ -126,9 +129,25 @@ public class ProfileActivity extends AppCompatActivity {
     public void guardarCambios(View view) {
         //TO DO: hacer llamada a API para modificar los datos
 
-        String mailIngresado = String.valueOf(tvMail.getText());
+        String mailIngresado = String.valueOf(etMail.getText());
+        String pswActual = String.valueOf(etPSW.getText());
+        String pswNueva = String.valueOf(etPSWnueva.getText());
         boolean mailValido = validarMail(mailIngresado);
+        boolean pswValida = validarPSW(pswNueva);
+        String url = "";
         if(mailValido){
+            if(pswValida){
+                url = APIUrl + "?mail=" + mailIngresado + "&pswactual=" + pswActual + "&pswnueva=" + pswNueva;
+                Log.d("PRUEBA URL", url);
+            } else {
+                if(pswNueva.equals("")){
+                    url = APIUrl + "?mail=" + mailIngresado;
+                    Log.d("PRUEBA URL", url);
+                } else {
+                    Toast.makeText(ProfileActivity.this, "La contraseña ingresada es inválida",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
             //enviarRequest();
             Toast.makeText(this, "Cambios guardados!",
                     Toast.LENGTH_LONG).show();
@@ -162,6 +181,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);*/
+    }
+
+    private boolean validarPSW(String pswNueva) {
+        if(pswNueva.length()>4){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean validarMail(String mail) {
