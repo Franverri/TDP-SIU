@@ -43,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     RequestQueue queue;
     ProgressDialog progress;
-    String APIUrl ="https://siu-api.herokuapp.com/perfil";
+    String APIUrl ="https://siu-api.herokuapp.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,32 +129,43 @@ public class ProfileActivity extends AppCompatActivity {
     public void guardarCambios(View view) {
         //TO DO: hacer llamada a API para modificar los datos
 
+        String url;
+        if(esAlumno){
+            url = APIUrl + "alumno/perfil?padron=" + sharedPref.getString("padron", "");
+        } else {
+            url = APIUrl + "docente/perfil" + sharedPref.getString("legajo", "");
+        }
+
         String mailIngresado = String.valueOf(etMail.getText());
         String pswActual = String.valueOf(etPSW.getText());
         String pswNueva = String.valueOf(etPSWnueva.getText());
         boolean mailValido = validarMail(mailIngresado);
         boolean pswValida = validarPSW(pswNueva);
-        String url = "";
+        boolean exitoso = false;
         if(mailValido){
             if(pswValida){
-                url = APIUrl + "?mail=" + mailIngresado + "&pswactual=" + pswActual + "&pswnueva=" + pswNueva;
+                url = url + "&mail=" + mailIngresado + "&pswactual=" + pswActual + "&pswnueva=" + pswNueva;
                 Log.d("PRUEBA URL", url);
+                exitoso = true;
             } else {
                 if(pswNueva.equals("")){
-                    url = APIUrl + "?mail=" + mailIngresado;
+                    url = url + "&mail=" + mailIngresado;
                     Log.d("PRUEBA URL", url);
+                    exitoso = true;
                 } else {
                     Toast.makeText(ProfileActivity.this, "La contraseña ingresada es inválida",
                             Toast.LENGTH_LONG).show();
                 }
             }
+        } else {
+            Toast.makeText(ProfileActivity.this, "El mail ingresado es inválido",
+                    Toast.LENGTH_LONG).show();
+        }
+        if(exitoso){
             //enviarRequest();
             Toast.makeText(this, "Cambios guardados!",
                     Toast.LENGTH_LONG).show();
             super.onBackPressed();
-        } else {
-            Toast.makeText(ProfileActivity.this, "El mail ingresado es inválido",
-                    Toast.LENGTH_LONG).show();
         }
         /*
         String url = APIUrl + "?mail={nuevo_mail}&pswactual={actual_psw}&pswnueva={nueva_psw}";
