@@ -26,6 +26,8 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
@@ -123,8 +125,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void guardarCambios(View view) {
         //TO DO: hacer llamada a API para modificar los datos
-        Toast.makeText(this, "Cambios guardados!",
-                Toast.LENGTH_LONG).show();
+
+        String mailIngresado = String.valueOf(tvMail.getText());
+        boolean mailValido = validarMail(mailIngresado);
+        if(mailValido){
+            //enviarRequest();
+            Toast.makeText(this, "Cambios guardados!",
+                    Toast.LENGTH_LONG).show();
+            super.onBackPressed();
+        } else {
+            Toast.makeText(ProfileActivity.this, "El mail ingresado es inválido",
+                    Toast.LENGTH_LONG).show();
+        }
         /*
         String url = APIUrl + "?mail={nuevo_mail}&pswactual={actual_psw}&pswnueva={nueva_psw}";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -150,7 +162,23 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);*/
+    }
 
-        super.onBackPressed();
+    private boolean validarMail(String mail) {
+        boolean esValido;
+        String emailPattern = "^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@" +
+                "[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})$";
+        Pattern pattern = Pattern.compile(emailPattern);
+        if (mail != null) {
+            Matcher matcher = pattern.matcher(mail);
+            if (matcher.matches()) {
+                esValido = true;
+            } else {
+                esValido = false;
+            }
+        } else {
+            esValido = false;
+        }
+        return esValido;
     }
 }
