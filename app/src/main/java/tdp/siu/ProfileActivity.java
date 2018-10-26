@@ -127,7 +127,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void guardarCambios(View view) {
-        //TO DO: hacer llamada a API para modificar los datos
+        progress = ProgressDialog.show(this, "Perfil",
+                "Guardando cambios...", true);
 
         String url;
         if(esAlumno){
@@ -162,39 +163,41 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.LENGTH_LONG).show();
         }
         if(exitoso){
-            //enviarRequest();
+            //enviarRequest(url);
             editorShared.putString("mail", mailIngresado);
             editorShared.apply();
             Toast.makeText(this, "Cambios guardados!",
                     Toast.LENGTH_LONG).show();
             super.onBackPressed();
         }
-        /*
-        String url = APIUrl + "?mail={nuevo_mail}&pswactual={actual_psw}&pswnueva={nueva_psw}";
+    }
+
+    private void enviarRequest(String url) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.PUT, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        progress.dismiss();
                         Log.i("API","Response: " + response.toString());
                         //procesarRespuesta(response);
+                        progress.dismiss();
 
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progress.dismiss();
                         Log.i("Error.Response", String.valueOf(error));
                         Toast.makeText(ProfileActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();
+                        progress.dismiss();
                     }
                 });
 
         // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);*/
+        queue.add(jsonObjectRequest);
     }
+
 
     private boolean validarPSW(String pswNueva) {
         if(pswNueva.length()>4){
