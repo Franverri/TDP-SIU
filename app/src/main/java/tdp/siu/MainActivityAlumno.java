@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,14 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -36,7 +31,6 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +40,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivityAlumno extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -116,15 +109,15 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void configurarClickTarjetas() {
-        CardView tPerfil = (CardView) findViewById(R.id.tarjeta_perfil);
+        CardView tHistorial = (CardView) findViewById(R.id.tarjeta_historial);
         CardView tOferta = (CardView) findViewById(R.id.tarjeta_ofertaAcademica);
         CardView tInscripciones = (CardView) findViewById(R.id.tarjeta_inscripciones);
         CardView tFinales = (CardView) findViewById(R.id.tarjeta_finales);
 
-        tPerfil.setOnClickListener(new View.OnClickListener() {
+        tHistorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goPerfil();
+                goHistorial();
             }
         });
 
@@ -162,6 +155,11 @@ public class MainActivityAlumno extends AppCompatActivity
 
     private void goPerfil() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void goHistorial() {
+        Intent intent = new Intent(this, HistorialActivity.class);
         startActivity(intent);
     }
 
@@ -536,6 +534,8 @@ public class MainActivityAlumno extends AppCompatActivity
             goLogin();
         } else if (id == R.id.nav_finales){
             goFinales();
+        } else if(id == R.id.nav_historialAcademimco){
+            goHistorial();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_alumno);
