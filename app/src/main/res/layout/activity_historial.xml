@@ -17,6 +17,8 @@
         android:layout_height="match_parent">
 
         <TableLayout
+            android:divider="@drawable/divider_list"
+            android:showDividers="middle"
             android:id="@+id/table_historial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

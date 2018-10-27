@@ -60,16 +60,16 @@ public class HistorialActivity extends AppCompatActivity {
 
         //initialize header row and define LayoutParams
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-        TableRow.LayoutParams params1 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-        TableRow.LayoutParams params2 = new TableRow.LayoutParams(52, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-        TableRow.LayoutParams params3 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-        TableRow.LayoutParams params4 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+        TableRow.LayoutParams params1 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams params2 = new TableRow.LayoutParams(52, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams params3 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams params4 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
 
         TableRow header_row = new TableRow(this);
 
         //column 1
         TextView header_tv = new TextView(this);
-        header_tv.setLayoutParams(params);
+        header_tv.setLayoutParams(params1);
         header_tv.setText("Codigo");
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(Color.WHITE);
@@ -78,7 +78,7 @@ public class HistorialActivity extends AppCompatActivity {
 
         //column 2
         header_tv = new TextView(this);
-        header_tv.setLayoutParams(params);
+        header_tv.setLayoutParams(params2);
         header_tv.setText("Nombre");
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(Color.WHITE);
@@ -87,7 +87,7 @@ public class HistorialActivity extends AppCompatActivity {
 
         //column 3
         header_tv = new TextView(this);
-        header_tv.setLayoutParams(params);
+        header_tv.setLayoutParams(params3);
         header_tv.setText("Nota");
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(Color.WHITE);
@@ -96,12 +96,14 @@ public class HistorialActivity extends AppCompatActivity {
 
         //column 4
         header_tv = new TextView(this);
-        header_tv.setLayoutParams(params);
+        header_tv.setLayoutParams(params4);
         header_tv.setText("Fecha");
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(Color.WHITE);
         header_tv.setTextSize(20);
         header_row.addView(header_tv);
+
+        header_row.setGravity(Gravity.CENTER);
 
         tableHeader.addView(header_row, 0);
 
@@ -135,6 +137,7 @@ public class HistorialActivity extends AppCompatActivity {
             tv.setLayoutParams(params4);
             tv.setText("06/12/2018");
             tv.setGravity(Gravity.CENTER);
+            row.setGravity(Gravity.CENTER);
             row.addView(tv);
 
             tableLayout.addView(row, i);
