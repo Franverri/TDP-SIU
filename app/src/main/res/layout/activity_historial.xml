@@ -1,51 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:shrinkColumns="*"  android:stretchColumns="*" android:background="#ffffff">
+    android:orientation="vertical">
 
-
-    <!-- Row 1 with 3 columns -->
-
-
-    <TableRow
-        android:id="@+id/tableRow1"
+    <TableLayout
+        android:id="@+id/table_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:background="@color/colorPrimary"
+        android:stretchColumns="*" />
 
-        <TextView
-            android:text="Código"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:id="@+id/table_historial"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="#dcdcdc"
-            android:textColor="#000000"
-            android:padding="20dip" android:gravity="center"/>
+            android:stretchColumns="*" />
 
-        <TextView
-            android:text="Nombre"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="#d3d3d3"
-            android:textColor="#000000"
-            android:padding="20dip" android:gravity="center"/>
+    </ScrollView>
 
-        <TextView
-            android:text="Nota"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="#cac9c9"
-            android:textColor="#000000"
-            android:padding="20dip" android:gravity="center"/>
-
-        <TextView
-            android:text="Fecha"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:background="#cac9c9"
-            android:textColor="#000000"
-            android:padding="20dip" android:gravity="center"/>
-
-    </TableRow>
-
-</TableLayout>
+</LinearLayout>
