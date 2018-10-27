@@ -63,7 +63,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".HistorialActivity"></activity>
+        <activity android:name=".HistorialActivity"
+            android:label="Historial académico"/>
     </application>
 
 </manifest>

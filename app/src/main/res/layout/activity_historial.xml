@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HistorialActivity">
+    android:shrinkColumns="*"  android:stretchColumns="*" android:background="#ffffff">
 
-</android.support.constraint.ConstraintLayout>
+
+    <!-- Row 1 with 3 columns -->
+
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:text="Código"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#dcdcdc"
+            android:textColor="#000000"
+            android:padding="20dip" android:gravity="center"/>
+
+        <TextView
+            android:text="Nombre"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#d3d3d3"
+            android:textColor="#000000"
+            android:padding="20dip" android:gravity="center"/>
+
+        <TextView
+            android:text="Nota"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#cac9c9"
+            android:textColor="#000000"
+            android:padding="20dip" android:gravity="center"/>
+
+        <TextView
+            android:text="Fecha"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#cac9c9"
+            android:textColor="#000000"
+            android:padding="20dip" android:gravity="center"/>
+
+    </TableRow>
+
+</TableLayout>
