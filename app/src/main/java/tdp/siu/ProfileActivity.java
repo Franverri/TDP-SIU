@@ -30,6 +30,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -156,19 +157,18 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(ProfileActivity.this, "La contraseña ingresada es inválida",
                             Toast.LENGTH_LONG).show();
+                    progress.dismiss();
                 }
             }
         } else {
             Toast.makeText(ProfileActivity.this, "El mail ingresado es inválido",
                     Toast.LENGTH_LONG).show();
+            progress.dismiss();
         }
         if(exitoso){
-            //enviarRequest(url);
+            enviarRequest(url);
             editorShared.putString("mail", mailIngresado);
             editorShared.apply();
-            Toast.makeText(this, "Cambios guardados!",
-                    Toast.LENGTH_LONG).show();
-            super.onBackPressed();
         }
     }
 
@@ -179,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("API","Response: " + response.toString());
-                        //procesarRespuesta(response);
+                        procesarRespuesta(response);
                         progress.dismiss();
 
                     }
@@ -196,6 +196,23 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
+    }
+
+    private void procesarRespuesta(JSONObject response) {
+        int tipo = 0;
+        try {
+            tipo = response.getInt("result");
+        }catch (JSONException e){
+            Log.i("JSON","Error al parsear JSON");
+        }
+        if ((tipo == 1) || (tipo == 2) || (tipo == 3)){ //Exitoso
+            Toast.makeText(this, "Cambios guardados!",
+                    Toast.LENGTH_LONG).show();
+            super.onBackPressed();
+        } else if (tipo == 4){ //Error en contraseña actual
+            Toast.makeText(this, "La contraseña ingresada es incorrecta",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
 
