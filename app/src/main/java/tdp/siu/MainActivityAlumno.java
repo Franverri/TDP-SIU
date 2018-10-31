@@ -521,6 +521,8 @@ public class MainActivityAlumno extends AppCompatActivity
 
         boolean esRegular = validarRegularidad();
         if(esRegular){
+            Toast.makeText(MainActivityAlumno.this, "Generando certificado...",
+                    Toast.LENGTH_LONG).show();
             descargarPDF();
         } else {
             Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",

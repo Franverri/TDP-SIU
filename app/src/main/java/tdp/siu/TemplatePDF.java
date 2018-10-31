@@ -56,7 +56,7 @@ public class TemplatePDF extends FileProvider {
     }
 
     private void createFile(){
-        File folder = new File(Environment.getExternalStorageDirectory().toString(), "PDF");
+        File folder = new File(Environment.getExternalStorageDirectory().toString(), "Download");
 
         if(!folder.exists()){
             folder.mkdirs();
