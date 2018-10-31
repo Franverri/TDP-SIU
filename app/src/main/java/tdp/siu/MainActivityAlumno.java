@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -558,10 +559,35 @@ public class MainActivityAlumno extends AppCompatActivity
             goFinales();
         } else if(id == R.id.nav_historialAcademimco){
             goHistorial();
+        } else if(id == R.id.nav_alumnoRegular){
+            validarAlumnoRegular();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_alumno);
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void validarAlumnoRegular() {
+
+        boolean esRegular = validarRegularidad();
+        if(esRegular){
+            descargarPDF();
+        } else {
+            Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void descargarPDF() {
+
+        
+
+    }
+
+    private boolean validarRegularidad() {
+        //Pegarle a la API para ver si es alumno regular
         return true;
     }
 
