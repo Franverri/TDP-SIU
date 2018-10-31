@@ -1,30 +1,70 @@
 package tdp.siu;
 
-import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.JsonArrayRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class HistorialActivity extends AppCompatActivity {
 
-    int idIncrementeal = 0;
-    //TableLayout tl;
+    ProgressDialog progress;
+    EditText etSearch;
+
+    RequestQueue queue;
+    String APIUrl ="https://siu-api.herokuapp.com/alumno/historial?padron=";
 
     private TableLayout tableLayout;
     private TableLayout tableHeader;
 
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
+    String padron;
+
+    TableRow.LayoutParams params1;
+    TableRow.LayoutParams params2;
+    TableRow.LayoutParams params3;
+    TableRow.LayoutParams params4;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        padron = sharedPref.getString("padron", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -36,13 +76,29 @@ public class HistorialActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_historial);
 
-        //configurarHeaders();
+        configurarHTTPRequestSingleton();
 
         configurarTabla();
+    }
 
-        //agregarFila("7547", "Adm. y Control de Proy. Informaticos II", "10", "06/12/2018");
+    private void configurarHTTPRequestSingleton() {
 
-        //cargarTabla();
+        // Get RequestQueue Singleton
+        queue = HTTPRequestSingleton.getInstance(this.getApplicationContext()).
+                getRequestQueue();
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the RequestQueue with the cache and network.
+        queue = new RequestQueue(cache, network);
+
+        // Start the queue
+        queue.start();
+
     }
 
     private void configurarTabla() {
@@ -59,11 +115,10 @@ public class HistorialActivity extends AppCompatActivity {
         tableHeader = (TableLayout) findViewById(R.id.table_header);
 
         //initialize header row and define LayoutParams
-        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-        TableRow.LayoutParams params1 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
-        TableRow.LayoutParams params2 = new TableRow.LayoutParams(52, TableRow.LayoutParams.WRAP_CONTENT);
-        TableRow.LayoutParams params3 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
-        TableRow.LayoutParams params4 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
+        params1 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
+        params2 = new TableRow.LayoutParams(52, TableRow.LayoutParams.WRAP_CONTENT);
+        params3 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
+        params4 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
 
         TableRow header_row = new TableRow(this);
 
@@ -107,164 +162,106 @@ public class HistorialActivity extends AppCompatActivity {
 
         tableHeader.addView(header_row, 0);
 
-        for (int i = 0; i < 20; i++) {
+        obtenerDatos();
+    }
 
-            TableRow row = new TableRow(this);
+    private void obtenerDatos() {
 
-            //column 1
-            TextView tv = new TextView(this);
-            tv.setLayoutParams(params1);
-            tv.setText("7547");
-            tv.setGravity(Gravity.CENTER);
-            row.addView(tv);
+        progress = ProgressDialog.show(this, "Historial académico",
+                "Recolectando datos...", true);
+        String url = APIUrl + padron;
 
-            //column 2
-            tv = new TextView(this);
-            tv.setLayoutParams(params2);
-            tv.setText("Adm. y Control de Proy. Informaticos II");
-            tv.setGravity(Gravity.CENTER);
-            row.addView(tv);
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
-            //column 3
-            tv = new TextView(this);
-            tv.setLayoutParams(params3);
-            tv.setText("10");
-            tv.setGravity(Gravity.CENTER);
-            row.addView(tv);
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        actualizarTabla(response);
+                        progress.dismiss();
 
-            //column 4
-            tv = new TextView(this);
-            tv.setLayoutParams(params4);
-            tv.setText("06/12/2018");
-            tv.setGravity(Gravity.CENTER);
-            row.setGravity(Gravity.CENTER);
-            row.addView(tv);
+                    }
+                }, new Response.ErrorListener() {
 
-            tableLayout.addView(row, i);
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progress.dismiss();
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(HistorialActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+
+    }
+
+    private void actualizarTabla(JSONArray response) {
+        tableLayout.removeAllViews();
+        for (int i = 0; i < response.length(); i++) {
+            JSONObject jsonobject = null;
+            try {
+                jsonobject = response.getJSONObject(i);
+                if(jsonobject.length() == 0){
+                    Toast.makeText(HistorialActivity.this, "Sin materias aprobadas",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        String nombreMateria = jsonobject.getString("nombre");
+                        String codigoMateria = jsonobject.getString("codigo");
+                        String nota = jsonobject.getString("nota");
+                        String fecha = jsonobject.getString("fecha");
+                        añadirFila(i, codigoMateria, nombreMateria, nota, fecha);
+                    } catch (JSONException e) {
+                        Log.i("JSON","Error al obtener datos del JSON");
+                    }
+                }
+            } catch (JSONException e) {
+                Log.i("JSON","Error al parsear JSON");
+            }
         }
     }
 
-    /*
-    private void agregarFila(String strCodigo, String strNombre, String strNota, String strFecha) {
+    private void añadirFila(int i, String codigoMateria, String nombreMateria, String nota, String fecha) {
 
-        TableRow tr_head = new TableRow(this);
-        tr_head.setId(idIncrementeal);
-        idIncrementeal = idIncrementeal + 1;
-        tr_head.setBackgroundColor(Color.WHITE);        // part1
-        tr_head.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.MATCH_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT));
+        TableRow row = new TableRow(this);
 
-        //Primer columna
-        TextView col_codigo = new TextView(this);
-        col_codigo.setId(idIncrementeal);
-        idIncrementeal = idIncrementeal + 1;
-        col_codigo.setText(strCodigo);
-        col_codigo.setTextColor(Color.BLACK);          // part2
-        col_codigo.setPadding(5, 5, 5, 5);
-        col_codigo.setGravity(Gravity.CENTER);
-        col_codigo.setTextSize(20);
-        tr_head.addView(col_codigo);// add the column to the table row here
+        //column 1
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(params1);
+        tv.setText(codigoMateria);
+        tv.setGravity(Gravity.CENTER);
+        row.addView(tv);
 
-        //Segunda columna
-        TextView col_nombre = new TextView(this);    // part3
-        col_nombre.setId(idIncrementeal);// define id that must be unique
-        idIncrementeal = idIncrementeal + 1;
-        col_nombre.setText(strNombre); // set the text for the header
-        col_nombre.setTextColor(Color.BLACK); // set the color
-        col_nombre.setTextSize(20);
-        tr_head.addView(col_nombre); // add the column to the table row here
+        //column 2
+        tv = new TextView(this);
+        tv.setLayoutParams(params2);
+        tv.setText(nombreMateria);
+        tv.setGravity(Gravity.CENTER);
+        row.addView(tv);
 
-        //Tercer columna
-        TextView col_nota = new TextView(this);    // part3
-        col_nota.setId(idIncrementeal);// define id that must be unique
-        idIncrementeal = idIncrementeal + 1;
-        col_nota.setText(strNota); // set the text for the header
-        col_nota.setTextColor(Color.BLACK); // set the color
-        col_nota.setPadding(5, 5, 5, 5); // set the padding (if required)
-        col_nota.setGravity(Gravity.CENTER);
-        col_nota.setTextSize(20);
-        tr_head.addView(col_nota); // add the column to the table row here
+        //column 3
+        tv = new TextView(this);
+        tv.setLayoutParams(params3);
+        tv.setText(nota);
+        tv.setGravity(Gravity.CENTER);
+        row.addView(tv);
 
-        //Cuarta columna
-        TextView col_fecha = new TextView(this);    // part3
-        col_fecha.setId(idIncrementeal);// define id that must be unique
-        idIncrementeal = idIncrementeal + 1;
-        col_fecha.setText(strFecha); // set the text for the header
-        col_fecha.setTextColor(Color.BLACK); // set the color
-        col_fecha.setPadding(5, 5, 5, 5); // set the padding (if required)
-        col_fecha.setGravity(Gravity.CENTER);
-        col_fecha.setTextSize(20);
-        tr_head.addView(col_fecha); // add the column to the table row here
+        //column 4
+        tv = new TextView(this);
+        tv.setLayoutParams(params4);
+        tv.setText(fecha);
+        tv.setGravity(Gravity.CENTER);
+        row.setGravity(Gravity.CENTER);
+        row.addView(tv);
 
-        tl.addView(tr_head, new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.MATCH_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT));
-    }*/
+        tableLayout.addView(row, i);
+
+    }
 
     public boolean onOptionsItemSelected(MenuItem item){
         super.onBackPressed();
         return true;
     }
-
-    /*
-    @SuppressLint("ResourceType")
-    public void configurarHeaders(){
-        tl = (TableLayout) findViewById(R.id.table_historial);
-        TableRow tr_head = new TableRow(this);
-        tr_head.setId(idIncrementeal);
-        idIncrementeal = idIncrementeal + 1;
-        tr_head.setBackgroundColor(Color.GRAY);        // part1
-        tr_head.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.MATCH_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT));
-
-        //Primer columna
-        TextView col_codigo = new TextView(this);
-        col_codigo.setId(idIncrementeal);
-        idIncrementeal = idIncrementeal + 1;
-        col_codigo.setText("Código");
-        col_codigo.setTextColor(Color.WHITE);          // part2
-        col_codigo.setPadding(5, 5, 5, 5);
-        col_codigo.setGravity(Gravity.CENTER);
-        col_codigo.setTextSize(20);
-        tr_head.addView(col_codigo);// add the column to the table row here
-
-        //Segunda columna
-        TextView col_nombre = new TextView(this);    // part3
-        col_nombre.setId(idIncrementeal);// define id that must be unique
-        idIncrementeal = idIncrementeal + 1;
-        col_nombre.setText("Nombre"); // set the text for the header
-        col_nombre.setTextColor(Color.WHITE); // set the color
-        col_nombre.setPadding(5, 5, 5, 5); // set the padding (if required)
-        col_nombre.setGravity(Gravity.CENTER);
-        col_nombre.setTextSize(20);
-        tr_head.addView(col_nombre); // add the column to the table row here
-
-        //Tercer columna
-        TextView col_nota = new TextView(this);    // part3
-        col_nota.setId(idIncrementeal);// define id that must be unique
-        idIncrementeal = idIncrementeal + 1;
-        col_nota.setText("Nota"); // set the text for the header
-        col_nota.setTextColor(Color.WHITE); // set the color
-        col_nota.setPadding(5, 5, 5, 5); // set the padding (if required)
-        col_nota.setGravity(Gravity.CENTER);
-        col_nota.setTextSize(20);
-        tr_head.addView(col_nota); // add the column to the table row here
-
-        //Cuarta columna
-        TextView col_fecha = new TextView(this);    // part3
-        col_fecha.setId(idIncrementeal);// define id that must be unique
-        idIncrementeal = idIncrementeal + 1;
-        col_fecha.setText("Fecha"); // set the text for the header
-        col_fecha.setTextColor(Color.WHITE); // set the color
-        col_fecha.setPadding(5, 5, 5, 5); // set the padding (if required)
-        col_fecha.setGravity(Gravity.CENTER);
-        col_fecha.setTextSize(20);
-        tr_head.addView(col_fecha); // add the column to the table row here
-
-        tl.addView(tr_head, new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
-                TableLayout.LayoutParams.WRAP_CONTENT));
-    }*/
 }
