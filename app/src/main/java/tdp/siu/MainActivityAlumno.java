@@ -1,12 +1,12 @@
 package tdp.siu;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -35,11 +35,15 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Image;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -530,14 +534,33 @@ public class MainActivityAlumno extends AppCompatActivity
         templatePDF.openDocument();
         templatePDF.addMetaData("Certificado", "Alumno regular", "FIUBA");
         String fechaActual = getFechaAtual();
+        templatePDF.addImage(addImagePDF());
         templatePDF.addTitles("Facultad de Ingeniería de la Universidad de Buenos Aires", "Certificado de alumno regular", fechaActual);
         templatePDF.addParagraph("Apellido/s: " + nombre.split("\\s+")[1]);
         templatePDF.addParagraph("Nombre/s: " + nombre.split("\\s+")[0]);
-        templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", "");
+        templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", ""));
         templatePDF.addParagraph("Carrera: " /*FALTA CARRERA*/ );
         templatePDF.addParagraph("Conste que el alumno cuyos datos figuran en el presente documento, se encuentra inscripto en la/s carrera/s arriba citada/s y a la fecha mantiene su condicion de Alumno Regular. A pedido del interesado se extiende el presente documento");
         templatePDF.closeDocument();
         templatePDF.viewPDF(this);
+    }
+
+    private Image addImagePDF() {
+
+        Drawable d = getResources().getDrawable(R.drawable.logo_fiuba);
+        BitmapDrawable bitDw = ((BitmapDrawable) d);
+        Bitmap bmp = bitDw.getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        Image image = null;
+        try {
+            image = Image.getInstance(stream.toByteArray());
+        } catch (BadElementException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
     }
 
     private boolean validarRegularidad() {

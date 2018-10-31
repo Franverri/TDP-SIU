@@ -15,6 +15,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -118,5 +119,17 @@ public class TemplatePDF extends FileProvider {
         } else {
             Toast.makeText(activity.getApplicationContext(), "No existe el PDF", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void addImage(Image image) {
+
+        try {
+            image.setAlignment(Element.ALIGN_CENTER);
+            image.scalePercent(30);
+            document.add(image);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
     }
 }
