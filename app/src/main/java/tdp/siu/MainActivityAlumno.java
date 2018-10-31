@@ -1,9 +1,12 @@
 package tdp.siu;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -405,64 +408,6 @@ public class MainActivityAlumno extends AppCompatActivity
 
     }
 
-    /*
-    private Boolean validezPeriodo(String fechaInicio, String fechaCierre) {
-        boolean periodoValido = false;
-
-        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
-        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
-        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
-        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
-        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
-
-        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
-        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
-        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
-        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
-        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
-
-        Calendar currentTime = Calendar.getInstance();
-        int añoActual = currentTime.get(Calendar.YEAR);
-        int mesActual = (currentTime.get(Calendar.MONTH)+1);
-        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
-        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minutoActual = currentTime.get(Calendar.MINUTE);
-
-        if((año1 <= añoActual) && (añoActual <= año2)){
-
-            if(((año1 == año2) && (mes1 <= mesActual) && (mesActual <= mes2)) || (añoActual < año2)){
-
-                if(((dia1 <= diaActual) && (diaActual <= dia2))||(mesActual < mes2)){
-
-                    if(((hora1 <= horaActual) && (horaActual <= hora2))||(diaActual < dia2)){
-
-                        if(((minutos1 <= minutoActual) && (minutoActual <= minutos2))||(horaActual < hora2)){
-
-                            periodoValido = true;
-
-                        } else {
-                            periodoValido = false;
-                        }
-
-                    } else {
-                        periodoValido = false;
-                    }
-
-                } else {
-                    periodoValido = false;
-                }
-
-            } else {
-                periodoValido = false;
-            }
-
-        } else {
-            periodoValido = false;
-        }
-
-        return periodoValido;
-    }*/
-
     private String obtenerDiaFecha(String fecha){
         String dia = fecha.substring(8,10);
         String mes = fecha.substring(5,7);
@@ -581,9 +526,13 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void descargarPDF() {
-
-        
-
+        TemplatePDF templatePDF = new TemplatePDF(getApplicationContext());
+        templatePDF.openDocument();
+        templatePDF.addMetaData("Certificado", "Alumno regular", "FIUBA");
+        templatePDF.addTitles("FIUBA", "Certificado de alumno regular", "31/10/2018");
+        templatePDF.addParagraph("El alumno es regular... bla bla bla");
+        templatePDF.closeDocument();
+        templatePDF.viewPDF(this);
     }
 
     private boolean validarRegularidad() {
