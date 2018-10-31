@@ -54,12 +54,13 @@ public class MainActivityAlumno extends AppCompatActivity
 
     String padron;
     String prioridad;
-    String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioFinales, fechaCierreFinales;
+    String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioCursada, fechaCierreCursada ,fechaInicioFinales, fechaCierreFinales;
     String diaInscripcion, diaFinInscripcion, horaInscripcion, horaFinInscripcion;
     String diaDesinscripcion, diaFinDesinscripcion, horaDesinscripcion, horaFinDesinscripcion;
+    String diaCursada, diaFinCursada, horaCursada, horaFinCursada;
     String diaFinales, diaFinFinales, horaFinales, horaFinFinales;
     String diaActualizacion;
-    Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnFinales;
+    Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnCursada ,estaEnFinales;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -263,6 +264,27 @@ public class MainActivityAlumno extends AppCompatActivity
                     Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
                     //editorShared.putBoolean("estaEnDesinscripcion", true);
                     editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
+
+                    //---------------
+
+                    //CURSADA
+
+                    fechaInicioCursada = jsonobject.getString("fechaInicioCursadas");
+                    diaCursada = obtenerDiaFecha(fechaInicioCursada);
+                    horaCursada = obtenerHoraFecha(fechaInicioCursada);
+                    editorShared.putString("diaCursada", diaCursada);
+                    editorShared.putString("horaCursada", horaCursada);
+
+                    fechaCierreCursada = jsonobject.getString("fechaFinDesinscripcionCursadas");
+                    diaFinCursada = obtenerDiaFecha(fechaCierreCursada);
+                    horaFinCursada = obtenerHoraFecha(fechaCierreCursada);
+                    editorShared.putString("diaFinCursada", diaFinCursada);
+                    editorShared.putString("horaFinCursada", horaFinCursada);
+
+                    estaEnCursada = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
+                    Log.d("FECHAS", "Cursada: " + estaEnCursada);
+                    //editorShared.putBoolean("estaEnDesinscripcion", true);
+                    editorShared.putBoolean("estaEnCursada", estaEnCursada);
 
                     //---------------
 

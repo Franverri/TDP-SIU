@@ -195,7 +195,7 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
         }
         recyclerView.setAdapter(adapter);
         if (cantFinales == 0){
-            Toast.makeText(FinalesOpcionesActivity.this, "Sin inscripciones",
+            Toast.makeText(FinalesOpcionesActivity.this, "No existen finales cargados",
                     Toast.LENGTH_LONG).show();
         }
     }

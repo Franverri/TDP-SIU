@@ -76,7 +76,11 @@ public class OfertaFinalesActivity extends AppCompatActivity {
         editorShared = sharedPref.edit();
 
         padron = sharedPref.getString("padron", null);
-        periodoHabilitado = sharedPref.getBoolean("periodoHabilitado", false);
+        boolean estaEnFinales = sharedPref.getBoolean("estaEnFinales", false);
+        boolean estaEnCursada = sharedPref.getBoolean("estaEnCursada", false);
+        if(estaEnCursada || estaEnFinales){
+            periodoHabilitado = true;
+        }
         descPeriodo = sharedPref.getString("descPeriodo", "");
 
         //Remove notification bar

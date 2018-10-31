@@ -107,6 +107,17 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         final String fechaFinal = finalActual.getHorario();
         if(puedoClickear){
             holder.ivCancel.setVisibility(View.GONE);
+            holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(estoy48hsAntes(fechaFinal)){
+                        mostrarDialogInscripcion(nombreMateria, idFinal);
+                    } else {
+                        Toast.makeText(mCtx, "No es posible inscribirse a menos de 48hs del final",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         } else {
             holder.ivCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,17 +132,6 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                 }
             });
         }
-        holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(puedoClickear && estoy48hsAntes(fechaFinal)){
-                    mostrarDialogInscripcion(nombreMateria, idFinal);
-                } else {
-                    Toast.makeText(mCtx, "No es posible inscribirse a menos de 48hs del final",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     private boolean estoy48hsAntes(String fechaFinal) {
