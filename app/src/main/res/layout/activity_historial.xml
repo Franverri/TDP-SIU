@@ -9,8 +9,7 @@
         android:id="@+id/table_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:stretchColumns="*" />
+        android:background="@color/colorPrimary" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,8 +20,7 @@
             android:showDividers="middle"
             android:id="@+id/table_historial"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*" />
+            android:layout_height="wrap_content" />
 
     </ScrollView>
 

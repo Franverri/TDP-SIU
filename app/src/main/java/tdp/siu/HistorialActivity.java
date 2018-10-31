@@ -115,10 +115,10 @@ public class HistorialActivity extends AppCompatActivity {
         tableHeader = (TableLayout) findViewById(R.id.table_header);
 
         //initialize header row and define LayoutParams
-        params1 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
-        params2 = new TableRow.LayoutParams(52, TableRow.LayoutParams.WRAP_CONTENT);
-        params3 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
-        params4 = new TableRow.LayoutParams(16, TableRow.LayoutParams.WRAP_CONTENT);
+        params1 = new TableRow.LayoutParams(3*width/16, TableRow.LayoutParams.WRAP_CONTENT);
+        params2 = new TableRow.LayoutParams(7*width/16, TableRow.LayoutParams.WRAP_CONTENT);
+        params3 = new TableRow.LayoutParams(2*width/16, TableRow.LayoutParams.WRAP_CONTENT);
+        params4 = new TableRow.LayoutParams(4*width/16, TableRow.LayoutParams.WRAP_CONTENT);
 
         TableRow header_row = new TableRow(this);
 
@@ -238,7 +238,7 @@ public class HistorialActivity extends AppCompatActivity {
         tv = new TextView(this);
         tv.setLayoutParams(params2);
         tv.setText(nombreMateria);
-        tv.setGravity(Gravity.CENTER);
+        tv.setGravity(Gravity.CENTER_VERTICAL);
         row.addView(tv);
 
         //column 3
