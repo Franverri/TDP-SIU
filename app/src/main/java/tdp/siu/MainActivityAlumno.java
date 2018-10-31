@@ -533,8 +533,8 @@ public class MainActivityAlumno extends AppCompatActivity
         templatePDF.addTitles("Facultad de Ingeniería de la Universidad de Buenos Aires", "Certificado de alumno regular", fechaActual);
         templatePDF.addParagraph("Apellido/s: " + nombre.split("\\s+")[1]);
         templatePDF.addParagraph("Nombre/s: " + nombre.split("\\s+")[0]);
-        templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", "") +
-                " Carrera: " /*FALTA CARRERA*/ );
+        templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", "");
+        templatePDF.addParagraph("Carrera: " /*FALTA CARRERA*/ );
         templatePDF.addParagraph("Conste que el alumno cuyos datos figuran en el presente documento, se encuentra inscripto en la/s carrera/s arriba citada/s y a la fecha mantiene su condicion de Alumno Regular. A pedido del interesado se extiende el presente documento");
         templatePDF.closeDocument();
         templatePDF.viewPDF(this);
