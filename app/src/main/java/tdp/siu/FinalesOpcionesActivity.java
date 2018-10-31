@@ -59,10 +59,6 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
-        //Guardo para saber si puedo clickear o no
-        editorShared.putBoolean("clickTarjetaFinal", true);
-        editorShared.apply();
-
         padron = sharedPref.getString("padron", null);
 
         //Remove notification bar
@@ -128,7 +124,7 @@ public class FinalesOpcionesActivity extends AppCompatActivity {
         finalList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new FinalAdapter(this, finalList);
+        adapter = new FinalAdapter(this, finalList, true);
 
         buscarFinales();
         recyclerView.setAdapter(adapter);
