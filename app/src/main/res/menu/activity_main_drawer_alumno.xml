@@ -5,6 +5,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_historialAcademimco"
+            android:icon="@drawable/ic_historial"
+            android:title="Historial académico" />
+        <item
             android:id="@+id/nav_ofertaAcademica"
             android:icon="@drawable/ic_bullets"
             android:title="Oferta académica" />
