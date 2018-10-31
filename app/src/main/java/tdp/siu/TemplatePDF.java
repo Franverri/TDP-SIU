@@ -31,7 +31,7 @@ public class TemplatePDF extends FileProvider {
     private Font fTitle = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
     private Font fSubtitle = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private Font fText = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-    private Font fHighText = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.BOLD, BaseColor.RED);
+    private Font fHighText = new Font(Font.FontFamily.TIMES_ROMAN, 15, Font.BOLD);
 
     public TemplatePDF(){
 
@@ -73,7 +73,7 @@ public class TemplatePDF extends FileProvider {
         paragraph = new Paragraph();
         addChildP(new Paragraph(title, fTitle));
         addChildP(new Paragraph(subtitle, fSubtitle));
-        addChildP(new Paragraph("Generado: " + date, fHighText));
+        addChildP(new Paragraph("Fecha de generación del certificado: " + date, fHighText));
         paragraph.setSpacingAfter(30);
         try {
             document.add(paragraph);

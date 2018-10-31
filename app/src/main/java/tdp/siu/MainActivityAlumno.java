@@ -56,7 +56,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
-    String padron;
+    String padron, nombre;
     String prioridad;
     String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioCursada, fechaCierreCursada ,fechaInicioFinales, fechaCierreFinales;
     String diaInscripcion, diaFinInscripcion, horaInscripcion, horaFinInscripcion;
@@ -75,7 +75,7 @@ public class MainActivityAlumno extends AppCompatActivity
         editorShared = sharedPref.edit();
 
         padron = sharedPref.getString("padron", null);
-        String nombre = sharedPref.getString("nombre", null);
+        nombre = sharedPref.getString("nombre", null);
         String mail = sharedPref.getString("mail", null);
 
         //Remove notification bar
@@ -529,8 +529,13 @@ public class MainActivityAlumno extends AppCompatActivity
         TemplatePDF templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();
         templatePDF.addMetaData("Certificado", "Alumno regular", "FIUBA");
-        templatePDF.addTitles("FIUBA", "Certificado de alumno regular", "31/10/2018");
-        templatePDF.addParagraph("El alumno es regular... bla bla bla");
+        String fechaActual = getFechaAtual();
+        templatePDF.addTitles("Facultad de Ingeniería de la Universidad de Buenos Aires", "Certificado de alumno regular", fechaActual);
+        templatePDF.addParagraph("Apellido/s: " + nombre.split("\\s+")[1]);
+        templatePDF.addParagraph("Nombre/s: " + nombre.split("\\s+")[0]);
+        templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", "") +
+                " Carrera: " /*FALTA CARRERA*/ );
+        templatePDF.addParagraph("Conste que el alumno cuyos datos figuran en el presente documento, se encuentra inscripto en la/s carrera/s arriba citada/s y a la fecha mantiene su condicion de Alumno Regular. A pedido del interesado se extiende el presente documento");
         templatePDF.closeDocument();
         templatePDF.viewPDF(this);
     }
@@ -563,5 +568,17 @@ public class MainActivityAlumno extends AppCompatActivity
 
     public void calcularPrioridad() {
         formularRequest();
+    }
+
+    public String getFechaAtual() {
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+
+        String fechaAtual = diaActual + "/" + mesActual + "/" + añoActual;
+
+        return fechaAtual;
     }
 }
