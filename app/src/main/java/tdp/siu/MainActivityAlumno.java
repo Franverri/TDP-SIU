@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -31,11 +35,15 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Image;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,7 +60,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
-    String padron;
+    String padron, nombre;
     String prioridad;
     String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioCursada, fechaCierreCursada ,fechaInicioFinales, fechaCierreFinales;
     String diaInscripcion, diaFinInscripcion, horaInscripcion, horaFinInscripcion;
@@ -71,7 +79,7 @@ public class MainActivityAlumno extends AppCompatActivity
         editorShared = sharedPref.edit();
 
         padron = sharedPref.getString("padron", null);
-        String nombre = sharedPref.getString("nombre", null);
+        nombre = sharedPref.getString("nombre", null);
         String mail = sharedPref.getString("mail", null);
 
         //Remove notification bar
@@ -404,64 +412,6 @@ public class MainActivityAlumno extends AppCompatActivity
 
     }
 
-    /*
-    private Boolean validezPeriodo(String fechaInicio, String fechaCierre) {
-        boolean periodoValido = false;
-
-        int dia1 = Integer.parseInt(fechaInicio.substring(8,10));
-        int mes1 = Integer.parseInt(fechaInicio.substring(5,7));
-        int año1 = Integer.parseInt(fechaInicio.substring(0,4));
-        int hora1 = Integer.parseInt(fechaInicio.substring(11,13));
-        int minutos1 = Integer.parseInt(fechaInicio.substring(14,16));
-
-        int dia2 = Integer.parseInt(fechaCierre.substring(8,10));
-        int mes2 = Integer.parseInt(fechaCierre.substring(5,7));
-        int año2 = Integer.parseInt(fechaCierre.substring(0,4));
-        int hora2 = Integer.parseInt(fechaCierre.substring(11,13));
-        int minutos2 = Integer.parseInt(fechaCierre.substring(14,16));
-
-        Calendar currentTime = Calendar.getInstance();
-        int añoActual = currentTime.get(Calendar.YEAR);
-        int mesActual = (currentTime.get(Calendar.MONTH)+1);
-        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
-        int horaActual = currentTime.get(Calendar.HOUR_OF_DAY);
-        int minutoActual = currentTime.get(Calendar.MINUTE);
-
-        if((año1 <= añoActual) && (añoActual <= año2)){
-
-            if(((año1 == año2) && (mes1 <= mesActual) && (mesActual <= mes2)) || (añoActual < año2)){
-
-                if(((dia1 <= diaActual) && (diaActual <= dia2))||(mesActual < mes2)){
-
-                    if(((hora1 <= horaActual) && (horaActual <= hora2))||(diaActual < dia2)){
-
-                        if(((minutos1 <= minutoActual) && (minutoActual <= minutos2))||(horaActual < hora2)){
-
-                            periodoValido = true;
-
-                        } else {
-                            periodoValido = false;
-                        }
-
-                    } else {
-                        periodoValido = false;
-                    }
-
-                } else {
-                    periodoValido = false;
-                }
-
-            } else {
-                periodoValido = false;
-            }
-
-        } else {
-            periodoValido = false;
-        }
-
-        return periodoValido;
-    }*/
-
     private String obtenerDiaFecha(String fecha){
         String dia = fecha.substring(8,10);
         String mes = fecha.substring(5,7);
@@ -558,10 +508,65 @@ public class MainActivityAlumno extends AppCompatActivity
             goFinales();
         } else if(id == R.id.nav_historialAcademimco){
             goHistorial();
+        } else if(id == R.id.nav_alumnoRegular){
+            validarAlumnoRegular();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_alumno);
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void validarAlumnoRegular() {
+
+        boolean esRegular = validarRegularidad();
+        if(esRegular){
+            Toast.makeText(MainActivityAlumno.this, "Generando certificado...",
+                    Toast.LENGTH_LONG).show();
+            descargarPDF();
+        } else {
+            Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void descargarPDF() {
+        TemplatePDF templatePDF = new TemplatePDF(getApplicationContext());
+        templatePDF.openDocument();
+        templatePDF.addMetaData("Certificado", "Alumno regular", "FIUBA");
+        String fechaActual = getFechaAtual();
+        templatePDF.addImage(addImagePDF());
+        templatePDF.addTitles("Facultad de Ingeniería de la Universidad de Buenos Aires", "Certificado de alumno regular", fechaActual);
+        templatePDF.addParagraph("Apellido/s: " + nombre.split("\\s+")[1]);
+        templatePDF.addParagraph("Nombre/s: " + nombre.split("\\s+")[0]);
+        templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", ""));
+        templatePDF.addParagraph("Carrera: " /*FALTA CARRERA*/ );
+        templatePDF.addParagraph("Conste que el alumno cuyos datos figuran en el presente documento, se encuentra inscripto en la/s carrera/s arriba citada/s y a la fecha mantiene su condicion de Alumno Regular. A pedido del interesado se extiende el presente documento");
+        templatePDF.closeDocument();
+        templatePDF.viewPDF(this);
+    }
+
+    private Image addImagePDF() {
+
+        Drawable d = getResources().getDrawable(R.drawable.logo_fiuba);
+        BitmapDrawable bitDw = ((BitmapDrawable) d);
+        Bitmap bmp = bitDw.getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        Image image = null;
+        try {
+            image = Image.getInstance(stream.toByteArray());
+        } catch (BadElementException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+    private boolean validarRegularidad() {
+        //Pegarle a la API para ver si es alumno regular
         return true;
     }
 
@@ -588,5 +593,17 @@ public class MainActivityAlumno extends AppCompatActivity
 
     public void calcularPrioridad() {
         formularRequest();
+    }
+
+    public String getFechaAtual() {
+
+        Calendar currentTime = Calendar.getInstance();
+        int añoActual = currentTime.get(Calendar.YEAR);
+        int mesActual = (currentTime.get(Calendar.MONTH)+1);
+        int diaActual = currentTime.get(Calendar.DAY_OF_MONTH);
+
+        String fechaAtual = diaActual + "/" + mesActual + "/" + añoActual;
+
+        return fechaAtual;
     }
 }
