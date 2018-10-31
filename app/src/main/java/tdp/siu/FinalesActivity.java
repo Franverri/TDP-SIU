@@ -80,13 +80,6 @@ public class FinalesActivity extends AppCompatActivity {
         configurarClickNuevoFinal();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //Guardo para saber si puedo clickear o no
-        editorShared.putBoolean("clickTarjetaFinal", false);
-        editorShared.apply();
-    }
 
     private void configurarClickNuevoFinal() {
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.btn_nuevoFinal);
@@ -143,7 +136,7 @@ public class FinalesActivity extends AppCompatActivity {
         finalList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new FinalAdapter(this, finalList);
+        adapter = new FinalAdapter(this, finalList, false);
 
         buscarFinalesInscripto();
         recyclerView.setAdapter(adapter);

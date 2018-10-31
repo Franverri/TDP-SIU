@@ -43,7 +43,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
 
     String padron;
     Boolean estadoDesinscripcion, estadoInscripcion;
-    Boolean puedoClickear;
+    Boolean clickableCard;
     int positionClick;
     String APIUrl ="https://siu-api.herokuapp.com/alumno";
     RequestQueue queue;
@@ -56,9 +56,10 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     private List<Final> finalList;
 
     //getting the context and product list with constructor
-    public FinalAdapter(Context mCtx, List<Final> finalList) {
+    public FinalAdapter(Context mCtx, List<Final> finalList, boolean clickable) {
         this.mCtx = mCtx;
         this.finalList = finalList;
+        this.clickableCard = clickable;
     }
 
     @Override
@@ -67,7 +68,6 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         View view = inflater.inflate(R.layout.card_final_layout, null);
         SharedPreferences sharedPref = mCtx.getSharedPreferences(mCtx.getString(R.string.saved_data), Context.MODE_PRIVATE);
         padron = sharedPref.getString("padron", null);
-        puedoClickear = sharedPref.getBoolean("clickTarjetaFinal", false);
         configurarHTTPRequestSingleton();
         return new ProductViewHolder(view);
     }
@@ -105,7 +105,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         final String nombreMateria = finalActual.getNombreMateria();
         final String idFinal = finalActual.getIdFinal();
         final String fechaFinal = finalActual.getHorario();
-        if(puedoClickear){
+        if(clickableCard){
             holder.ivCancel.setVisibility(View.GONE);
             holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
                 @Override
