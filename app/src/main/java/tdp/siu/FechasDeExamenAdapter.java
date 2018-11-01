@@ -2,8 +2,11 @@ package tdp.siu;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,6 +73,16 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
             @Override
             public void onClick(View view) {
                 mostrarDialog(position, fecha.getFecha(), fecha.getId() );
+            }
+        });
+        holder.cvFechaExamen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mCtx, AlumnosInscriptosFinalActivity.class);
+                Bundle b = new Bundle();
+                b.putString("id", fecha.getId()); //Your id
+                intent.putExtras(b); //Put your id to your next Intent
+                mCtx.startActivity(intent);
             }
         });
     }
@@ -180,6 +193,7 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
 
         TextView tvNumeroExamen, tvFechaExamen, tvHoraExamen;
         ImageView ivDeleteButton;
+        CardView cvFechaExamen;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -188,6 +202,7 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
             tvFechaExamen = itemView.findViewById(R.id.tvFechaExamen);
             tvHoraExamen = itemView.findViewById(R.id.tvHoraExamen);
             ivDeleteButton = itemView.findViewById(R.id.ivDeleteButton);
+            cvFechaExamen = itemView.findViewById(R.id.cvFechaExamenCard);
         }
     }
 

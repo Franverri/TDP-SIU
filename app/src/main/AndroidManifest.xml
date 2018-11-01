@@ -45,6 +45,9 @@
             android:name=".AlumnosInscriptosActivity"
             android:label="Alumnos inscriptos" />
         <activity
+            android:name=".AlumnosInscriptosFinalActivity"
+            android:label="Alumnos inscriptos" />
+        <activity
             android:name=".FechasDeExamenActivity"
             android:label="Fechas de examen" />
         <activity android:name=".ProfileActivity" />
