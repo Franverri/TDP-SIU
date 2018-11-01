@@ -20,6 +20,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -32,6 +33,7 @@ public class CalendarActivity extends AppCompatActivity {
 
     WeekView mWeekView;
     List<WeekViewEvent> events = new ArrayList<>();
+    String strHorarios, strDias, strNombres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,16 @@ public class CalendarActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_calendar);
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            strNombres = b.getString("strNombres");
+            Log.i("PRUEBAA", "Nombres: " + strNombres);
+            strHorarios = b.getString("strHorarios");
+            Log.i("PRUEBAA", "Horarios: " + strHorarios);
+            strDias = b.getString("strDias");
+            Log.i("PRUEBAA", "Dias: " + strDias);
+        }
 
         // Get a reference for the week view in the layout.
         mWeekView = (WeekView) findViewById(R.id.weekView);
@@ -71,15 +83,6 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         acomodarInicioCalendario();
-
-        /*
-        Calendar inicio = Calendar.getInstance();
-        inicio.set(Calendar.DAY_OF_MONTH, 29);
-        inicio.set(Calendar.HOUR_OF_DAY, 0);
-        inicio.set(Calendar.MINUTE, 0);
-        inicio.set(Calendar.MONTH, 9);
-        inicio.set(Calendar.YEAR, 2018);
-        mWeekView.goToDate(inicio);*/
     }
 
     private void acomodarInicioCalendario() {
@@ -124,15 +127,7 @@ public class CalendarActivity extends AppCompatActivity {
         mWeekView.setHourHeight(height/20);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return true;
-    }
-
     private List<WeekViewEvent> getEvents(int year, int month) {
-
-        Log.d("PRUEBAA", "YEAR: " + year);
-        Log.d("PRUEBAA", "MONTH: " + month);
 
         Calendar today = Calendar.getInstance();
         today.setTime(new Date());
@@ -141,43 +136,156 @@ public class CalendarActivity extends AppCompatActivity {
             return new ArrayList<>();
         }
 
-        int id = 0;
+        List<String> listDias = Arrays.asList(strDias.split(";"));
+        List<String> listHorarios = Arrays.asList(strHorarios.split(";"));
+        List<String> listNombres = Arrays.asList(strNombres.split(";"));
 
-        Calendar startTime = Calendar.getInstance();
-        startTime.set(Calendar.DAY_OF_MONTH, 31);
-        startTime.set(Calendar.HOUR_OF_DAY, 9);
-        startTime.set(Calendar.MINUTE, 1);
-        startTime.set(Calendar.MONTH, 9);
-        startTime.set(Calendar.YEAR, 2018);
-        Calendar endTime = (Calendar) startTime.clone();
-        endTime.set(Calendar.DAY_OF_MONTH, 31);
-        endTime.set(Calendar.HOUR_OF_DAY, 12);
-        endTime.set(Calendar.MINUTE, 0);
-        endTime.set(Calendar.MONTH, 9);
-        endTime.set(Calendar.YEAR, 2018);
-        WeekViewEvent event = new WeekViewEvent(id, "Materia 1", startTime, endTime);
-        event.setColor(getResources().getColor(R.color.colorAccent));
-        events.add(event);
+        for (int i = 0; i < listDias.size(); i++) {
 
-        agregarEvento(2, 10, 2018, 9, 12);
+            Calendar diaCalculado = calcularDia(listDias.get(i));
+
+            agregarEvento(listNombres.get(0), //VER COMO SACAR ESTE HARDCODEO
+                    diaCalculado.get(Calendar.DAY_OF_MONTH),
+                    diaCalculado.get(Calendar.MONTH),
+                    diaCalculado.get(Calendar.YEAR),
+                    Integer.valueOf(listHorarios.get(i).substring(0,2)),
+                    Integer.valueOf(listHorarios.get(i).substring(3,5)),
+                    Integer.valueOf(listHorarios.get(i).substring(6,8)),
+                    Integer.valueOf(listHorarios.get(i).substring(9,11)));
+        }
 
         return events;
     }
 
-    private void agregarEvento(int dia, int mes, int año, int horaInicio, int horaCierre) {
+    private Calendar calcularDia(String s) {
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(new Date());
+
+        switch (inicio.get(Calendar.DAY_OF_WEEK)){
+            case Calendar.MONDAY:
+                if(s.equals("lunes")){
+
+                } else if(s.equals("martes")) {
+                    inicio.add(Calendar.DAY_OF_YEAR, 1);
+                } else if(s.equals("miercoles")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 2);
+                } else if(s.equals("jueves")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 3);
+                } else if(s.equals("viernes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 4);
+                } else if(s.equals("sabado")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 5);
+                }
+                break;
+            case Calendar.TUESDAY:
+                if(s.equals("lunes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -1);
+                } else if(s.equals("martes")) {
+
+                } else if(s.equals("miercoles")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 1);
+                } else if(s.equals("jueves")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 2);
+                } else if(s.equals("viernes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 3);
+                } else if(s.equals("sabado")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 4);
+                }
+                break;
+            case Calendar.WEDNESDAY:
+                if(s.equals("lunes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -2);
+                } else if(s.equals("martes")) {
+                    inicio.add(Calendar.DAY_OF_YEAR, -1);
+                } else if(s.equals("miercoles")){
+
+                } else if(s.equals("jueves")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 1);
+                } else if(s.equals("viernes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 2);
+                } else if(s.equals("sabado")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 3);
+                }
+                break;
+            case Calendar.THURSDAY:
+                if(s.equals("lunes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -3);
+                } else if(s.equals("martes")) {
+                    inicio.add(Calendar.DAY_OF_YEAR, -2);
+                } else if(s.equals("miercoles")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -1);
+                } else if(s.equals("jueves")){
+
+                } else if(s.equals("viernes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 1);
+                } else if(s.equals("sabado")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 2);
+                }
+                break;
+            case Calendar.FRIDAY:
+                if(s.equals("lunes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -4);
+                } else if(s.equals("martes")) {
+                    inicio.add(Calendar.DAY_OF_YEAR, -3);
+                } else if(s.equals("miercoles")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -2);
+                } else if(s.equals("jueves")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -1);
+                } else if(s.equals("viernes")){
+
+                } else if(s.equals("sabado")){
+                    inicio.add(Calendar.DAY_OF_YEAR, 1);
+                }
+                break;
+            case Calendar.SATURDAY:
+                if(s.equals("lunes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -5);
+                } else if(s.equals("martes")) {
+                    inicio.add(Calendar.DAY_OF_YEAR, -4);
+                } else if(s.equals("miercoles")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -3);
+                } else if(s.equals("jueves")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -2);
+                } else if(s.equals("viernes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -1);
+                } else if(s.equals("sabado")){
+
+                }
+                break;
+            case Calendar.SUNDAY:
+                if(s.equals("lunes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -6);
+                } else if(s.equals("martes")) {
+                    inicio.add(Calendar.DAY_OF_YEAR, -5);
+                } else if(s.equals("miercoles")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -4);
+                } else if(s.equals("jueves")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -3);
+                } else if(s.equals("viernes")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -2);
+                } else if(s.equals("sabado")){
+                    inicio.add(Calendar.DAY_OF_YEAR, -1);
+                }
+                break;
+        }
+
+        return inicio;
+    }
+
+    private void agregarEvento(String nombre, int dia, int mes, int año, int horaInicio, int minInicio, int horaCierre, int minCierre) {
         Calendar startTime = Calendar.getInstance();
         startTime.set(Calendar.DAY_OF_MONTH, dia);
         startTime.set(Calendar.HOUR_OF_DAY, horaInicio);
-        startTime.set(Calendar.MINUTE, 0);
+        startTime.set(Calendar.MINUTE, minInicio);
         startTime.set(Calendar.MONTH, mes);
         startTime.set(Calendar.YEAR, año);
         Calendar endTime = (Calendar) startTime.clone();
         endTime.set(Calendar.DAY_OF_MONTH, dia);
         endTime.set(Calendar.HOUR_OF_DAY, horaCierre);
-        endTime.set(Calendar.MINUTE, 0);
+        endTime.set(Calendar.MINUTE, minCierre);
         endTime.set(Calendar.MONTH, mes);
         endTime.set(Calendar.YEAR, año);
-        WeekViewEvent event = new WeekViewEvent(0, "Materia 1", startTime, endTime);
+        WeekViewEvent event = new WeekViewEvent(0, nombre, startTime, endTime);
         event.setColor(getResources().getColor(R.color.colorAccent));
         events.add(event);
     }
