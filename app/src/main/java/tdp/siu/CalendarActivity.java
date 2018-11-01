@@ -5,10 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.MonthLoader;
@@ -112,6 +115,18 @@ public class CalendarActivity extends AppCompatActivity {
                 mWeekView.goToDate(inicio);
                 break;
         }
+
+        //determine height and width
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int height = metrics.heightPixels;
+        mWeekView.goToHour(7);
+        mWeekView.setHourHeight(height/20);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return true;
     }
 
     private List<WeekViewEvent> getEvents(int year, int month) {
@@ -122,13 +137,6 @@ public class CalendarActivity extends AppCompatActivity {
         Calendar today = Calendar.getInstance();
         today.setTime(new Date());
 
-        Calendar timeCierre = Calendar.getInstance();
-        timeCierre.set(Calendar.DAY_OF_MONTH, 30);
-        timeCierre.set(Calendar.HOUR_OF_DAY, 0);
-        timeCierre.set(Calendar.MINUTE, 0);
-        timeCierre.set(Calendar.MONTH, 10);
-        timeCierre.set(Calendar.YEAR, 2018);
-
         if(today.get(Calendar.MONTH)+1 != month){
             return new ArrayList<>();
         }
@@ -137,13 +145,13 @@ public class CalendarActivity extends AppCompatActivity {
 
         Calendar startTime = Calendar.getInstance();
         startTime.set(Calendar.DAY_OF_MONTH, 31);
-        startTime.set(Calendar.HOUR_OF_DAY, 1);
+        startTime.set(Calendar.HOUR_OF_DAY, 9);
         startTime.set(Calendar.MINUTE, 1);
         startTime.set(Calendar.MONTH, 9);
         startTime.set(Calendar.YEAR, 2018);
         Calendar endTime = (Calendar) startTime.clone();
         endTime.set(Calendar.DAY_OF_MONTH, 31);
-        endTime.set(Calendar.HOUR_OF_DAY, 4);
+        endTime.set(Calendar.HOUR_OF_DAY, 12);
         endTime.set(Calendar.MINUTE, 0);
         endTime.set(Calendar.MONTH, 9);
         endTime.set(Calendar.YEAR, 2018);
@@ -151,7 +159,7 @@ public class CalendarActivity extends AppCompatActivity {
         event.setColor(getResources().getColor(R.color.colorAccent));
         events.add(event);
 
-        agregarEvento(2, 10, 2018, 1, 4);
+        agregarEvento(2, 10, 2018, 9, 12);
 
         return events;
     }
