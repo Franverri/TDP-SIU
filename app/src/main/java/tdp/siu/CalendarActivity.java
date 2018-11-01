@@ -67,15 +67,51 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
-        //acomodarInicioCalendario();
+        acomodarInicioCalendario();
 
+        /*
         Calendar inicio = Calendar.getInstance();
         inicio.set(Calendar.DAY_OF_MONTH, 29);
         inicio.set(Calendar.HOUR_OF_DAY, 0);
         inicio.set(Calendar.MINUTE, 0);
         inicio.set(Calendar.MONTH, 9);
         inicio.set(Calendar.YEAR, 2018);
-        mWeekView.goToDate(inicio);
+        mWeekView.goToDate(inicio);*/
+    }
+
+    private void acomodarInicioCalendario() {
+
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(new Date());
+
+        switch (inicio.get(Calendar.DAY_OF_WEEK)){
+            case Calendar.MONDAY:
+                break;
+            case Calendar.TUESDAY:
+                inicio.add(Calendar.DAY_OF_YEAR, -1);
+                mWeekView.goToDate(inicio);
+                break;
+            case Calendar.WEDNESDAY:
+                inicio.add(Calendar.DAY_OF_YEAR, -2);
+                mWeekView.goToDate(inicio);
+                break;
+            case Calendar.THURSDAY:
+                inicio.add(Calendar.DAY_OF_YEAR, -3);
+                mWeekView.goToDate(inicio);
+                break;
+            case Calendar.FRIDAY:
+                inicio.add(Calendar.DAY_OF_YEAR, -4);
+                mWeekView.goToDate(inicio);
+                break;
+            case Calendar.SATURDAY:
+                inicio.add(Calendar.DAY_OF_YEAR, -5);
+                mWeekView.goToDate(inicio);
+                break;
+            case Calendar.SUNDAY:
+                inicio.add(Calendar.DAY_OF_YEAR, -6);
+                mWeekView.goToDate(inicio);
+                break;
+        }
     }
 
     private List<WeekViewEvent> getEvents(int year, int month) {
