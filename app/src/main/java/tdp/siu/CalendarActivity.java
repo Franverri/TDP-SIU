@@ -144,7 +144,7 @@ public class CalendarActivity extends AppCompatActivity {
 
             Calendar diaCalculado = calcularDia(listDias.get(i));
 
-            agregarEvento(listNombres.get(0), //VER COMO SACAR ESTE HARDCODEO
+            agregarEvento(listNombres.get(i),
                     diaCalculado.get(Calendar.DAY_OF_MONTH),
                     diaCalculado.get(Calendar.MONTH),
                     diaCalculado.get(Calendar.YEAR),

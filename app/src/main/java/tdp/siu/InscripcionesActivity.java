@@ -209,7 +209,11 @@ public class InscripcionesActivity extends AppCompatActivity {
                 horarioFinal = calcularHorarioFinal(sede,aulas,dias,horarios);
                 strHorarios = strHorarios + horarios + ";";
                 strDias = strDias + dias + ";";
-                strNombres = strNombres + nombreCurso + ";";
+                if(dias.contains(";")){
+                    strNombres = strNombres + nombreCurso + ";" + nombreCurso + ";";
+                } else {
+                    strNombres = strNombres + nombreCurso + ";";
+                }
                 inscripcionList.add(new Inscripcion(idCurso, nombreCurso,codigoCurso,docente,horarioFinal));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
