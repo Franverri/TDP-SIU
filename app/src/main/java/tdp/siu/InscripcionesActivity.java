@@ -2,7 +2,9 @@ package tdp.siu;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -47,6 +50,8 @@ public class InscripcionesActivity extends AppCompatActivity {
     SharedPreferences.Editor editorShared;
 
     String padron;
+    String strHorarios, strDias, strNombres;
+    boolean tieneInscripciones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,33 @@ public class InscripcionesActivity extends AppCompatActivity {
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+
+        configurarClickCalendario();
+    }
+
+    private void configurarClickCalendario() {
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.btn_calendar);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(tieneInscripciones){
+                    goCalendarioSemanal();
+                } else {
+                    Toast.makeText(InscripcionesActivity.this, "No existe ninguna inscripción",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void goCalendarioSemanal() {
+        Intent intent = new Intent(this, CalendarActivity.class);
+        Bundle b = new Bundle();
+        b.putString("strHorarios", strHorarios);
+        b.putString("strDias", strDias);
+        b.putString("strNombres", strNombres);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     private void configurarHTTPRequestSingleton() {
@@ -146,6 +178,9 @@ public class InscripcionesActivity extends AppCompatActivity {
 
     private void procesarRespuesta(JSONObject response) {
         inscripcionList.clear();
+        strDias = "";
+        strHorarios = "";
+        strNombres = "";
         JSONArray array = null;
         try {
             array = response.getJSONArray("cursos");
@@ -172,7 +207,13 @@ public class InscripcionesActivity extends AppCompatActivity {
                 dias = jsonobject.getString("dias");
                 horarios = jsonobject.getString("horarios");
                 horarioFinal = calcularHorarioFinal(sede,aulas,dias,horarios);
-
+                strHorarios = strHorarios + horarios + ";";
+                strDias = strDias + dias + ";";
+                if(dias.contains(";")){
+                    strNombres = strNombres + nombreCurso + ";" + nombreCurso + ";";
+                } else {
+                    strNombres = strNombres + nombreCurso + ";";
+                }
                 inscripcionList.add(new Inscripcion(idCurso, nombreCurso,codigoCurso,docente,horarioFinal));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
@@ -180,8 +221,11 @@ public class InscripcionesActivity extends AppCompatActivity {
         }
         recyclerView.setAdapter(adapter);
         if (cantCursos == 0){
+            tieneInscripciones  = false;
             Toast.makeText(InscripcionesActivity.this, "Sin inscripciones",
                     Toast.LENGTH_LONG).show();
+        } else {
+            tieneInscripciones = true;
         }
     }
 
