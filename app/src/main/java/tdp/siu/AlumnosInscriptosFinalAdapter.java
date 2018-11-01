@@ -2,10 +2,15 @@ package tdp.siu;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import java.util.List;
 
@@ -42,15 +47,34 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
         } else {
             condicion = "Libre";
         }
+        final ViewSwitcher viewSwitcher = holder.vsNota;
+        final TextView textView = holder.tvNotaAlumno;
+        final EditText editText = holder.etNotaAlumno;
 
         //binding the data with the view holder views
         holder.tvNombreAlumno.setText(alumno.getNombre());
         holder.tvPadronAlumno.setText(alumno.getPadron());
         holder.tvCondicionAlumno.setText(condicion);
         holder.tvNotaAlumno.setText(String.valueOf(nota));
-        if (nota < 0) {
-            holder.tvNotaAlumno.setVisibility(View.INVISIBLE);
-        }
+        holder.tvNotaAlumno.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    viewSwitcher.showNext();//if the current view is the Textview, then show
+                }                           //the next one, which is the EditText
+        });
+        holder.etNotaAlumno.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    textView.setText(editText.getText());
+                    editText.setText("");
+                    viewSwitcher.showPrevious();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
     }
 
     @Override
@@ -62,13 +86,17 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvNombreAlumno, tvPadronAlumno, tvNotaAlumno, tvCondicionAlumno;
+        EditText etNotaAlumno;
+        ViewSwitcher vsNota;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
 
             tvNombreAlumno = itemView.findViewById(R.id.tvNombreAlumno);
             tvPadronAlumno = itemView.findViewById(R.id.tvPadronAlumno);
+            vsNota = itemView.findViewById(R.id.vsNota);
             tvNotaAlumno = itemView.findViewById(R.id.tvNotaAlumno);
+            etNotaAlumno = itemView.findViewById(R.id.etNotaAlumno);
             tvCondicionAlumno = itemView.findViewById(R.id.tvCondicionAlumno);
         }
     }
