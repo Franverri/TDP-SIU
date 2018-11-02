@@ -49,7 +49,7 @@ public class HistorialActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
-    String padron;
+    String padron, nombreCarrera, codigoCarrera;
 
     TableRow.LayoutParams params1;
     TableRow.LayoutParams params2;
@@ -76,6 +76,13 @@ public class HistorialActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_historial);
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            codigoCarrera = b.getString("codigoCarrera");
+            nombreCarrera = b.getString("nombreCarrera");
+            Log.d("PRUEBAA", codigoCarrera + " - " + nombreCarrera);
+        }
 
         configurarHTTPRequestSingleton();
 

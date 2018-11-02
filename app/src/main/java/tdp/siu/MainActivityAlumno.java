@@ -69,6 +69,8 @@ public class MainActivityAlumno extends AppCompatActivity
     String diaFinales, diaFinFinales, horaFinales, horaFinFinales;
     String diaActualizacion;
     Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnCursada ,estaEnFinales;
+    String codigoCarreras, nombreCarreras;
+    String idMateriaSeleccionada, nombreCarreraSeleccionada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,8 @@ public class MainActivityAlumno extends AppCompatActivity
         padron = sharedPref.getString("padron", null);
         nombre = sharedPref.getString("nombre", null);
         String mail = sharedPref.getString("mail", null);
+        codigoCarreras = sharedPref.getString("codigoCarreras", null);
+        nombreCarreras = sharedPref.getString("nombreCarreras", null);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -168,8 +172,26 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void goHistorial() {
-        Intent intent = new Intent(this, HistorialActivity.class);
-        startActivity(intent);
+
+        final String[] listCodigos = codigoCarreras.split(";");
+        final String[] listNombres = nombreCarreras.split(";");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione la carrera");
+        builder.setItems(listNombres, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                idMateriaSeleccionada = listCodigos[which];
+                nombreCarreraSeleccionada = listNombres[which];
+                Intent intent = new Intent(MainActivityAlumno.this, HistorialActivity.class);
+                Bundle b = new Bundle();
+                b.putString("codigoCarrera", idMateriaSeleccionada);
+                b.putString("nombreCarrera", nombreCarreraSeleccionada);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+        builder.show();
     }
 
     private void configurarHTTPRequestSingleton() {
