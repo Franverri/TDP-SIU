@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,7 +41,7 @@ public class HistorialActivity extends AppCompatActivity {
     EditText etSearch;
 
     RequestQueue queue;
-    String APIUrl ="https://siu-api.herokuapp.com/alumno/historial?padron=";
+    String APIUrl ="https://siu-api.herokuapp.com/alumno/";
 
     private TableLayout tableLayout;
     private TableLayout tableHeader;
@@ -166,10 +167,34 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void obtenerDatos() {
-
         progress = ProgressDialog.show(this, "Historial académico",
                 "Recolectando datos...", true);
-        String url = APIUrl + padron;
+        obtenerDatosHistorial();
+        obtenerDatosAvance();
+        progress.dismiss();
+    }
+
+    private void obtenerDatosAvance() {
+
+        //Modifico creditos obtenidos
+        int idCreditosObtenidos = getResources().getIdentifier("tv_creditosObtenidos","id", getPackageName());
+        TextView tvCreditosObtenidos = (TextView) findViewById(idCreditosObtenidos);
+        tvCreditosObtenidos.setText("200");
+
+        //Modifico creditos totales
+        int idCreditosTotales = getResources().getIdentifier("tv_creditosTotales","id", getPackageName());
+        TextView tvCreditosTotales = (TextView) findViewById(idCreditosTotales);
+        tvCreditosTotales.setText("350");
+
+        //Modifico creditos obtenidos
+        int idPorcentaje = getResources().getIdentifier("tv_porcentajeAvance","id", getPackageName());
+        TextView tvPorcentaje = (TextView) findViewById(idPorcentaje);
+        tvPorcentaje.setText("57%");
+
+    }
+
+    private void obtenerDatosHistorial() {
+        String url = APIUrl + "historial?padron=" + padron;
 
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -178,14 +203,11 @@ public class HistorialActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarTabla(response);
-                        progress.dismiss();
-
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progress.dismiss();
                         Log.i("Error.Response", String.valueOf(error));
                         Toast.makeText(HistorialActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();

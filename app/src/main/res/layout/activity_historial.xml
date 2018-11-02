@@ -82,25 +82,28 @@
                         android:weightSum="100">
 
                         <TextView
+                            android:id="@+id/tv_creditosObtenidos"
                             android:textAlignment="center"
                             android:layout_width="0dp"
                             android:layout_weight="35"
                             android:layout_height="wrap_content"
-                            android:text="200" />
+                            android:text="-" />
 
                         <TextView
+                            android:id="@+id/tv_creditosTotales"
                             android:textAlignment="center"
                             android:layout_width="0dp"
                             android:layout_weight="35"
                             android:layout_height="wrap_content"
-                            android:text="350" />
+                            android:text="-" />
 
                         <TextView
+                            android:id="@+id/tv_porcentajeAvance"
                             android:textAlignment="center"
                             android:layout_width="0dp"
                             android:layout_weight="30"
                             android:layout_height="wrap_content"
-                            android:text="57%" />
+                            android:text="-%" />
 
                     </LinearLayout>
                     
