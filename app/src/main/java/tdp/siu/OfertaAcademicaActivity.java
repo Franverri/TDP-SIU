@@ -61,7 +61,7 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
 
-    String padron;
+    String padron, codigoCarrera, nombreCarrera;
     Boolean periodoHabilitado;
     String descPeriodo;
 
@@ -88,6 +88,12 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_oferta_academica);
 
         setTitle("Oferta académica " + descPeriodo);
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            codigoCarrera = b.getString("codigoCarrera");
+            nombreCarrera = b.getString("nombreCarrera");
+        }
 
         adapter = new ArrayAdapter<String>(
                 this,
