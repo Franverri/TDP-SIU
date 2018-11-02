@@ -71,6 +71,7 @@ public class MainActivityAlumno extends AppCompatActivity
     Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnCursada ,estaEnFinales;
     String codigoCarreras, nombreCarreras;
     String idMateriaSeleccionada, nombreCarreraSeleccionada;
+    boolean multiCarrera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class MainActivityAlumno extends AppCompatActivity
         String mail = sharedPref.getString("mail", null);
         codigoCarreras = sharedPref.getString("codigoCarreras", null);
         nombreCarreras = sharedPref.getString("nombreCarreras", null);
+        multiCarrera = sharedPref.getBoolean("multiCarrera", false);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -171,27 +173,67 @@ public class MainActivityAlumno extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void goOfertaAcademica() {
+        if(multiCarrera){
+            final String[] listCodigos = codigoCarreras.split(";");
+            final String[] listNombres = nombreCarreras.split(";");
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Seleccione la carrera");
+            builder.setItems(listNombres, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    idMateriaSeleccionada = listCodigos[which];
+                    nombreCarreraSeleccionada = listNombres[which];
+                    Intent intent = new Intent(MainActivityAlumno.this, OfertaAcademicaActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("codigoCarrera", idMateriaSeleccionada);
+                    b.putString("nombreCarrera", nombreCarreraSeleccionada);
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            });
+            builder.show();
+        } else {
+            Intent intent = new Intent(MainActivityAlumno.this, OfertaAcademicaActivity.class);
+            Bundle b = new Bundle();
+            b.putString("codigoCarrera", codigoCarreras);
+            b.putString("nombreCarrera", nombreCarreras);
+            intent.putExtras(b);
+            startActivity(intent);
+        }
+    }
+
+
     private void goHistorial() {
+        if(multiCarrera){
+            final String[] listCodigos = codigoCarreras.split(";");
+            final String[] listNombres = nombreCarreras.split(";");
 
-        final String[] listCodigos = codigoCarreras.split(";");
-        final String[] listNombres = nombreCarreras.split(";");
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Seleccione la carrera");
-        builder.setItems(listNombres, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                idMateriaSeleccionada = listCodigos[which];
-                nombreCarreraSeleccionada = listNombres[which];
-                Intent intent = new Intent(MainActivityAlumno.this, HistorialActivity.class);
-                Bundle b = new Bundle();
-                b.putString("codigoCarrera", idMateriaSeleccionada);
-                b.putString("nombreCarrera", nombreCarreraSeleccionada);
-                intent.putExtras(b);
-                startActivity(intent);
-            }
-        });
-        builder.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Seleccione la carrera");
+            builder.setItems(listNombres, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    idMateriaSeleccionada = listCodigos[which];
+                    nombreCarreraSeleccionada = listNombres[which];
+                    Intent intent = new Intent(MainActivityAlumno.this, HistorialActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("codigoCarrera", idMateriaSeleccionada);
+                    b.putString("nombreCarrera", nombreCarreraSeleccionada);
+                    intent.putExtras(b);
+                    startActivity(intent);
+                }
+            });
+            builder.show();
+        } else {
+            Intent intent = new Intent(MainActivityAlumno.this, HistorialActivity.class);
+            Bundle b = new Bundle();
+            b.putString("codigoCarrera", codigoCarreras);
+            b.putString("nombreCarrera", nombreCarreras);
+            intent.putExtras(b);
+            startActivity(intent);
+        }
     }
 
     private void configurarHTTPRequestSingleton() {
@@ -594,11 +636,6 @@ public class MainActivityAlumno extends AppCompatActivity
 
     private void goInscripciones() {
         Intent intent = new Intent(this, InscripcionesActivity.class);
-        startActivity(intent);
-    }
-
-    private void goOfertaAcademica() {
-        Intent intent = new Intent(this, OfertaAcademicaActivity.class);
         startActivity(intent);
     }
 

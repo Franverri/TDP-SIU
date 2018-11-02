@@ -216,10 +216,14 @@ public class LoginActivity extends AppCompatActivity {
                 String email = response.getString("email");
                 String carrera = String.valueOf(response.getInt("carrera"));
                 //EJEMPLO VARIAS CARRERAS
-                String codigoCarreras = "1;2";
-                String nombreCarreras = "Ing. en Informática; Lic. en Sistemas";
-                editorShared.putString("codigoCarreras", codigoCarreras);
-                editorShared.putString("nombreCarreras", nombreCarreras);
+                String codigoCarreras1 = "1";
+                String nombreCarreras1 = "Ing. en Informática";
+                String codigoCarreras2 = "1;2";
+                String nombreCarreras2 = "Ing. en Informática; Lic. en Sistemas";
+                editorShared.putString("codigoCarreras", codigoCarreras2);
+                editorShared.putString("nombreCarreras", nombreCarreras2);
+                //editorShared.putBoolean("multiCarrera", false);
+                editorShared.putBoolean("multiCarrera", true);
                 //-----------------------
                 editorShared.putString("nombre", nombre + " " + apellido);
                 editorShared.putString("usuario", usuario);
