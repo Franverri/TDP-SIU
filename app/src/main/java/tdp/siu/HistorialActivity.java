@@ -81,7 +81,6 @@ public class HistorialActivity extends AppCompatActivity {
         if(b != null){
             codigoCarrera = b.getString("codigoCarrera");
             nombreCarrera = b.getString("nombreCarrera");
-            Log.d("PRUEBAA", codigoCarrera + " - " + nombreCarrera);
         }
 
         configurarHTTPRequestSingleton();
