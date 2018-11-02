@@ -176,21 +176,73 @@ public class HistorialActivity extends AppCompatActivity {
 
     private void obtenerDatosAvance() {
 
+        /*
+        String url = APIUrl + "creditos?padron=" + padron;
+
+        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        actualizarTarjeta(response);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(HistorialActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);*/
+
+        actualizarDatosTarjeta("200","350","57");
+
+    }
+
+    private void actualizarTarjeta(JSONArray response) {
+        for (int i = 0; i < response.length(); i++) {
+            JSONObject jsonobject = null;
+            try {
+                jsonobject = response.getJSONObject(i);
+                if(jsonobject.length() == 0){
+                    Toast.makeText(HistorialActivity.this, "No existe información disponible",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        String creditosTotales = jsonobject.getString("creditos_totales");
+                        String creditosObtenidos = jsonobject.getString("creditos_obtenidos");
+                        String porcentaje = jsonobject.getString("porcentaje");
+                        actualizarDatosTarjeta(creditosObtenidos, creditosTotales, porcentaje);
+                    } catch (JSONException e) {
+                        Log.i("JSON","Error al obtener datos del JSON");
+                    }
+                }
+            } catch (JSONException e) {
+                Log.i("JSON","Error al parsear JSON");
+            }
+        }
+    }
+
+    private void actualizarDatosTarjeta(String creditosObtenidos, String creditosTotales, String porcentaje) {
         //Modifico creditos obtenidos
         int idCreditosObtenidos = getResources().getIdentifier("tv_creditosObtenidos","id", getPackageName());
         TextView tvCreditosObtenidos = (TextView) findViewById(idCreditosObtenidos);
-        tvCreditosObtenidos.setText("200");
+        tvCreditosObtenidos.setText(creditosObtenidos);
 
         //Modifico creditos totales
         int idCreditosTotales = getResources().getIdentifier("tv_creditosTotales","id", getPackageName());
         TextView tvCreditosTotales = (TextView) findViewById(idCreditosTotales);
-        tvCreditosTotales.setText("350");
+        tvCreditosTotales.setText(creditosTotales);
 
         //Modifico creditos obtenidos
         int idPorcentaje = getResources().getIdentifier("tv_porcentajeAvance","id", getPackageName());
         TextView tvPorcentaje = (TextView) findViewById(idPorcentaje);
-        tvPorcentaje.setText("57%");
-
+        tvPorcentaje.setText(porcentaje + "%");
     }
 
     private void obtenerDatosHistorial() {
