@@ -6,15 +6,18 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:divider="@drawable/divider_list"
+        android:showDividers="middle"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        tools:context=".MainActivity">
+        tools:context=".EncuestasActivity">
 
         <TextView
-            android:text="Pregunta 1"
+            android:textColor="#000000"
+            android:text="Opinion general sobre el curso"
             android:id="@+id/question_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,7 +31,7 @@
 
         <RadioGroup
             xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/radio_group"
+            android:id="@+id/radio_group1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -38,41 +41,306 @@
 
             <RadioButton
                 android:text="1"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:id="@+id/choice_1_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <RadioButton
                 android:text="2"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:id="@+id/choice_1_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <RadioButton
                 android:text="3"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:id="@+id/choice_1_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <RadioButton
                 android:text="4"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:id="@+id/choice_1_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <RadioButton
                 android:text="5"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:id="@+id/choice_1_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+
+        <TextView
+            android:textColor="#000000"
+            android:text="¿Los temas de la materia son interesantes?"
+            android:id="@+id/question_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/question_1">
+
+            <RadioButton
+                android:text="1"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_2_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="2"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_2_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="3"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_2_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="4"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_2_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="5"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_2_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+        <TextView
+            android:textColor="#000000"
+            android:text="¿Los temas están actualizados?"
+            android:id="@+id/question_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/question_1">
+
+            <RadioButton
+                android:text="1"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_3_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="2"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_3_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="3"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_3_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="4"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_3_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="5"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_3_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+        <TextView
+            android:textColor="#000000"
+            android:text="Nivel de las clases teóricas"
+            android:id="@+id/question_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/question_1">
+
+            <RadioButton
+                android:text="1"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_4_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="2"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_4_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="3"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_4_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="4"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_4_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="5"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_4_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+        <TextView
+            android:textColor="#000000"
+            android:text="Nivel de las clases prácticas"
+            android:id="@+id/question_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/question_1">
+
+            <RadioButton
+                android:text="1"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_5_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="2"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_5_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="3"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_5_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="4"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_5_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="5"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_5_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
