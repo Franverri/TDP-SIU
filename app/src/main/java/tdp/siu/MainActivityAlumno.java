@@ -574,10 +574,24 @@ public class MainActivityAlumno extends AppCompatActivity
             goHistorial();
         } else if(id == R.id.nav_alumnoRegular){
             validarAlumnoRegular();
+        } else if(id == R.id.nav_encuestas){
+            if(hayEncuestaPendiente()){
+                goEncuesta();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_alumno);
         drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void goEncuesta() {
+        Intent intent = new Intent(this, EncuestasActivity.class);
+        startActivity(intent);
+    }
+
+    private boolean hayEncuestaPendiente() {
+        //FALTARIA SACAR ESTE DATO DE LA API
         return true;
     }
 

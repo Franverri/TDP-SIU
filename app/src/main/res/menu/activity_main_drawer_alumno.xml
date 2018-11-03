@@ -21,6 +21,10 @@
             android:icon="@drawable/ic_finales"
             android:title="Finales" />
         <item
+            android:id="@+id/nav_encuestas"
+            android:icon="@drawable/ic_encuesta"
+            android:title="Encuestas" />
+        <item
             android:id="@+id/nav_alumnoRegular"
             android:icon="@drawable/ic_alumnoregular"
             android:title="Certificado alumno regular" />

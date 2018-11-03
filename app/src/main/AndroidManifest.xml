@@ -79,7 +79,9 @@
             android:label="Historial académico" />
         <activity
             android:name=".CalendarActivity"
-            android:label="Calendario semanal"/>
+            android:label="Calendario semanal" />
+        <activity android:name=".EncuestasActivity"
+            android:label="Encuesta"/>
     </application>
 
 </manifest>
