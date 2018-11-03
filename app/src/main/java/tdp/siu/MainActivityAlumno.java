@@ -5,12 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -73,6 +76,8 @@ public class MainActivityAlumno extends AppCompatActivity
     String idMateriaSeleccionada, nombreCarreraSeleccionada;
     boolean multiCarrera;
 
+    TextView tvEncuestas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +110,8 @@ public class MainActivityAlumno extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view_alumno);
         navigationView.setNavigationItemSelectedListener(this);
 
+        tvEncuestas = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_encuestas));
+
         configurarHTTPRequestSingleton();
 
         configurarAccesoAPerfil();
@@ -121,6 +128,17 @@ public class MainActivityAlumno extends AppCompatActivity
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
+        initializeCountDrawer();
+    }
+
+    private void initializeCountDrawer() {
+
+        //Gravity property aligns the text
+        tvEncuestas.setGravity(Gravity.CENTER_VERTICAL);
+        tvEncuestas.setTypeface(null, Typeface.BOLD);
+        tvEncuestas.setTextColor(getResources().getColor(R.color.colorAccent));
+        tvEncuestas.setText("3");
+
     }
 
     private void configurarClickTarjetas() {
@@ -577,6 +595,9 @@ public class MainActivityAlumno extends AppCompatActivity
         } else if(id == R.id.nav_encuestas){
             if(hayEncuestaPendiente()){
                 goEncuesta();
+            } else {
+                Toast.makeText(MainActivityAlumno.this, "Sin encuestas pendientes",
+                        Toast.LENGTH_LONG).show();
             }
         }
 
@@ -591,8 +612,12 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private boolean hayEncuestaPendiente() {
-        //FALTARIA SACAR ESTE DATO DE LA API
-        return true;
+        int encuestasPendientes = Integer.valueOf(String.valueOf(tvEncuestas.getText()));
+        if(encuestasPendientes > 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void validarAlumnoRegular() {
