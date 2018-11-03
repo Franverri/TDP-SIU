@@ -346,6 +346,92 @@
 
         </RadioGroup>
 
+        <TextView
+            android:textColor="#000000"
+            android:text="Dificultad"
+            android:id="@+id/question_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/radio_group6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/question_1">
+
+            <RadioButton
+                android:text="1"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_6_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="2"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_6_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="3"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_6_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="4"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_6_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioButton
+                android:text="5"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:id="@+id/choice_6_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RadioGroup>
+
+        <TextView
+            android:textColor="#000000"
+            android:text="Comentarios (opcional)"
+            android:id="@+id/question_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/comentario_encuesta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese sus comentarios aqui..."/>
+
         <Button
             android:id="@+id/vote"
             android:layout_width="match_parent"

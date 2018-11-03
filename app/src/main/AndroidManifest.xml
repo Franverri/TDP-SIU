@@ -80,7 +80,8 @@
         <activity
             android:name=".CalendarActivity"
             android:label="Calendario semanal" />
-        <activity android:name=".EncuestasActivity"
+        <activity
+            android:name=".EncuestasActivity"
             android:label="Encuesta"/>
     </application>
 
