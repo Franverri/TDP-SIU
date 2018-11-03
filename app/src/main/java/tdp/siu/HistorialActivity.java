@@ -30,6 +30,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -173,25 +174,22 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void obtenerDatos() {
-        progress = ProgressDialog.show(this, "Historial académico",
-                "Recolectando datos...", true);
         obtenerDatosHistorial();
         obtenerDatosAvance();
-        progress.dismiss();
     }
 
     private void obtenerDatosAvance() {
 
-        /*
         String url = APIUrl + "creditos?padron=" + padron;
 
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarTarjeta(response);
+                        progress.dismiss();
                     }
                 }, new Response.ErrorListener() {
 
@@ -200,36 +198,27 @@ public class HistorialActivity extends AppCompatActivity {
                         Log.i("Error.Response", String.valueOf(error));
                         Toast.makeText(HistorialActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
                                 Toast.LENGTH_LONG).show();
+                        progress.dismiss();
                     }
                 });
 
         // Add the request to the RequestQueue.
-        queue.add(jsonObjectRequest);*/
-
-        actualizarDatosTarjeta("200","350","57");
+        queue.add(jsonObjectRequest);
 
     }
 
-    private void actualizarTarjeta(JSONArray response) {
-        for (int i = 0; i < response.length(); i++) {
-            JSONObject jsonobject = null;
+    private void actualizarTarjeta(JSONObject response) {
+        if(response.length() == 0){
+            Toast.makeText(HistorialActivity.this, "No existe información disponible",
+                    Toast.LENGTH_LONG).show();
+        } else {
             try {
-                jsonobject = response.getJSONObject(i);
-                if(jsonobject.length() == 0){
-                    Toast.makeText(HistorialActivity.this, "No existe información disponible",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    try {
-                        String creditosTotales = jsonobject.getString("creditos_totales");
-                        String creditosObtenidos = jsonobject.getString("creditos_obtenidos");
-                        String porcentaje = jsonobject.getString("porcentaje");
-                        actualizarDatosTarjeta(creditosObtenidos, creditosTotales, porcentaje);
-                    } catch (JSONException e) {
-                        Log.i("JSON","Error al obtener datos del JSON");
-                    }
-                }
+                String creditosTotales = response.getString("creditos_totales");
+                String creditosObtenidos = response.getString("creditos_obtenidos");
+                String porcentaje = response.getString("porcentaje");
+                actualizarDatosTarjeta(creditosObtenidos, creditosTotales, porcentaje);
             } catch (JSONException e) {
-                Log.i("JSON","Error al parsear JSON");
+                Log.i("JSON","Error al obtener datos del JSON");
             }
         }
     }
@@ -252,6 +241,8 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void obtenerDatosHistorial() {
+        progress = ProgressDialog.show(this, "Historial académico",
+                "Recolectando datos...", true);
         String url = APIUrl + "historial?padron=" + padron;
 
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
