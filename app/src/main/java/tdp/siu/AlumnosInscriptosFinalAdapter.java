@@ -2,12 +2,10 @@ package tdp.siu;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
@@ -20,6 +18,8 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
 
     //we are storing all the products in a list
     private List<AlumnoFinal> alumnosList;
+
+    private String STR_NOTA = "Nota: ";
 
     //getting the context and product list with constructor
     public AlumnosInscriptosFinalAdapter(Context mCtx, List<AlumnoFinal> productList) {
@@ -39,8 +39,7 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     public void onBindViewHolder(AlumnosInscriptosFinalAdapter.ProductViewHolder holder, int position) {
         //getting the product of the specified position
         AlumnoFinal alumno = alumnosList.get(position);
-        int nota = alumno.getNota();
-
+        String nota = Integer.toString(alumno.getNota());
         String condicion;
         if (alumno.isRegular()){
             condicion = "Regular";
@@ -49,30 +48,37 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
         }
         final ViewSwitcher viewSwitcher = holder.vsNota;
         final TextView textView = holder.tvNotaAlumno;
-        final EditText editText = holder.etNotaAlumno;
+        final NumberPicker np = holder.npNotaAlumno;
 
         //binding the data with the view holder views
         holder.tvNombreAlumno.setText(alumno.getNombre());
         holder.tvPadronAlumno.setText(alumno.getPadron());
         holder.tvCondicionAlumno.setText(condicion);
-        holder.tvNotaAlumno.setText(String.valueOf(nota));
-        holder.tvNotaAlumno.setOnClickListener(new View.OnClickListener() {
+        if (!nota.contentEquals("-1")){
+            holder.tvNotaAlumno.setText(STR_NOTA + nota);
+        }
+        holder.npNotaAlumno.setMinValue(1);
+        holder.npNotaAlumno.setMaxValue(10);
+
+        holder.ivEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    viewSwitcher.showNext();//if the current view is the Textview, then show
-                }                           //the next one, which is the EditText
+                viewSwitcher.showNext();
+            }
         });
-        holder.etNotaAlumno.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+        holder.ivCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    textView.setText(editText.getText());
-                    editText.setText("");
-                    viewSwitcher.showPrevious();
-                    handled = true;
-                }
-                return handled;
+            public void onClick(View view) {
+                viewSwitcher.showPrevious();
+            }
+        });
+
+        holder.ivConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textView.setText(STR_NOTA + String.valueOf(np.getValue()));
+                viewSwitcher.showPrevious();
             }
         });
     }
@@ -86,8 +92,9 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvNombreAlumno, tvPadronAlumno, tvNotaAlumno, tvCondicionAlumno;
-        EditText etNotaAlumno;
+        NumberPicker npNotaAlumno;
         ViewSwitcher vsNota;
+        ImageView ivEditButton, ivConfirmButton, ivCancelButton;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -96,8 +103,11 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
             tvPadronAlumno = itemView.findViewById(R.id.tvPadronAlumno);
             vsNota = itemView.findViewById(R.id.vsNota);
             tvNotaAlumno = itemView.findViewById(R.id.tvNotaAlumno);
-            etNotaAlumno = itemView.findViewById(R.id.etNotaAlumno);
+            npNotaAlumno = itemView.findViewById(R.id.npNotaAlumno);
             tvCondicionAlumno = itemView.findViewById(R.id.tvCondicionAlumno);
+            ivEditButton = itemView.findViewById(R.id.ivEditButton);
+            ivConfirmButton = itemView.findViewById(R.id.ivConfirmButton);
+            ivCancelButton = itemView.findViewById(R.id.ivCancelButton);
         }
     }
 }
