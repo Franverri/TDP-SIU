@@ -307,7 +307,8 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
                 String idFinal = fechaFinal.getString("id_final");
                 String fecha = fechaFinal.getString("fecha");
                 String hora = fechaFinal.getString("hora");
-                fechasList.add(new FechaExamen(idFinal,fecha,hora));
+                String inscriptos = fechaFinal.getString("cantidad");
+                fechasList.add(new FechaExamen(idFinal, fecha, hora, inscriptos));
             }
             recyclerView.setAdapter(adapter);
             if (cantFechas == 0){

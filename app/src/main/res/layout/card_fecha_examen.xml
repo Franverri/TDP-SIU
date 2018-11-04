@@ -14,8 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tvNumeroExamen"
@@ -44,8 +43,7 @@
                 android:layout_below="@id/tvNumeroExamen"
                 android:textSize="20sp"
                 android:gravity="center_horizontal"
-                android:textColor="#000000"
-                android:text="01/12/18"/>
+                android:textColor="#000000"/>
 
             <TextView
                 android:id="@+id/tvHoraExamen"
@@ -53,8 +51,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvFechaExamen"
                 android:gravity="center_horizontal"
-                android:textSize="15sp"
-                android:text="18:00"/>
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tvInscriptos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvHoraExamen"
+                android:gravity="center_horizontal"
+                android:textSize="15sp"/>
+
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
