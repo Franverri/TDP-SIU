@@ -231,6 +231,8 @@ public class InscripcionesActivity extends AppCompatActivity {
 
     private String calcularHorarioFinal(String sede, String aulas, String dias, String horarios) {
         String horarioFinal = "";
+        String horarioAnterior = "";
+        String horarioActual = "";
 
         String[] arraySede = sede.split(";");
         String[] arrayAulas = aulas.split(";");
@@ -238,7 +240,11 @@ public class InscripcionesActivity extends AppCompatActivity {
         String[] arrayHorarios = horarios.split(";");
 
         for (int i = 0; i < arrayDias.length; i++) {
-            horarioFinal = horarioFinal + arrayDias[i] + " " + arrayHorarios[i] + " [" + arraySede[i] + " - " + arrayAulas[i] + "] \n";
+            horarioActual = arrayDias[i] + " " + arrayHorarios[i] + " [" + arraySede[i] + " - " + arrayAulas[i] + "]";
+            if(!horarioActual.equals(horarioAnterior)){
+                horarioFinal = horarioFinal + arrayDias[i] + " " + arrayHorarios[i] + " [" + arraySede[i] + " - " + arrayAulas[i] + "] \n";
+            }
+            horarioAnterior = horarioActual;
         }
 
         return horarioFinal;
