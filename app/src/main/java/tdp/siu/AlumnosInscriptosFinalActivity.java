@@ -1,8 +1,11 @@
 package tdp.siu;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +43,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
     List<AlumnoFinal> alumnosList;
     AlumnosInscriptosFinalAdapter adapter;
     RecyclerView recyclerView;
+    Button changesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +68,46 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
 
         configurarHTTPRequestSingleton();
 
-        configurarRecyclerView();
-
         configurarBotonCambiosNotas();
+
+        configurarRecyclerView();
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
-        super.onBackPressed();
+        onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (changesButton.getVisibility() == View.VISIBLE){
+            mostrarDialog();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void mostrarDialog() {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle("Notas sin guardar")
+                .setMessage("¿Desea continuar sin guardar? Se perderán todos los cambios realizados")
+                .setCancelable(false)
+                .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
     private void configurarRecyclerView() {
@@ -84,7 +120,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
         alumnosList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new AlumnosInscriptosFinalAdapter(this, alumnosList, (Button) findViewById(R.id.guardar_cambios_button));
+        adapter = new AlumnosInscriptosFinalAdapter(this, alumnosList, changesButton);
 
         //Aca se manda el request al server
         enviarRequestInscriptos();
@@ -146,8 +182,8 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
     }
 
     private void configurarBotonCambiosNotas(){
-        final Button button = findViewById(R.id.guardar_cambios_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        changesButton = findViewById(R.id.guardar_cambios_button);
+        changesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 JSONArray alumnosArray = new JSONArray();
@@ -171,7 +207,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 enviarNotas(data);
-                button.setVisibility(View.INVISIBLE);
+                changesButton.setVisibility(View.INVISIBLE);
             }
         });
     }

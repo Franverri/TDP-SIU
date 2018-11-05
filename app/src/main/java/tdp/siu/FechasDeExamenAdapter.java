@@ -63,9 +63,7 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
     public void onBindViewHolder(FechasDeExamenAdapter.ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         final FechaExamen fecha = fechasList.get(position);
-        //TODO: Cambiar, mock para testear
-        String inscriptos = "3";
-        //String inscriptos = fecha.getInscriptos();
+        String inscriptos = fecha.getInscriptos();
 
         String numero = String.valueOf(position + 1);
         //binding the data with the view holder views
