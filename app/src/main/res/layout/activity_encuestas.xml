@@ -430,10 +430,11 @@
             android:id="@+id/comentario_encuesta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="Ingrese sus comentarios aqui..."/>
 
         <Button
-            android:id="@+id/vote"
+            android:id="@+id/btnEnviar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
