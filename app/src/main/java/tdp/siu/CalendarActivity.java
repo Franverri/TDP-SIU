@@ -140,18 +140,28 @@ public class CalendarActivity extends AppCompatActivity {
         List<String> listHorarios = Arrays.asList(strHorarios.split(";"));
         List<String> listNombres = Arrays.asList(strNombres.split(";"));
 
+        String strAnterior = "";
+        String strActual = "";
+
         for (int i = 0; i < listDias.size(); i++) {
 
             Calendar diaCalculado = calcularDia(listDias.get(i));
 
-            agregarEvento(listNombres.get(i),
-                    diaCalculado.get(Calendar.DAY_OF_MONTH),
-                    diaCalculado.get(Calendar.MONTH),
-                    diaCalculado.get(Calendar.YEAR),
-                    Integer.valueOf(listHorarios.get(i).substring(0,2)),
-                    Integer.valueOf(listHorarios.get(i).substring(3,5)),
-                    Integer.valueOf(listHorarios.get(i).substring(6,8)),
-                    Integer.valueOf(listHorarios.get(i).substring(9,11)));
+            strActual = listDias.get(i) + listHorarios.get(i) + listNombres.get(i);
+
+            if(!strAnterior.equals(strActual)){
+
+                agregarEvento(listNombres.get(i),
+                        diaCalculado.get(Calendar.DAY_OF_MONTH),
+                        diaCalculado.get(Calendar.MONTH),
+                        diaCalculado.get(Calendar.YEAR),
+                        Integer.valueOf(listHorarios.get(i).substring(0,2)),
+                        Integer.valueOf(listHorarios.get(i).substring(3,5)),
+                        Integer.valueOf(listHorarios.get(i).substring(6,8)),
+                        Integer.valueOf(listHorarios.get(i).substring(9,11)));
+            }
+
+            strAnterior = strActual;
         }
 
         return events;
