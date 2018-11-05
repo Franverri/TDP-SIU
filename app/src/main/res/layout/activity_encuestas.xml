@@ -430,7 +430,7 @@
             android:id="@+id/comentario_encuesta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edittextbackground"
+            android:background="@android:color/transparent"
             android:layout_margin="5dp"
             android:paddingLeft="5dp"
             android:hint="Ingrese sus comentarios aqui..."/>
