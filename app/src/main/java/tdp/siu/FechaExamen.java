@@ -4,11 +4,13 @@ public class FechaExamen {
     private String id;
     private String fecha;
     private String hora;
+    private String inscriptos;
 
-    public FechaExamen(String id, String fecha, String hora){
+    public FechaExamen(String id, String fecha, String hora, String inscriptos){
         this.id = id;
         this.fecha = fecha;
         this.hora = hora;
+        this.inscriptos = inscriptos;
     }
 
     public String getId() {
@@ -21,5 +23,9 @@ public class FechaExamen {
 
     public String getHora() {
         return hora;
+    }
+
+    public String getInscriptos() {
+        return inscriptos;
     }
 }

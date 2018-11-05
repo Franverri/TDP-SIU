@@ -233,43 +233,6 @@ public class AlumnosInscriptosActivity extends AppCompatActivity implements Acti
 
     }
 
-    private JSONObject exampleJSON() {
-        JSONObject alumno1 = new JSONObject();
-        try{
-            alumno1.put("nombre", "Juan Perez");
-            alumno1.put("padron", 99999);
-            alumno1.put("prioridad", 1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONObject alumno2 = new JSONObject();
-        try{
-            alumno2.put("nombre", "Fernando Garcia");
-            alumno2.put("padron", 12345);
-            alumno2.put("prioridad", 5);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONObject alumno3 = new JSONObject();
-        try{
-            alumno3.put("nombre", "Jose Gimenez");
-            alumno3.put("padron", 78345);
-            alumno3.put("prioridad", 50);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONArray arr = new JSONArray();
-        arr.put(alumno1);
-        arr.put(alumno2);
-        arr.put(alumno3);
-        JSONObject obj = new JSONObject();
-        try{
-            obj.put("inscriptos", arr);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        return obj;
-    }
 
     private void configurarHTTPRequestSingleton() {
 

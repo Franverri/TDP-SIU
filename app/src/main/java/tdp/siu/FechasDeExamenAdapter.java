@@ -2,8 +2,11 @@ package tdp.siu;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,18 +63,32 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
     public void onBindViewHolder(FechasDeExamenAdapter.ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         final FechaExamen fecha = fechasList.get(position);
+        String inscriptos = fecha.getInscriptos();
 
         String numero = String.valueOf(position + 1);
         //binding the data with the view holder views
         holder.tvNumeroExamen.setText("Fecha " + numero);
         holder.tvFechaExamen.setText(fecha.getFecha());
         holder.tvHoraExamen.setText(fecha.getHora());
+        holder.tvInscriptos.setText("Inscriptos: " + inscriptos);
         holder.ivDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarDialog(position, fecha.getFecha(), fecha.getId() );
             }
         });
+        if (Integer.parseInt(inscriptos) > 0){
+            holder.cvFechaExamen.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mCtx, AlumnosInscriptosFinalActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString("id", fecha.getId()); //Your id
+                    intent.putExtras(b); //Put your id to your next Intent
+                    mCtx.startActivity(intent);
+                }
+            });
+        }
     }
 
     private void mostrarDialog(final int position, String fecha, final String id) {
@@ -178,8 +195,9 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvNumeroExamen, tvFechaExamen, tvHoraExamen;
+        TextView tvNumeroExamen, tvFechaExamen, tvHoraExamen, tvInscriptos;
         ImageView ivDeleteButton;
+        CardView cvFechaExamen;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -187,7 +205,9 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
             tvNumeroExamen = itemView.findViewById(R.id.tvNumeroExamen);
             tvFechaExamen = itemView.findViewById(R.id.tvFechaExamen);
             tvHoraExamen = itemView.findViewById(R.id.tvHoraExamen);
+            tvInscriptos = itemView.findViewById(R.id.tvInscriptos);
             ivDeleteButton = itemView.findViewById(R.id.ivDeleteButton);
+            cvFechaExamen = itemView.findViewById(R.id.cvFechaExamenCard);
         }
     }
 
