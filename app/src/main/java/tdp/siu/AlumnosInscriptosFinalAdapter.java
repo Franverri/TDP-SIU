@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -19,12 +20,16 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     //we are storing all the products in a list
     private List<AlumnoFinal> alumnosList;
 
+    //Botón que aparece cuando se modifica alguna nota para guardar los cambios
+    private Button changesButton;
+
     private String STR_NOTA = "Nota: ";
 
     //getting the context and product list with constructor
-    public AlumnosInscriptosFinalAdapter(Context mCtx, List<AlumnoFinal> productList) {
+    public AlumnosInscriptosFinalAdapter(Context mCtx, List<AlumnoFinal> productList, Button changesButton) {
         this.mCtx = mCtx;
         this.alumnosList = productList;
+        this.changesButton = changesButton;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     @Override
     public void onBindViewHolder(AlumnosInscriptosFinalAdapter.ProductViewHolder holder, int position) {
         //getting the product of the specified position
-        AlumnoFinal alumno = alumnosList.get(position);
+        final AlumnoFinal alumno = alumnosList.get(position);
         String nota = Integer.toString(alumno.getNota());
         String condicion;
         if (alumno.isRegular()){
@@ -77,7 +82,14 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
         holder.ivConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textView.setText(STR_NOTA + String.valueOf(np.getValue()));
+                int nuevaNota = np.getValue();
+                if (nuevaNota != alumno.getNota()){
+                    alumno.setNota(nuevaNota);
+                    textView.setText(STR_NOTA + String.valueOf(nuevaNota));
+                    if (changesButton.getVisibility() == View.INVISIBLE){
+                        changesButton.setVisibility(View.VISIBLE);
+                    }
+                }
                 viewSwitcher.showPrevious();
             }
         });

@@ -15,4 +15,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </android.support.v7.widget.RecyclerView>
 
+    <Button
+        android:id="@+id/guardar_cambios_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_centerHorizontal="true"
+        android:textAllCaps="true"
+        android:theme="@style/Widget.MaterialComponents.FloatingActionButton"
+        android:text="guardar cambios"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

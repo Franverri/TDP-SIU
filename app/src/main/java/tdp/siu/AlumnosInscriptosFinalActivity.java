@@ -8,8 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -32,7 +34,7 @@ import java.util.List;
 
 public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
     RequestQueue queue;
-    String APIUrl ="https://siu-api.herokuapp.com/docente/inscriptos?id_final=";
+    String APIUrl ="https://siu-api.herokuapp.com/docente/";
     String idFinal = null;
 
     List<AlumnoFinal> alumnosList;
@@ -63,6 +65,8 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
         configurarHTTPRequestSingleton();
 
         configurarRecyclerView();
+
+        configurarBotonCambiosNotas();
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
@@ -80,19 +84,15 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
         alumnosList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new AlumnosInscriptosFinalAdapter(this, alumnosList);
+        adapter = new AlumnosInscriptosFinalAdapter(this, alumnosList, (Button) findViewById(R.id.guardar_cambios_button));
 
-        //TODO: Probar request cuando funcione API
         //Aca se manda el request al server
-        //enviarRequestInscriptos();
+        enviarRequestInscriptos();
 
-        //Estas dos lineas se deberían borrar cuando este el endpoint del server devolviendo un JSON
-        JSONObject value = exampleJSON();
-        actualizarAlumnosInscriptos(value);
     }
 
     private void enviarRequestInscriptos(){
-        String url = APIUrl + idFinal;
+        String url = APIUrl + "inscriptos?id_final=" + idFinal;
         Log.i("API", "url: " + url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -145,45 +145,61 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
 
     }
 
-    private JSONObject exampleJSON() {
-        JSONObject alumno1 = new JSONObject();
-        try{
-            alumno1.put("apellido_y_nombre", "Juan Perez");
-            alumno1.put("padron", "99999");
-            alumno1.put("nota", -1);
-            alumno1.put("es_regular", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONObject alumno2 = new JSONObject();
-        try{
-            alumno2.put("apellido_y_nombre", "LeBron James");
-            alumno2.put("padron", "12345");
-            alumno2.put("nota", 9);
-            alumno2.put("es_regular", false);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONObject alumno3 = new JSONObject();
-        try{
-            alumno3.put("apellido_y_nombre", "Jorge García");
-            alumno3.put("padron", "88888");
-            alumno3.put("nota", 10);
-            alumno3.put("es_regular", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONArray arr = new JSONArray();
-        arr.put(alumno1);
-        arr.put(alumno2);
-        arr.put(alumno3);
-        JSONObject obj = new JSONObject();
-        try{
-            obj.put("inscriptos", arr);
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
-        return obj;
+    private void configurarBotonCambiosNotas(){
+        final Button button = findViewById(R.id.guardar_cambios_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                JSONArray alumnosArray = new JSONArray();
+                for (AlumnoFinal alumno : alumnosList){
+                    if (alumno.HasChanged()){
+                        JSONObject alumnoJSON = new JSONObject();
+                        try{
+                            alumnoJSON.put("padron",alumno.getPadron());
+                            alumnoJSON.put("nota",alumno.getNota());
+                        } catch (JSONException e){
+                            e.printStackTrace();
+                        }
+                        alumnosArray.put(alumnoJSON);
+                        alumno.setChange(false);
+                    }
+                }
+                JSONObject data = new JSONObject();
+                try {
+                    data.put("notas",alumnosArray);
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+                enviarNotas(data);
+                button.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void enviarNotas(JSONObject data){
+        String url = APIUrl + "notas?id_final=" + idFinal;
+        Log.i("API", "url: " + url);
+        Log.i("DEBUG", "data: " + data.toString());
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("API","Response: " + response.toString());
+                        Toast.makeText(AlumnosInscriptosFinalActivity.this, "Datos guardados",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(AlumnosInscriptosFinalActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
     }
 
     private void configurarHTTPRequestSingleton() {
