@@ -594,6 +594,7 @@ public class MainActivityAlumno extends AppCompatActivity
         } else if (id == R.id.nav_cerrarSesionAlumno) {
             editorShared.remove("logueadoAlumno");
             editorShared.apply();
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
             goLogin();
         } else if (id == R.id.nav_finales){
             goFinales();
