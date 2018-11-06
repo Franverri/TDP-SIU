@@ -57,6 +57,7 @@ public class HistorialActivity extends AppCompatActivity {
     TableRow.LayoutParams params3;
     TableRow.LayoutParams params4;
 
+    TextView tvTitulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,9 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void configurarTabla() {
+
+        tvTitulo = (TextView) findViewById(R.id.table_titulo);
+        tvTitulo.setText(nombreCarrera);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -277,7 +281,7 @@ public class HistorialActivity extends AppCompatActivity {
         tableLayout.removeAllViews();
 
         if(response.length() == 0){
-            añadirFila(0,"-","-", "-", "-");
+            añadirFila(0,"-","", "-", "-");
         } else {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject jsonobject = null;
@@ -286,6 +290,7 @@ public class HistorialActivity extends AppCompatActivity {
                     if(jsonobject.length() == 0){
                         Toast.makeText(HistorialActivity.this, "Sin materias aprobadas",
                                 Toast.LENGTH_LONG).show();
+                        añadirFila(0,"-", "", "-", "-");
                     } else {
                         try {
                             String nombreMateria = jsonobject.getString("nombre");
