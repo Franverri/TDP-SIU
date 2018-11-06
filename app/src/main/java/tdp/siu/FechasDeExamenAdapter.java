@@ -63,32 +63,36 @@ public class FechasDeExamenAdapter extends RecyclerView.Adapter<FechasDeExamenAd
     public void onBindViewHolder(FechasDeExamenAdapter.ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         final FechaExamen fecha = fechasList.get(position);
-        String inscriptos = fecha.getInscriptos();
 
         String numero = String.valueOf(position + 1);
         //binding the data with the view holder views
         holder.tvNumeroExamen.setText("Fecha " + numero);
         holder.tvFechaExamen.setText(fecha.getFecha());
         holder.tvHoraExamen.setText(fecha.getHora());
-        holder.tvInscriptos.setText("Inscriptos: " + inscriptos);
+        holder.tvInscriptos.setText("Inscriptos: " + fecha.getInscriptos());
         holder.ivDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mostrarDialog(position, fecha.getFecha(), fecha.getId() );
             }
         });
-        if (Integer.parseInt(inscriptos) > 0){
-            holder.cvFechaExamen.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+
+        holder.cvFechaExamen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Integer.parseInt(fecha.getInscriptos()) > 0) {
                     Intent intent = new Intent(mCtx, AlumnosInscriptosFinalActivity.class);
                     Bundle b = new Bundle();
                     b.putString("id", fecha.getId()); //Your id
                     intent.putExtras(b); //Put your id to your next Intent
                     mCtx.startActivity(intent);
+                } else {
+                    Toast.makeText(mCtx, "La fecha seleccionada no tiene alumnos inscriptos",
+                            Toast.LENGTH_LONG).show();
                 }
+            }
             });
-        }
+
     }
 
     private void mostrarDialog(final int position, String fecha, final String id) {
