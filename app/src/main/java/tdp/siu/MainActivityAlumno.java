@@ -128,6 +128,7 @@ public class MainActivityAlumno extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         calcularPrioridad();
+        mail = sharedPref.getString("mail", null);
         actualizarDatosMenuLateral(nombre, mail);
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
