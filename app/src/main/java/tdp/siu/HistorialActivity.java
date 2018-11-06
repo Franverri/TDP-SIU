@@ -57,6 +57,7 @@ public class HistorialActivity extends AppCompatActivity {
     TableRow.LayoutParams params3;
     TableRow.LayoutParams params4;
 
+    TextView tvTitulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,9 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void configurarTabla() {
+
+        tvTitulo = (TextView) findViewById(R.id.table_titulo);
+        tvTitulo.setText(nombreCarrera);
 
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);

@@ -6,6 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/table_titulo"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:textSize="25dp"
+        android:background="@color/colorPrimary"/>
+
     <TableLayout
         android:id="@+id/table_header"
         android:layout_width="match_parent"
