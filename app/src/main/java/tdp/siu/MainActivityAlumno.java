@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.Request;
@@ -38,6 +39,9 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Image;
@@ -52,6 +56,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivityAlumno extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -124,8 +130,56 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
+    }
 
+    private void eliminarTopics() {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        String url = "https://iid.googleapis.com/iid/info/"+ token + "?details=true";
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest getRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response", response);
+                        procesarTopics(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR","error => "+error.toString());
+                    }
+                }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization", "key=AAAAARB5KBc:APA91bECc4HqoPBgdcb-GZdeUNImLZ1hKGDlI2opx1htxc9RU7TjTlxpRLJv5fC1bLMCPpE6VmwZ5Vb1v8kB33hiCI_ut28QeBi48UUxEV61DFlviHvwBTsO2x2wC9sey27SKO2ePxB1");
+                return params;
+            }
+        };
+        queue.add(getRequest);
+    }
 
+    private void procesarTopics(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject rel = jsonObject.getJSONObject("rel");
+            //Log.d("PRUEBAA", "rel: " + rel);
+            JSONObject topics = rel.getJSONObject("topics");
+            //Log.d("PRUEBAA", "topics: " + topics);
+            JSONArray topicNames = topics.names();
+            //Log.d("PRUEBAA", "topic keys: " + topicNames);
+            for (int i=0; i< topicNames.length() ;i++){
+                //Log.d("PRUEBAA", i+1 + "): " + topicNames.get(i));
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(String.valueOf(topicNames.get(i)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -594,7 +648,7 @@ public class MainActivityAlumno extends AppCompatActivity
         } else if (id == R.id.nav_cerrarSesionAlumno) {
             editorShared.remove("logueadoAlumno");
             editorShared.apply();
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("all");
+            eliminarTopics();
             goLogin();
         } else if (id == R.id.nav_finales){
             goFinales();
