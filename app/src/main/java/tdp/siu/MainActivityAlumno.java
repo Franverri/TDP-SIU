@@ -645,6 +645,7 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void descargarPDF() {
+
         TemplatePDF templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument();
         templatePDF.addMetaData("Certificado", "Alumno regular", "FIUBA");
@@ -654,8 +655,18 @@ public class MainActivityAlumno extends AppCompatActivity
         templatePDF.addParagraph("Apellido/s: " + nombre.split("\\s+")[1]);
         templatePDF.addParagraph("Nombre/s: " + nombre.split("\\s+")[0]);
         templatePDF.addParagraph("DNI N°: " + sharedPref.getString("usuario", ""));
-        templatePDF.addParagraph("Carrera: " /*FALTA CARRERA*/ );
-        templatePDF.addParagraph("Conste que el alumno cuyos datos figuran en el presente documento, se encuentra inscripto en la/s carrera/s arriba citada/s y a la fecha mantiene su condicion de Alumno Regular. A pedido del interesado se extiende el presente documento");
+        //Obtengo carreras
+        String[] listCodigos = codigoCarreras.split(";");
+        String[] listNombres = nombreCarreras.split(";");
+        String carreras = "";
+        for(int i = 0; i < listCodigos.length; i++){
+            carreras = carreras + "[" + listCodigos[i] + "] " + listNombres[i];
+            if(i!=listCodigos.length-1){
+                carreras = carreras + ", ";
+            }
+        }
+        templatePDF.addParagraph("Carrera/s: " + carreras);
+        templatePDF.addParagraph("Conste que el alumno/a cuyos datos figuran en el presente documento, se encuentra inscripto en la/s carrera/s arriba citada/s y a la fecha mantiene su condicion de Alumno Regular. A pedido del interesado se extiende el presente documento");
         templatePDF.closeDocument();
         templatePDF.viewPDF(this);
     }
