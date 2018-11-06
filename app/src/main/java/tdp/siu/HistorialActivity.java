@@ -281,7 +281,7 @@ public class HistorialActivity extends AppCompatActivity {
         tableLayout.removeAllViews();
 
         if(response.length() == 0){
-            añadirFila(0,"-","-", "-", "-");
+            añadirFila(0,"-","", "-", "-");
         } else {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject jsonobject = null;
@@ -290,6 +290,7 @@ public class HistorialActivity extends AppCompatActivity {
                     if(jsonobject.length() == 0){
                         Toast.makeText(HistorialActivity.this, "Sin materias aprobadas",
                                 Toast.LENGTH_LONG).show();
+                        añadirFila(0,"-", "", "-", "-");
                     } else {
                         try {
                             String nombreMateria = jsonobject.getString("nombre");
