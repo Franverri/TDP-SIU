@@ -38,6 +38,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Image;
 
@@ -81,6 +82,9 @@ public class MainActivityAlumno extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Topic Firebase
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
 
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);

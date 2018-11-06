@@ -214,16 +214,13 @@ public class LoginActivity extends AppCompatActivity {
                 String nombre = response.getString("nombre");
                 String apellido = response.getString("apellido");
                 String email = response.getString("email");
-                String codCarreras = response.getString("carrera");
-                //FALTA QUE LO AGREGUEN AL ENDPOINT DE LOGIN
-                String nombreCarreras;
+                String codCarreras = response.getString("carreras");
+                String nombreCarreras = response.getString("desc_carreras");
                 boolean multiCarrera;
                 if(codCarreras.contains(";")){
                     multiCarrera = true;
-                    nombreCarreras = "Ing. en Informática; Lic. en Sistemas";
                 } else {
                     multiCarrera = false;
-                    nombreCarreras = "Ing. en Informática";
                 }
                 editorShared.putBoolean("multiCarrera", multiCarrera);
                 editorShared.putString("codigoCarreras", codCarreras);
