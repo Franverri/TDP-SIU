@@ -22,15 +22,17 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
 
     //Botón que aparece cuando se modifica alguna nota para guardar los cambios
     private Button changesButton;
+    private Button closeButton;
 
     private String STR_NOTA = "Nota: ";
     String[] DISPLAYED_VALUES  = new String[] {"A", "D", "4", "5", "6", "7", "8", "9", "10"};
 
     //getting the context and product list with constructor
-    public AlumnosInscriptosFinalAdapter(Context mCtx, List<AlumnoFinal> productList, Button changesButton) {
+    public AlumnosInscriptosFinalAdapter(Context mCtx, List<AlumnoFinal> productList, Button changesButton, Button closeButton) {
         this.mCtx = mCtx;
         this.alumnosList = productList;
         this.changesButton = changesButton;
+        this.closeButton = closeButton;
     }
 
     @Override
@@ -90,6 +92,9 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
                     alumno.setNota(nuevaNota);
                     textView.setText(nuevaNota);
                     if (changesButton.getVisibility() == View.INVISIBLE){
+                        if (closeButton.getVisibility() == View.VISIBLE){
+                            closeButton.setVisibility(View.INVISIBLE);
+                        }
                         changesButton.setVisibility(View.VISIBLE);
                     }
                 }

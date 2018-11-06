@@ -2,6 +2,7 @@ package tdp.siu;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -38,12 +39,14 @@ import java.util.List;
 public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
+    String UNCHANGED = "-1";
     String idFinal = null;
 
     List<AlumnoFinal> alumnosList;
     AlumnosInscriptosFinalAdapter adapter;
     RecyclerView recyclerView;
     Button changesButton;
+    Button closeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,8 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
         configurarHTTPRequestSingleton();
 
         configurarBotonCambiosNotas();
+
+        configurarBotonCerrarFecha();
 
         configurarRecyclerView();
     }
@@ -120,7 +125,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
         alumnosList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new AlumnosInscriptosFinalAdapter(this, alumnosList, changesButton);
+        adapter = new AlumnosInscriptosFinalAdapter(this, alumnosList, changesButton, closeButton);
 
         //Aca se manda el request al server
         enviarRequestInscriptos();
@@ -154,6 +159,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
 
     private void actualizarAlumnosInscriptos(JSONObject response){
         alumnosList.clear();
+        boolean canClose = true;
         JSONArray array = null;
         try {
             array = response.getJSONArray("inscriptos");
@@ -171,14 +177,56 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
                 String nombreAlumno = jsonobject.getString("apellido_y_nombre");
                 String padronAlumno = jsonobject.getString("padron");
                 String notaAlumno = jsonobject.getString("nota");
+                if (notaAlumno.contentEquals(UNCHANGED)){
+                    canClose = false;
+                }
                 boolean regular = jsonobject.getBoolean("es_regular");
                 alumnosList.add(new AlumnoFinal(nombreAlumno, padronAlumno, notaAlumno, regular));
             } catch (JSONException e) {
                 Log.i("JSON","Error al obtener datos del JSON");
             }
         }
+        if (canClose){
+            closeButton.setVisibility(View.VISIBLE);
+        }
         recyclerView.setAdapter(adapter);
 
+    }
+
+    private void configurarBotonCerrarFecha(){
+        closeButton = findViewById(R.id.cerrar_fecha_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cerrarFecha();
+            }
+        });
+    }
+
+    private void cerrarFecha(){
+        String url = APIUrl + "finales?id_final=" + idFinal;
+        Log.i("API", "url: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.PUT, url,null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("API","Response: " + response.toString());
+                        Intent myIntent = new Intent(AlumnosInscriptosFinalActivity.this, FechasDeExamenActivity.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        startActivity(myIntent);
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(AlumnosInscriptosFinalActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
     }
 
     private void configurarBotonCambiosNotas(){
@@ -186,8 +234,12 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
         changesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean canClose = true;
                 JSONArray alumnosArray = new JSONArray();
                 for (AlumnoFinal alumno : alumnosList){
+                    if (alumno.getNota().contentEquals(UNCHANGED)){
+                        canClose = false;
+                    }
                     if (alumno.HasChanged()){
                         JSONObject alumnoJSON = new JSONObject();
                         try{
@@ -208,6 +260,9 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
                 }
                 enviarNotas(data);
                 changesButton.setVisibility(View.INVISIBLE);
+                if (canClose){
+                    closeButton.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

@@ -3,6 +3,7 @@ package tdp.siu;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -71,6 +72,12 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
 
     private DateValidator dateValidator;
     private TimeValidator timeValidator;
+
+    //Para cuando recibo un Intent desde AlumnosInscriptosFinalActivity porque se cerró una fecha
+    @Override
+    protected void onNewIntent(Intent intent) {
+        enviarRequestGetFechas();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
