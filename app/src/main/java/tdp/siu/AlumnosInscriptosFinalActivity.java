@@ -170,7 +170,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
             try {
                 String nombreAlumno = jsonobject.getString("apellido_y_nombre");
                 String padronAlumno = jsonobject.getString("padron");
-                int notaAlumno = jsonobject.getInt("nota");
+                String notaAlumno = jsonobject.getString("nota");
                 boolean regular = jsonobject.getBoolean("es_regular");
                 alumnosList.add(new AlumnoFinal(nombreAlumno, padronAlumno, notaAlumno, regular));
             } catch (JSONException e) {

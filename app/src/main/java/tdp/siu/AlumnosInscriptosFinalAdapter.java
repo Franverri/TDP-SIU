@@ -24,6 +24,7 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     private Button changesButton;
 
     private String STR_NOTA = "Nota: ";
+    String[] DISPLAYED_VALUES  = new String[] {"A", "D", "4", "5", "6", "7", "8", "9", "10"};
 
     //getting the context and product list with constructor
     public AlumnosInscriptosFinalAdapter(Context mCtx, List<AlumnoFinal> productList, Button changesButton) {
@@ -44,7 +45,7 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
     public void onBindViewHolder(AlumnosInscriptosFinalAdapter.ProductViewHolder holder, int position) {
         //getting the product of the specified position
         final AlumnoFinal alumno = alumnosList.get(position);
-        String nota = Integer.toString(alumno.getNota());
+        String nota = alumno.getNota();
         String condicion;
         if (alumno.isRegular()){
             condicion = "Regular";
@@ -60,10 +61,12 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
         holder.tvPadronAlumno.setText(alumno.getPadron());
         holder.tvCondicionAlumno.setText(condicion);
         if (!nota.contentEquals("-1")){
-            holder.tvNotaAlumno.setText(STR_NOTA + nota);
+            holder.tvNotaAlumno.setText(nota);
         }
-        holder.npNotaAlumno.setMinValue(1);
-        holder.npNotaAlumno.setMaxValue(10);
+
+        holder.npNotaAlumno.setMinValue(0);
+        holder.npNotaAlumno.setMaxValue(DISPLAYED_VALUES.length-1);
+        holder.npNotaAlumno.setDisplayedValues(DISPLAYED_VALUES);
 
         holder.ivEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,10 +85,10 @@ public class AlumnosInscriptosFinalAdapter extends RecyclerView.Adapter<AlumnosI
         holder.ivConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int nuevaNota = np.getValue();
-                if (nuevaNota != alumno.getNota()){
+                String nuevaNota = DISPLAYED_VALUES[np.getValue()];
+                if (!nuevaNota.contentEquals(alumno.getNota())){
                     alumno.setNota(nuevaNota);
-                    textView.setText(STR_NOTA + String.valueOf(nuevaNota));
+                    textView.setText(nuevaNota);
                     if (changesButton.getVisibility() == View.INVISIBLE){
                         changesButton.setVisibility(View.VISIBLE);
                     }
