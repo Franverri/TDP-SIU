@@ -63,7 +63,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     NavigationView navigationView;
 
-    String padron, nombre;
+    String padron, nombre, mail;
     String prioridad;
     String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioCursada, fechaCierreCursada ,fechaInicioFinales, fechaCierreFinales;
     String diaInscripcion, diaFinInscripcion, horaInscripcion, horaFinInscripcion;
@@ -88,10 +88,13 @@ public class MainActivityAlumno extends AppCompatActivity
 
         padron = sharedPref.getString("padron", null);
         nombre = sharedPref.getString("nombre", null);
-        String mail = sharedPref.getString("mail", null);
+        mail = sharedPref.getString("mail", null);
         codigoCarreras = sharedPref.getString("codigoCarreras", null);
         nombreCarreras = sharedPref.getString("nombreCarreras", null);
         multiCarrera = sharedPref.getBoolean("multiCarrera", false);
+        Log.d("PRUEBAA", "codigos: " + codigoCarreras);
+        Log.d("PRUEBAA", "nombres: " + nombreCarreras);
+        Log.d("PRUEBAA", "multi  : " + multiCarrera);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -118,13 +121,14 @@ public class MainActivityAlumno extends AppCompatActivity
 
         configurarClickTarjetas();
 
-        actualizarDatosMenuLateral(nombre, mail);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         calcularPrioridad();
+        actualizarDatosMenuLateral(nombre, mail);
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }

@@ -82,6 +82,8 @@ public class HistorialActivity extends AppCompatActivity {
         if(b != null){
             codigoCarrera = b.getString("codigoCarrera");
             nombreCarrera = b.getString("nombreCarrera");
+            //Log.d("PRUEBAA", "codigos: " + codigoCarrera);
+            //Log.d("PRUEBAA", "nombres: " + nombreCarrera);
         }
 
         configurarHTTPRequestSingleton();
@@ -180,7 +182,9 @@ public class HistorialActivity extends AppCompatActivity {
 
     private void obtenerDatosAvance() {
 
-        String url = APIUrl + "creditos?padron=" + padron;
+        //AGREGAR ID_CARRERA AL ENDPOINT
+
+        String url = APIUrl + "creditos?padron=" + padron + "&id_carrera=" + codigoCarrera;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -208,8 +212,9 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void actualizarTarjeta(JSONObject response) {
+
         if(response.length() == 0){
-            Toast.makeText(HistorialActivity.this, "No existe información disponible",
+            Toast.makeText(HistorialActivity.this, "No existen materias aprobadas aún",
                     Toast.LENGTH_LONG).show();
         } else {
             try {
@@ -243,7 +248,7 @@ public class HistorialActivity extends AppCompatActivity {
     private void obtenerDatosHistorial() {
         progress = ProgressDialog.show(this, "Historial académico",
                 "Recolectando datos...", true);
-        String url = APIUrl + "historial?padron=" + padron;
+        String url = APIUrl + "historial?padron=" + padron + "&id_carrera=" + codigoCarrera;
 
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -270,26 +275,31 @@ public class HistorialActivity extends AppCompatActivity {
 
     private void actualizarTabla(JSONArray response) {
         tableLayout.removeAllViews();
-        for (int i = 0; i < response.length(); i++) {
-            JSONObject jsonobject = null;
-            try {
-                jsonobject = response.getJSONObject(i);
-                if(jsonobject.length() == 0){
-                    Toast.makeText(HistorialActivity.this, "Sin materias aprobadas",
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    try {
-                        String nombreMateria = jsonobject.getString("nombre");
-                        String codigoMateria = jsonobject.getString("codigo");
-                        String nota = jsonobject.getString("nota");
-                        String fecha = jsonobject.getString("fecha");
-                        añadirFila(i, codigoMateria, nombreMateria, nota, fecha);
-                    } catch (JSONException e) {
-                        Log.i("JSON","Error al obtener datos del JSON");
+
+        if(response.length() == 0){
+            añadirFila(0,"-","-", "-", "-");
+        } else {
+            for (int i = 0; i < response.length(); i++) {
+                JSONObject jsonobject = null;
+                try {
+                    jsonobject = response.getJSONObject(i);
+                    if(jsonobject.length() == 0){
+                        Toast.makeText(HistorialActivity.this, "Sin materias aprobadas",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            String nombreMateria = jsonobject.getString("nombre");
+                            String codigoMateria = jsonobject.getString("codigo");
+                            String nota = jsonobject.getString("nota");
+                            String fecha = jsonobject.getString("fecha");
+                            añadirFila(i, codigoMateria, nombreMateria, nota, fecha);
+                        } catch (JSONException e) {
+                            Log.i("JSON","Error al obtener datos del JSON");
+                        }
                     }
+                } catch (JSONException e) {
+                    Log.i("JSON","Error al parsear JSON");
                 }
-            } catch (JSONException e) {
-                Log.i("JSON","Error al parsear JSON");
             }
         }
     }

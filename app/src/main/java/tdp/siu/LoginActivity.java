@@ -203,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             tipo = response.getInt("tipo");
         }catch (JSONException e){
-            Log.i("JSON","Error al parsear JSON");
+            Log.i("JSON","Error al parsear JSON 1");
         }
         if (tipo == 0){
             mEmailView.setError(getString(R.string.error_incorrect_user_or_password));
@@ -214,26 +214,28 @@ public class LoginActivity extends AppCompatActivity {
                 String nombre = response.getString("nombre");
                 String apellido = response.getString("apellido");
                 String email = response.getString("email");
-                String carrera = String.valueOf(response.getInt("carrera"));
-                //EJEMPLO VARIAS CARRERAS
-                String codigoCarreras1 = "1";
-                String nombreCarreras1 = "Ing. en Informática";
-                String codigoCarreras2 = "1;2";
-                String nombreCarreras2 = "Ing. en Informática; Lic. en Sistemas";
-                editorShared.putString("codigoCarreras", codigoCarreras2);
-                editorShared.putString("nombreCarreras", nombreCarreras2);
-                //editorShared.putBoolean("multiCarrera", false);
-                editorShared.putBoolean("multiCarrera", true);
-                //-----------------------
+                String codCarreras = response.getString("carrera");
+                //FALTA QUE LO AGREGUEN AL ENDPOINT DE LOGIN
+                String nombreCarreras;
+                boolean multiCarrera;
+                if(codCarreras.contains(";")){
+                    multiCarrera = true;
+                    nombreCarreras = "Ing. en Informática; Lic. en Sistemas";
+                } else {
+                    multiCarrera = false;
+                    nombreCarreras = "Ing. en Informática";
+                }
+                editorShared.putBoolean("multiCarrera", multiCarrera);
+                editorShared.putString("codigoCarreras", codCarreras);
+                editorShared.putString("nombreCarreras", nombreCarreras);
                 editorShared.putString("nombre", nombre + " " + apellido);
                 editorShared.putString("usuario", usuario);
                 editorShared.putString("mail", email);
-                editorShared.putString("carrera", carrera);
                 editorShared.putBoolean("logueadoAlumno",true);
                 editorShared.apply();
                 goMainAlumno();
             } catch (JSONException e){
-                Log.i("JSON","Error al parsear JSON");
+                Log.i("JSON","Error al parsear JSON 2");
             }
         } else if (tipo == 2){ //DOCENTE
             try {
