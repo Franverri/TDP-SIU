@@ -26,7 +26,7 @@
 
         <TextView
             android:textColor="#000000"
-            android:text="Opinion general sobre el curso"
+            android:text="Opinión general sobre el curso"
             android:id="@+id/question_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
