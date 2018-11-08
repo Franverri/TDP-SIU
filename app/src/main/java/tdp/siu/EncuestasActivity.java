@@ -9,9 +9,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class EncuestasActivity extends AppCompatActivity {
+
+    String padron, nombreCarrera, codigoCarrera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,23 @@ public class EncuestasActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_encuestas);
 
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            codigoCarrera = b.getString("codigoCarrera");
+            nombreCarrera = b.getString("nombreCarrera");
+            padron = b.getString("padron");
+        }
+
+        setearTitulo();
+
         configurarBtnEnviar();
+    }
+
+    private void setearTitulo() {
+
+        TextView tvTitulo = (TextView) findViewById(R.id.tvTituloEncuesta);
+        tvTitulo.setText("[" + codigoCarrera + "] " + nombreCarrera);
+
     }
 
     private void configurarBtnEnviar() {
