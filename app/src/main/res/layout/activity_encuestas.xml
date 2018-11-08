@@ -16,8 +16,17 @@
         tools:context=".EncuestasActivity">
 
         <TextView
+            android:id="@+id/tvTituloEncuesta"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="22dp"
+            android:background="@color/colorPrimary"/>
+
+        <TextView
             android:textColor="#000000"
-            android:text="Opinion general sobre el curso"
+            android:text="Opinión general sobre el curso"
             android:id="@+id/question_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

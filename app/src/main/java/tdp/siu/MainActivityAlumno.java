@@ -671,8 +671,27 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void goEncuesta() {
-        Intent intent = new Intent(this, EncuestasActivity.class);
-        startActivity(intent);
+        //SINCRONIZAR CON API PARA OBTENER LAS ENCUESTAS PENDIENTES
+        final String[] listCodigos = codigoCarreras.split(";");
+        final String[] listNombres = nombreCarreras.split(";");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione la encuesta a completar");
+        builder.setItems(listNombres, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                idMateriaSeleccionada = listCodigos[which];
+                nombreCarreraSeleccionada = listNombres[which];
+                Intent intent = new Intent(MainActivityAlumno.this, EncuestasActivity.class);
+                Bundle b = new Bundle();
+                b.putString("padron", padron);
+                b.putString("codigoCarrera", idMateriaSeleccionada);
+                b.putString("nombreCarrera", nombreCarreraSeleccionada);
+                intent.putExtras(b);
+                startActivity(intent);
+            }
+        });
+        builder.show();
     }
 
     private boolean hayEncuestaPendiente() {
