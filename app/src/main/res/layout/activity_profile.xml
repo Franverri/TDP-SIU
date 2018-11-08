@@ -145,6 +145,14 @@
                 android:inputType="textPassword"
                 android:hint="Ingrese la nueva contraseña" />
 
+            <EditText
+                android:id="@+id/tvProfile_pswNueva3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:hint="Repita la nueva contraseña" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -153,9 +161,10 @@
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/linearLayout_profile"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar cambios"
+        android:layout_margin="10dp"
+        android:text="GUARDAR"
         android:onClick="guardarCambios"/>
 
 </RelativeLayout>

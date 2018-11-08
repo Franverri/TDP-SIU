@@ -40,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private boolean esAlumno;
 
     TextView tvNombre, tvDNI, tvPadron;
-    EditText etMail, etPSW, etPSWnueva;
+    EditText etMail, etPSW, etPSWnueva, etPSWnueva2;
 
     RequestQueue queue;
     ProgressDialog progress;
@@ -102,6 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
         etMail = (EditText) findViewById(R.id.tvProfile_mail2);
         etPSW = (EditText) findViewById(R.id.tvProfile_psw2);
         etPSWnueva = (EditText) findViewById(R.id.tvProfile_pswNueva2);
+        etPSWnueva2 = (EditText) findViewById(R.id.tvProfile_pswNueva3);
         if(esAlumno){
             tvAtributo.setText("Padrón:");
         } else {
@@ -138,22 +139,38 @@ public class ProfileActivity extends AppCompatActivity {
             url = APIUrl + "docente/perfil" + sharedPref.getString("legajo", "");
         }
 
+        String mailAnterior = sharedPref.getString("mail", "");
         String mailIngresado = String.valueOf(etMail.getText()).toLowerCase();
         String pswActual = String.valueOf(etPSW.getText());
         String pswNueva = String.valueOf(etPSWnueva.getText());
+        String pswNueva2 = String.valueOf(etPSWnueva2.getText());
         boolean mailValido = validarMail(mailIngresado);
         boolean pswValida = validarPSW(pswNueva);
         boolean exitoso = false;
         if(mailValido){
             if(pswValida){
-                url = url + "&mail=" + mailIngresado + "&pswactual=" + pswActual + "&pswnueva=" + pswNueva;
-                Log.d("PRUEBA URL", url);
-                exitoso = true;
-            } else {
-                if(pswNueva.equals("")){
-                    url = url + "&mail=" + mailIngresado;
+                if(pswNueva.equals(pswNueva2)){
+                    url = url + "&mail=" + mailIngresado + "&pswactual=" + pswActual + "&pswnueva=" + pswNueva;
                     Log.d("PRUEBA URL", url);
                     exitoso = true;
+                } else {
+                    exitoso = false;
+                    Toast.makeText(ProfileActivity.this, "Las contraseñas no coinciden",
+                            Toast.LENGTH_LONG).show();
+                    progress.dismiss();
+                }
+            } else {
+                if(pswNueva.equals("")){
+                    if(mailAnterior.equals(mailIngresado)){
+                        exitoso = false;
+                        Toast.makeText(ProfileActivity.this, "No se registran cambios",
+                                Toast.LENGTH_LONG).show();
+                        progress.dismiss();
+                    } else {
+                        url = url + "&mail=" + mailIngresado;
+                        Log.d("PRUEBA URL", url);
+                        exitoso = true;
+                    }
                 } else {
                     Toast.makeText(ProfileActivity.this, "La contraseña ingresada es inválida",
                             Toast.LENGTH_LONG).show();
