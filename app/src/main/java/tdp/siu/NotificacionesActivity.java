@@ -47,7 +47,8 @@ public class NotificacionesActivity extends AppCompatActivity {
     private void agregarNotificaciones() {
 
         //Obtengo el historial de notificaciones del SharedPref
-        String strNotificaciones = sharedPref.getString("strNotificaciones", "");
+        String padron = sharedPref.getString("padron", null);
+        String strNotificaciones = sharedPref.getString("strNotificaciones"+padron, "");
         if(strNotificaciones.equals("")){
             strNotificaciones = "Sin notificaciones";
         }

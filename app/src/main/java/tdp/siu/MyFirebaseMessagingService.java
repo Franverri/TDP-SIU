@@ -29,23 +29,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String from = remoteMessage.getFrom();
         Log.d("FIREBASEE", "Mensaje recibido de: " + from);
 
-        if(remoteMessage.getNotification() != null){
-            Log.d("FIREBASEE", "Notificacion: " + remoteMessage.getNotification().getBody());
-
-            mostrarNotificacion(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
-        }
-
         if(remoteMessage.getData().size() > 0){
             Log.d("FIREBASEE", "Data: " + remoteMessage.getData());
+            mostrarNotificacion(remoteMessage.getData().get("title"), remoteMessage.getData().get("text"));
         }
 
     }
 
     private void mostrarNotificacion(String title, String body) {
-
-        String strNotificaciones = sharedPref.getString("strNotificaciones", "");
+        String padron = sharedPref.getString("padron", null);
+        String strNotificaciones = sharedPref.getString("strNotificaciones"+padron, "");
         strNotificaciones = strNotificaciones + body + ";";
-        editorShared.putString("strNotificaciones", strNotificaciones);
+        editorShared.putString("strNotificaciones"+padron, strNotificaciones);
         editorShared.apply();
 
         Intent intent = new Intent(this, MainActivityAlumno.class);
