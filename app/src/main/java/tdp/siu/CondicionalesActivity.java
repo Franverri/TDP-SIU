@@ -23,6 +23,8 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class CondicionalesActivity extends AppCompatActivity {
 
     private void configurarRecyclerView() {
         //getting the recyclerview from xml
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_fechas_examen);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_condicionales);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -82,7 +84,10 @@ public class CondicionalesActivity extends AppCompatActivity {
         adapter = new CondicionalesAdapter(this, alumnosList);
 
         //Aca se manda el request al server
-        enviarRequestGetCondicionales();
+        //enviarRequestGetCondicionales();
+
+        //Cambiar cuando este hecho el endpoint de la API
+        actualizarCondicionales(mockJSON());
 
         recyclerView.setAdapter(adapter);
     }
@@ -96,7 +101,7 @@ public class CondicionalesActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("API","Response: " + response.toString());
-
+                        actualizarCondicionales(response);
 
                     }
                 }, new Response.ErrorListener() {
@@ -111,6 +116,55 @@ public class CondicionalesActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
+    }
+
+    private void actualizarCondicionales(JSONObject response){
+        try {
+            alumnosList.clear();
+            JSONArray array = response.getJSONArray("condicionales");
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject jsonobject = null;
+                jsonobject = array.getJSONObject(i);
+                String nombreAlumno = jsonobject.getString("apellido_y_nombre");
+                String padronAlumno = jsonobject.getString("padron");
+                String prioridadAlumno = jsonobject.getString("prioridad");
+                alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno, true));
+                recyclerView.setAdapter(adapter);
+            }
+        } catch (JSONException e){
+            Log.i("JSON","Error al parsear JSON de Condicionales");
+        }
+    }
+
+    private JSONObject mockJSON(){
+        JSONObject response = new JSONObject();
+        JSONArray arr = new JSONArray();
+        JSONObject alumno1 = new JSONObject();
+        JSONObject alumno2 = new JSONObject();
+        JSONObject alumno3 = new JSONObject();
+        try {
+            alumno1.put("apellido_y_nombre", "Diego Abal");
+            alumno1.put("padron",99999);
+            alumno1.put("prioridad",1);
+
+            alumno2.put("apellido_y_nombre", "Darío Herrera");
+            alumno2.put("padron",12345);
+            alumno2.put("prioridad",4);
+
+            alumno3.put("apellido_y_nombre", "Néstor Pitana");
+            alumno3.put("padron",67876);
+            alumno3.put("prioridad",10);
+
+            arr.put(alumno1);
+            arr.put(alumno2);
+            arr.put(alumno3);
+
+            response.put("condicionales", arr);
+            return response;
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
