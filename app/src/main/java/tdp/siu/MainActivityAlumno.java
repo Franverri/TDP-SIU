@@ -76,7 +76,7 @@ public class MainActivityAlumno extends AppCompatActivity
     NavigationView navigationView;
 
     String padron, nombre, mail;
-    String prioridad;
+    String prioridad, cantEncuestas;
     String fechaInicioInscripcion, fechaCierreInscripcion, fechaInicioDesinscripcion, fechaCierreDesinscripcion, fechaInicioCursada, fechaCierreCursada ,fechaInicioFinales, fechaCierreFinales;
     String diaInscripcion, diaFinInscripcion, horaInscripcion, horaFinInscripcion;
     String diaDesinscripcion, diaFinDesinscripcion, horaDesinscripcion, horaFinDesinscripcion;
@@ -215,17 +215,6 @@ public class MainActivityAlumno extends AppCompatActivity
         for (int i = 0; i < navigationView.getMenu().size(); i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
-        initializeCountDrawer();
-    }
-
-    private void initializeCountDrawer() {
-
-        //Gravity property aligns the text
-        tvEncuestas.setGravity(Gravity.CENTER_VERTICAL);
-        tvEncuestas.setTypeface(null, Typeface.BOLD);
-        tvEncuestas.setTextColor(getResources().getColor(R.color.colorAccent));
-        tvEncuestas.setText("3");
-
     }
 
     private void configurarClickTarjetas() {
@@ -398,6 +387,7 @@ public class MainActivityAlumno extends AppCompatActivity
             try {
                 if (jsonobject != null) {
                     prioridad = jsonobject.getString("prioridad");
+                    cantEncuestas = jsonobject.getString("encuestas");
                     String fechaActualizacion = jsonobject.getString("fecha_actualizacion");
                     diaActualizacion = obtenerDiaFecha(fechaActualizacion);
                     String descripcionPeriodo = jsonobject.getString("descripcion_periodo");
@@ -489,6 +479,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     editorShared.putString("descPeriodo", descripcionPeriodo);
                     editorShared.apply();
                     modificarPrioridad(prioridad);
+                    modificarEncuestas(cantEncuestas);
                 } else {
                     modificarPrioridad(" - ");
                 }
@@ -496,6 +487,14 @@ public class MainActivityAlumno extends AppCompatActivity
                 Log.i("JSON","Error al obtener datos del JSON");
             }
         }
+    }
+
+    private void modificarEncuestas(String cantEncuestas) {
+        //Gravity property aligns the text
+        tvEncuestas.setGravity(Gravity.CENTER_VERTICAL);
+        tvEncuestas.setTypeface(null, Typeface.BOLD);
+        tvEncuestas.setTextColor(getResources().getColor(R.color.colorAccent));
+        tvEncuestas.setText(cantEncuestas);
     }
 
     private boolean validarPeriodo(String fechaInicio, String fechaCierre) {
@@ -714,6 +713,14 @@ public class MainActivityAlumno extends AppCompatActivity
                 b.putString("nombreCarrera", nombreCarreraSeleccionada);
                 intent.putExtras(b);
                 startActivity(intent);
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                for (int i = 0; i < navigationView.getMenu().size(); i++) {
+                    navigationView.getMenu().getItem(i).setChecked(false);
+                }
             }
         });
         builder.show();
