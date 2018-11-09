@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="condiciones_final_array">
+        <item>Regular</item>
+        <item>Libre</item>
+    </string-array>
+</resources>
