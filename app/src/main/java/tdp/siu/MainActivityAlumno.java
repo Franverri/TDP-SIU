@@ -21,6 +21,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -130,6 +131,12 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar_notificaciones, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void eliminarTopics() {
