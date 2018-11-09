@@ -479,8 +479,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnFinales = validarPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
-                    editorShared.putBoolean("estaEnFinales", true); //CAMBIAR
-                    //editorShared.putBoolean("estaEnFinales", estaEnFinales);
+                    editorShared.putBoolean("estaEnFinales", estaEnFinales);
 
                     //---------------
 
