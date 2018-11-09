@@ -85,7 +85,8 @@
             android:label="Calendario semanal" />
         <activity
             android:name=".EncuestasActivity"
-            android:label="Encuesta"/>
+            android:label="Encuesta" />
+        <activity android:name=".NotificacionesActivity"></activity>
     </application>
 
 </manifest>

@@ -139,6 +139,19 @@ public class MainActivityAlumno extends AppCompatActivity
         return super.onCreateOptionsMenu(menu);
     }
 
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if (id == R.id.btn_notificaciones) {
+                goNotificaciones();
+            }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void goNotificaciones() {
+        Intent intent = new Intent(MainActivityAlumno.this, NotificacionesActivity.class);
+        startActivity(intent);
+    }
+
     private void eliminarTopics() {
         String token = FirebaseInstanceId.getInstance().getToken();
         String url = "https://iid.googleapis.com/iid/info/"+ token + "?details=true";
