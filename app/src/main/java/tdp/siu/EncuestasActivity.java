@@ -32,8 +32,8 @@ public class EncuestasActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
         if(b != null){
-            codigoCarrera = b.getString("codigoCarrera");
-            nombreCarrera = b.getString("nombreCarrera");
+            codigoCarrera = b.getString("codigoMateria");
+            nombreCarrera = b.getString("nombreMateria");
             padron = b.getString("padron");
         }
 

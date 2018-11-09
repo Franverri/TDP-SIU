@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -85,7 +84,10 @@ public class MainActivityAlumno extends AppCompatActivity
     String diaActualizacion;
     Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnCursada ,estaEnFinales;
     String codigoCarreras, nombreCarreras;
-    String idMateriaSeleccionada, nombreCarreraSeleccionada;
+    String codigoMateria, nombreMateria, idMateriaSeleccionada, nombreMateriaSeleccionada, codigoMateriaSeleccionada;
+    String idCarreraSeleccionada, nombreCarreraSeleccionada;
+    String strListEncuestas, strCodigosEncuestas, strNombreEncuestas, strIDEncuestas;
+    String[] listCodigosEncuestas, listNombresEncuestas, listIDEncuestas, listEncuestasFinal;
     boolean multiCarrera, esRegular;
 
     TextView tvEncuestas;
@@ -277,11 +279,11 @@ public class MainActivityAlumno extends AppCompatActivity
             builder.setItems(listNombres, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    idMateriaSeleccionada = listCodigos[which];
+                    idCarreraSeleccionada = listCodigos[which];
                     nombreCarreraSeleccionada = listNombres[which];
                     Intent intent = new Intent(MainActivityAlumno.this, OfertaAcademicaActivity.class);
                     Bundle b = new Bundle();
-                    b.putString("codigoCarrera", idMateriaSeleccionada);
+                    b.putString("codigoCarrera", idCarreraSeleccionada);
                     b.putString("nombreCarrera", nombreCarreraSeleccionada);
                     intent.putExtras(b);
                     startActivity(intent);
@@ -309,11 +311,11 @@ public class MainActivityAlumno extends AppCompatActivity
             builder.setItems(listNombres, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    idMateriaSeleccionada = listCodigos[which];
+                    idCarreraSeleccionada = listCodigos[which];
                     nombreCarreraSeleccionada = listNombres[which];
                     Intent intent = new Intent(MainActivityAlumno.this, HistorialActivity.class);
                     Bundle b = new Bundle();
-                    b.putString("codigoCarrera", idMateriaSeleccionada);
+                    b.putString("codigoCarrera", idCarreraSeleccionada);
                     b.putString("nombreCarrera", nombreCarreraSeleccionada);
                     intent.putExtras(b);
                     startActivity(intent);
@@ -682,7 +684,7 @@ public class MainActivityAlumno extends AppCompatActivity
             validarRegularidad();
         } else if(id == R.id.nav_encuestas){
             if(hayEncuestaPendiente()){
-                goEncuesta();
+                obtenerEncuestasPendientes();
             } else {
                 Toast.makeText(MainActivityAlumno.this, "Sin encuestas pendientes",
                         Toast.LENGTH_LONG).show();
@@ -694,23 +696,87 @@ public class MainActivityAlumno extends AppCompatActivity
         return true;
     }
 
-    private void goEncuesta() {
-        //SINCRONIZAR CON API PARA OBTENER LAS ENCUESTAS PENDIENTES
-        final String[] listCodigos = codigoCarreras.split(";");
-        final String[] listNombres = nombreCarreras.split(";");
+    private void obtenerEncuestasPendientes() {
+
+        progress = ProgressDialog.show(this, "Encuestas",
+                "Obteniendo encuestas pendientes...", true);
+        String url = APIUrl + "alumno/encuestas?padron=" + padron;
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        procesarEncuestas(response);
+                        progress.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(MainActivityAlumno.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                        esRegular = false;
+                        progress.dismiss();
+                    }
+                });
+        // Add the request to the RequestQueue.
+        queue.add(jsonArrayRequest);
+
+    }
+
+    private void procesarEncuestas(JSONArray response) {
+        strListEncuestas = "";
+        strCodigosEncuestas = "";
+        strNombreEncuestas = "";
+        strIDEncuestas = "";
+        for (int i = 0; i < response.length(); i++) {
+            JSONObject jsonobject;
+            try {
+                jsonobject = response.getJSONObject(i);
+                if(jsonobject.length() == 0){
+                    Toast.makeText(MainActivityAlumno.this, "No hay encuestas pendientes",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        String nombreMateria = jsonobject.getString("nombre");
+                        String codigoMateria = jsonobject.getString("codigo");
+                        String idMateria = jsonobject.getString("id");
+                        strListEncuestas = strListEncuestas + "[" + codigoMateria + "] " + nombreMateria + ";";
+                        strNombreEncuestas = strNombreEncuestas + nombreMateria + ";";
+                        strCodigosEncuestas = strCodigosEncuestas + codigoMateria + ";";
+                        strIDEncuestas = strIDEncuestas + idMateria + ";";
+                    } catch (JSONException e) {
+                        Log.i("JSON","Error al obtener datos del JSON");
+                    }
+                }
+            } catch (JSONException e) {
+                Log.i("JSON","Error al parsear JSON");
+            }
+        }
+        cargarOpcionesEncuesta();
+    }
+
+    private void cargarOpcionesEncuesta() {
+
+        listIDEncuestas = strIDEncuestas.split(";");
+        listCodigosEncuestas = strCodigosEncuestas.split(";");
+        listNombresEncuestas = strNombreEncuestas.split(";");
+        listEncuestasFinal = strListEncuestas.split(";");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Seleccione la encuesta a completar");
-        builder.setItems(listNombres, new DialogInterface.OnClickListener() {
+        builder.setItems(listEncuestasFinal, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                idMateriaSeleccionada = listCodigos[which];
-                nombreCarreraSeleccionada = listNombres[which];
+                idMateriaSeleccionada = listIDEncuestas[which];
+                nombreMateriaSeleccionada = listNombresEncuestas[which];
+                codigoMateriaSeleccionada = listCodigosEncuestas[which];
                 Intent intent = new Intent(MainActivityAlumno.this, EncuestasActivity.class);
                 Bundle b = new Bundle();
                 b.putString("padron", padron);
-                b.putString("codigoCarrera", idMateriaSeleccionada);
-                b.putString("nombreCarrera", nombreCarreraSeleccionada);
+                b.putString("codigoMateria", codigoMateriaSeleccionada);
+                b.putString("nombreMateria", nombreMateriaSeleccionada);
+                b.putString("idMateria", idMateriaSeleccionada);
                 intent.putExtras(b);
                 startActivity(intent);
             }
@@ -724,6 +790,7 @@ public class MainActivityAlumno extends AppCompatActivity
             }
         });
         builder.show();
+
     }
 
     private boolean hayEncuestaPendiente() {
