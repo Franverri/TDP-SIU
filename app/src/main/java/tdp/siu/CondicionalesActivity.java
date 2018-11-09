@@ -37,7 +37,7 @@ public class CondicionalesActivity extends AppCompatActivity {
     SharedPreferences.Editor editorShared;
 
     List<Alumno> alumnosList;
-    AlumnosInscriptosAdapter adapter;
+    CondicionalesAdapter adapter;
     RecyclerView recyclerView;
 
     @Override
@@ -79,7 +79,7 @@ public class CondicionalesActivity extends AppCompatActivity {
         alumnosList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new AlumnosInscriptosAdapter(this, alumnosList);
+        adapter = new CondicionalesAdapter(this, alumnosList);
 
         //Aca se manda el request al server
         enviarRequestGetCondicionales();
