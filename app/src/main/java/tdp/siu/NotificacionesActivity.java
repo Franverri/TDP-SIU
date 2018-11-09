@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class NotificacionesActivity extends AppCompatActivity {
 
@@ -22,6 +27,23 @@ public class NotificacionesActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_notificaciones);
+
+        agregarNotificaciones();
+    }
+
+    private void agregarNotificaciones() {
+
+        //Obtengo el historial de notificaciones del SharedPref
+        String strNotificaciones = "noti 1;noti 2;noti 3;noti 4";
+        List<String> listaNotificaciones = Arrays.asList(strNotificaciones.split(";"));
+
+        ListView listView = (ListView) findViewById(R.id.listaNotificaciones);
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1, listaNotificaciones);
+
+        listView.setAdapter(arrayAdapter);
+        arrayAdapter.notifyDataSetChanged();
     }
 
     public boolean onOptionsItemSelected(MenuItem item){
