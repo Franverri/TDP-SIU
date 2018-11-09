@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:backgroundTint="#FFFFFF"
+        app:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_clear"
         app:fabCustomSize="60dp"
         app:fabSize="auto"
