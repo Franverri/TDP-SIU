@@ -86,7 +86,9 @@
         <activity
             android:name=".EncuestasActivity"
             android:label="Encuesta" />
-        <activity android:name=".NotificacionesActivity"></activity>
+        <activity
+            android:name=".NotificacionesActivity"
+            android:label="Notificaciones"/>
     </application>
 
 </manifest>
