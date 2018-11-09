@@ -3,18 +3,20 @@ package tdp.siu;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class EncuestasActivity extends AppCompatActivity {
 
-    String padron, nombreCarrera, codigoCarrera;
+    String padron, nombreCarrera, codigoCarrera, strDatos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,9 @@ public class EncuestasActivity extends AppCompatActivity {
             public void onClick(View view) {
                 boolean camposCompeltos = verificarCamposObligatorios();
                 if(camposCompeltos){
+                    strDatos = generarStrDatos();
                     //enviarDatos()
+                    Log.d("PRUEBAA", strDatos);
                 } else {
                     Toast.makeText(EncuestasActivity.this, "Debe completar todas las preguntas obligatorias",
                             Toast.LENGTH_LONG).show();
@@ -65,6 +69,28 @@ public class EncuestasActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private String generarStrDatos() {
+        String strDatos = "";
+
+        RadioGroup respuesta1 = (RadioGroup) findViewById(R.id.radio_group1);
+        RadioGroup respuesta2 = (RadioGroup) findViewById(R.id.radio_group2);
+        RadioGroup respuesta3 = (RadioGroup) findViewById(R.id.radio_group3);
+        RadioGroup respuesta4 = (RadioGroup) findViewById(R.id.radio_group4);
+        RadioGroup respuesta5 = (RadioGroup) findViewById(R.id.radio_group5);
+        RadioGroup respuesta6 = (RadioGroup) findViewById(R.id.radio_group6);
+        EditText respuesta7 = (EditText) findViewById(R.id.comentario_encuesta);
+
+        strDatos = "Pregunta1:" + (Integer.valueOf(respuesta1.indexOfChild(findViewById(respuesta1.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = strDatos + "Pregunta2:" + (Integer.valueOf(respuesta2.indexOfChild(findViewById(respuesta2.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = strDatos + "Pregunta3:" + (Integer.valueOf(respuesta3.indexOfChild(findViewById(respuesta3.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = strDatos + "Pregunta4:" + (Integer.valueOf(respuesta4.indexOfChild(findViewById(respuesta4.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = strDatos + "Pregunta5:" + (Integer.valueOf(respuesta5.indexOfChild(findViewById(respuesta5.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = strDatos + "Pregunta6:" + (Integer.valueOf(respuesta6.indexOfChild(findViewById(respuesta6.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = strDatos + "Pregunta7:" + respuesta7.getText();
+
+        return strDatos;
     }
 
     private boolean verificarCamposObligatorios() {
