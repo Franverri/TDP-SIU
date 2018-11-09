@@ -361,6 +361,7 @@ public class MainActivityAlumno extends AppCompatActivity
     private void formularRequest() {
 
         String url = APIUrl + "alumno/prioridad/" + padron;
+        Log.d("API", "URL: " + url);
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 
@@ -368,7 +369,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     public void onResponse(JSONArray response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
                         actualizarPrioridad(response);
-                        boolean periodoHabilitado = true;
+                        Log.i("DEBUG", "Prioridad Actualizada");
                     }
                 }, new Response.ErrorListener() {
 
@@ -478,8 +479,8 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnFinales = validarPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
-                    //editorShared.putBoolean("estaEnFinales", false);
-                    editorShared.putBoolean("estaEnFinales", estaEnFinales);
+                    editorShared.putBoolean("estaEnFinales", true); //CAMBIAR
+                    //editorShared.putBoolean("estaEnFinales", estaEnFinales);
 
                     //---------------
 

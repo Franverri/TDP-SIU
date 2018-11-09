@@ -2,10 +2,12 @@ package tdp.siu;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,7 +51,8 @@ public class FinalesActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
 
-    String padron;
+    String padron, codigoCarreras, nombreCarreras;
+    Boolean multiCarrera;
     Boolean periodoHabilitado;
 
     @Override
@@ -62,6 +65,12 @@ public class FinalesActivity extends AppCompatActivity {
 
         padron = sharedPref.getString("padron", null);
         periodoHabilitado = sharedPref.getBoolean("estaEnFinales", false);
+        Log.d("DEBUG","estaEnFinales: " + periodoHabilitado.toString());
+
+        codigoCarreras = sharedPref.getString("codigoCarreras", null);
+        nombreCarreras = sharedPref.getString("nombreCarreras", null);
+        multiCarrera = sharedPref.getBoolean("multiCarrera", false);
+
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -87,7 +96,24 @@ public class FinalesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(periodoHabilitado){
-                    goOfertaFinal();
+                    if(multiCarrera){
+                        final String[] listCodigos = codigoCarreras.split(";");
+                        final String[] listNombres = nombreCarreras.split(";");
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(FinalesActivity.this);
+                        builder.setTitle("Seleccione la carrera");
+                        builder.setItems(listNombres, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String codCarreraSeleccionada = listCodigos[which];
+                                String nombreCarreraSeleccionada = listNombres[which];
+                                goOfertaFinal(codCarreraSeleccionada, nombreCarreraSeleccionada);
+                            }
+                        });
+                        builder.show();
+                    } else {
+                        goOfertaFinal(codigoCarreras, nombreCarreras);
+                    }
                 } else {
                     Toast.makeText(FinalesActivity.this, "No se encuentra habilitado el período de inscripción a finales",
                             Toast.LENGTH_LONG).show();
@@ -96,8 +122,12 @@ public class FinalesActivity extends AppCompatActivity {
         });
     }
 
-    private void goOfertaFinal() {
+    private void goOfertaFinal(String codCarrera, String nombreCarrera) {
         Intent intent = new Intent(this, OfertaFinalesActivity.class);
+        Bundle b = new Bundle();
+        b.putString("codigoCarrera", codCarrera);
+        b.putString("nombreCarrera", nombreCarrera);
+        intent.putExtras(b);
         startActivity(intent);
     }
 
