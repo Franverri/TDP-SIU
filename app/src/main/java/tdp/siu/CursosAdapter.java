@@ -75,6 +75,13 @@ public class CursosAdapter extends RecyclerView.Adapter<CursosAdapter.ProductVie
                                 intent.putExtras(b); //Put your id to your next Intent
                                 mCtx.startActivity(intent);
                                 break;
+                            case R.id.menu_condicionales:
+                                intent = new Intent(mCtx, CondicionalesActivity.class);
+                                b = new Bundle();
+                                b.putInt("id", curso.getIdCurso()); //Your id
+                                intent.putExtras(b); //Put your id to your next Intent
+                                mCtx.startActivity(intent);
+                                break;
                         }
                         return false;
                     }

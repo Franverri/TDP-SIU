@@ -10,4 +10,8 @@
         android:title="Fechas de Examen"
         android:icon="@drawable/ic_fechas"/>
 
+    <item
+        android:id="@+id/menu_condicionales"
+        android:title="Condicionales"/>
+
 </menu>
