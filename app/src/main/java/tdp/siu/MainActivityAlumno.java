@@ -1,5 +1,6 @@
 package tdp.siu;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -66,6 +68,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/";
+    ProgressDialog progress;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -83,7 +86,7 @@ public class MainActivityAlumno extends AppCompatActivity
     Boolean estaEnInscripcion, estaEnDesinscripcion, estaEnCursada ,estaEnFinales;
     String codigoCarreras, nombreCarreras;
     String idMateriaSeleccionada, nombreCarreraSeleccionada;
-    boolean multiCarrera;
+    boolean multiCarrera, esRegular;
 
     TextView tvEncuestas;
 
@@ -677,7 +680,7 @@ public class MainActivityAlumno extends AppCompatActivity
         } else if(id == R.id.nav_historialAcademimco){
             goHistorial();
         } else if(id == R.id.nav_alumnoRegular){
-            validarAlumnoRegular();
+            validarRegularidad();
         } else if(id == R.id.nav_encuestas){
             if(hayEncuestaPendiente()){
                 goEncuesta();
@@ -725,20 +728,6 @@ public class MainActivityAlumno extends AppCompatActivity
         }
     }
 
-    private void validarAlumnoRegular() {
-
-        boolean esRegular = validarRegularidad();
-        if(esRegular){
-            Toast.makeText(MainActivityAlumno.this, "Generando certificado...",
-                    Toast.LENGTH_LONG).show();
-            descargarPDF();
-        } else {
-            Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",
-                    Toast.LENGTH_LONG).show();
-        }
-
-    }
-
     private void descargarPDF() {
 
         TemplatePDF templatePDF = new TemplatePDF(getApplicationContext());
@@ -784,9 +773,48 @@ public class MainActivityAlumno extends AppCompatActivity
         return image;
     }
 
-    private boolean validarRegularidad() {
+    private void validarRegularidad() {
+
+        progress = ProgressDialog.show(this, "Certificado alumno regular",
+                "Validando regularidad...", true);
         //Pegarle a la API para ver si es alumno regular
-        return true;
+        String url = APIUrl + "alumno/regular?padron=" + padron;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("RESPUESTA","Response: " + response.toString());
+                        esRegular(response);
+                        progress.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(MainActivityAlumno.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                        esRegular = false;
+                        progress.dismiss();
+                    }
+                });
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+    }
+
+    private void esRegular(JSONObject response) {
+        try {
+            esRegular = response.getBoolean("es_regular");
+            if(esRegular){
+                Toast.makeText(MainActivityAlumno.this, "Generando certificado...",
+                        Toast.LENGTH_LONG).show();
+                descargarPDF();
+            } else {
+                Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",
+                        Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void goInscripciones() {
