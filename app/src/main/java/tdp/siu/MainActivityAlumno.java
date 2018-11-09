@@ -680,7 +680,7 @@ public class MainActivityAlumno extends AppCompatActivity
         } else if(id == R.id.nav_historialAcademimco){
             goHistorial();
         } else if(id == R.id.nav_alumnoRegular){
-            validarAlumnoRegular();
+            validarRegularidad();
         } else if(id == R.id.nav_encuestas){
             if(hayEncuestaPendiente()){
                 goEncuesta();
@@ -728,20 +728,6 @@ public class MainActivityAlumno extends AppCompatActivity
         }
     }
 
-    private void validarAlumnoRegular() {
-
-        boolean esRegular = validarRegularidad();
-        if(esRegular){
-            Toast.makeText(MainActivityAlumno.this, "Generando certificado...",
-                    Toast.LENGTH_LONG).show();
-            descargarPDF();
-        } else {
-            Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",
-                    Toast.LENGTH_LONG).show();
-        }
-
-    }
-
     private void descargarPDF() {
 
         TemplatePDF templatePDF = new TemplatePDF(getApplicationContext());
@@ -787,10 +773,10 @@ public class MainActivityAlumno extends AppCompatActivity
         return image;
     }
 
-    private boolean validarRegularidad() {
+    private void validarRegularidad() {
 
-        progress = ProgressDialog.show(this, "Buscando materias",
-                "Recolectando datos...", true);
+        progress = ProgressDialog.show(this, "Certificado alumno regular",
+                "Validando regularidad...", true);
         //Pegarle a la API para ver si es alumno regular
         String url = APIUrl + "alumno/regular?padron=" + padron;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -798,7 +784,7 @@ public class MainActivityAlumno extends AppCompatActivity
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
-                        esRegular = esRegular(response);
+                        esRegular(response);
                         progress.dismiss();
                     }
                 }, new Response.ErrorListener() {
@@ -813,21 +799,22 @@ public class MainActivityAlumno extends AppCompatActivity
                 });
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
-        return esRegular;
-        //return true;
     }
 
-    private boolean esRegular(JSONObject response) {
-
-        /*
+    private void esRegular(JSONObject response) {
         try {
-            boolean esRegular = response.getBoolean("Es_regular");
+            esRegular = response.getBoolean("es_regular");
+            if(esRegular){
+                Toast.makeText(MainActivityAlumno.this, "Generando certificado...",
+                        Toast.LENGTH_LONG).show();
+                descargarPDF();
+            } else {
+                Toast.makeText(MainActivityAlumno.this, "No cumple los requisitos para ser alumno regular",
+                        Toast.LENGTH_LONG).show();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return esRegular;*/
-        return true;
     }
 
     private void goInscripciones() {
