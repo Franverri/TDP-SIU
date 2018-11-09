@@ -3,6 +3,7 @@ package tdp.siu;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -21,5 +22,10 @@ public class NotificacionesActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_notificaciones);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        super.onBackPressed();
+        return true;
     }
 }
