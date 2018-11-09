@@ -39,7 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void mostrarNotificacion(String title, String body) {
         String padron = sharedPref.getString("padron", null);
         String strNotificaciones = sharedPref.getString("strNotificaciones"+padron, "");
-        strNotificaciones = strNotificaciones + body + ";";
+        strNotificaciones = strNotificaciones + title + ": " + body + ";";
         editorShared.putString("strNotificaciones"+padron, strNotificaciones);
         editorShared.apply();
 

@@ -1,15 +1,19 @@
 package tdp.siu;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,6 +40,23 @@ public class NotificacionesActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_notificaciones);
+
+        configurarBtnClear();
+    }
+
+    private void configurarBtnClear() {
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.btn_clear);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(NotificacionesActivity.this, "Historial borrado",
+                        Toast.LENGTH_LONG).show();
+                String padron = sharedPref.getString("padron", null);
+                editorShared.putString("strNotificaciones"+padron, "");
+                editorShared.apply();
+                agregarNotificaciones();
+            }
+        });
     }
 
     @Override
@@ -52,7 +73,6 @@ public class NotificacionesActivity extends AppCompatActivity {
         if(strNotificaciones.equals("")){
             strNotificaciones = "Sin notificaciones";
         }
-        //String strNotificaciones = "noti 1;noti 2;noti 3;noti 4";
         List<String> listaNotificaciones = Arrays.asList(strNotificaciones.split(";"));
 
         ListView listView = (ListView) findViewById(R.id.listaNotificaciones);
@@ -67,5 +87,10 @@ public class NotificacionesActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item){
         super.onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 }
