@@ -30,6 +30,7 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -211,7 +212,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
 
     }
 
-    private void inscribirse(String padron, String idFinal, String condicion) {
+    private void inscribirse(String padron, final String idFinal, String condicion) {
         progress = ProgressDialog.show(mCtx, "Inscripción",
                 "Inscribiendose a final...", true);
         Boolean regular = (condicion.contentEquals("Regular"));
@@ -224,6 +225,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
+                        FirebaseMessaging.getInstance().subscribeToTopic("final"+idFinal);
                         procesarRespuestaInscripcion(response);
                         progress.dismiss();
 
@@ -294,7 +296,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                 .show();
     }
 
-    private void desincribirse(String padron, String idFinal) {
+    private void desincribirse(String padron, final String idFinal) {
         if(padron != null && idFinal != null) {
             progress = ProgressDialog.show(mCtx, "Desinscripción",
                     "Desinscribiendose de final...", true);
@@ -306,6 +308,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
                 @Override
                 public void onResponse(JSONObject response) {
                     Log.i("API","Response: " + response.toString());
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("final"+idFinal);
                     procesarRespuesta(response);
                     progress.dismiss();
                 }
