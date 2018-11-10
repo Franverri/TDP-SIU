@@ -44,11 +44,11 @@
                 android:textSize="15sp" />
 
             <Switch
+                android:id="@+id/switchAlumno"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"/>
-
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

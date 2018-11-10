@@ -8,8 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -41,6 +43,7 @@ public class CondicionalesActivity extends AppCompatActivity {
     List<Alumno> alumnosList;
     CondicionalesAdapter adapter;
     RecyclerView recyclerView;
+    Button aceptarButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,8 @@ public class CondicionalesActivity extends AppCompatActivity {
 
         configurarHTTPRequestSingleton();
 
+        configurarAceptarButton();
+
         configurarRecyclerView();
     }
 
@@ -81,7 +86,7 @@ public class CondicionalesActivity extends AppCompatActivity {
         alumnosList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new CondicionalesAdapter(this, alumnosList);
+        adapter = new CondicionalesAdapter(this, alumnosList, aceptarButton);
 
         //Aca se manda el request al server
         //enviarRequestGetCondicionales();
@@ -167,6 +172,15 @@ public class CondicionalesActivity extends AppCompatActivity {
         return null;
     }
 
+    private void configurarAceptarButton(){
+        aceptarButton = findViewById(R.id.aceptar_condicionales_button);
+        aceptarButton.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
 
     private void configurarHTTPRequestSingleton() {
 
