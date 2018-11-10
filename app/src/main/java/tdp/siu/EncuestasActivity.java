@@ -1,5 +1,6 @@
 package tdp.siu;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,9 +15,23 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.StringRequest;
+
 public class EncuestasActivity extends AppCompatActivity {
 
-    String padron, nombreCarrera, codigoCarrera, strDatos;
+    RequestQueue queue;
+    String APIUrl ="https://siu-api.herokuapp.com/";
+    ProgressDialog progress;
+    String padron, nombreCarrera, codigoCarrera, strDatos, idMateria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +51,35 @@ public class EncuestasActivity extends AppCompatActivity {
         if(b != null){
             codigoCarrera = b.getString("codigoMateria");
             nombreCarrera = b.getString("nombreMateria");
+            idMateria = b.getString("idMateria");
             padron = b.getString("padron");
         }
+
+        configurarHTTPRequestSingleton();
 
         setearTitulo();
 
         configurarBtnEnviar();
+    }
+
+    private void configurarHTTPRequestSingleton() {
+
+        // Get RequestQueue Singleton
+        queue = HTTPRequestSingleton.getInstance(this.getApplicationContext()).
+                getRequestQueue();
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the RequestQueue with the cache and network.
+        queue = new RequestQueue(cache, network);
+
+        // Start the queue
+        queue.start();
+
     }
 
     private void setearTitulo() {
@@ -60,7 +98,7 @@ public class EncuestasActivity extends AppCompatActivity {
                 boolean camposCompeltos = verificarCamposObligatorios();
                 if(camposCompeltos){
                     strDatos = generarStrDatos();
-                    //enviarDatos()
+                    enviarDatos(strDatos);
                     Log.d("PRUEBAA", strDatos);
                 } else {
                     Toast.makeText(EncuestasActivity.this, "Debe completar todas las preguntas obligatorias",
@@ -68,6 +106,41 @@ public class EncuestasActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void enviarDatos(String strDatos) {
+
+        progress = ProgressDialog.show(this, "Encuestas",
+                "Enviando respuestas...", true);
+        String url = APIUrl + "alumno/encuestas?padron=" + padron + "&id_materia=" + idMateria + "&respuesta="+ strDatos;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response", response);
+                        if(response.equals("ok")){
+                            Toast.makeText(EncuestasActivity.this, "Encuesta enviada",
+                                    Toast.LENGTH_LONG).show();
+                            finish();
+                        } else {
+                            Toast.makeText(EncuestasActivity.this, "Error al intentar enviar la encuesta. Intente nuevamente",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        progress.dismiss();
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error.Response", String.valueOf(error));
+                        progress.dismiss();
+                    }
+                }
+        );
+        queue.add(postRequest);
 
     }
 
@@ -82,13 +155,13 @@ public class EncuestasActivity extends AppCompatActivity {
         RadioGroup respuesta6 = (RadioGroup) findViewById(R.id.radio_group6);
         EditText respuesta7 = (EditText) findViewById(R.id.comentario_encuesta);
 
-        strDatos = "Pregunta1:" + (Integer.valueOf(respuesta1.indexOfChild(findViewById(respuesta1.getCheckedRadioButtonId())))+1) + ";";
+        strDatos = "{Pregunta1:" + (Integer.valueOf(respuesta1.indexOfChild(findViewById(respuesta1.getCheckedRadioButtonId())))+1) + ";";
         strDatos = strDatos + "Pregunta2:" + (Integer.valueOf(respuesta2.indexOfChild(findViewById(respuesta2.getCheckedRadioButtonId())))+1) + ";";
         strDatos = strDatos + "Pregunta3:" + (Integer.valueOf(respuesta3.indexOfChild(findViewById(respuesta3.getCheckedRadioButtonId())))+1) + ";";
         strDatos = strDatos + "Pregunta4:" + (Integer.valueOf(respuesta4.indexOfChild(findViewById(respuesta4.getCheckedRadioButtonId())))+1) + ";";
         strDatos = strDatos + "Pregunta5:" + (Integer.valueOf(respuesta5.indexOfChild(findViewById(respuesta5.getCheckedRadioButtonId())))+1) + ";";
         strDatos = strDatos + "Pregunta6:" + (Integer.valueOf(respuesta6.indexOfChild(findViewById(respuesta6.getCheckedRadioButtonId())))+1) + ";";
-        strDatos = strDatos + "Pregunta7:" + respuesta7.getText();
+        strDatos = strDatos + "Pregunta7:\"" + respuesta7.getText() + "\"}";
 
         return strDatos;
     }
