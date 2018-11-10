@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/custom_border">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tvPadronText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvNombre"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="Padrón:"/>
+
+    <TextView
+        android:id="@+id/tvPrioridadText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPadronText"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="Prioridad:"/>
+
+    <TextView
+        android:id="@+id/tvMailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvPrioridadText"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="Mail:"/>
+
+    <TextView
+        android:id="@+id/tvCarreraText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvMailText"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:text="Carrera:"/>
+
+
+</RelativeLayout>
