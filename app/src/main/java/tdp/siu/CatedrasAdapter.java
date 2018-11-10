@@ -32,6 +32,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -149,7 +150,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                 .show();
     }
 
-    private void enviarRequestInscripcion(String idCurso) {
+    private void enviarRequestInscripcion(final String idCurso) {
 
         String url = APIUrl + "alumno/inscribir?curso="+ idCurso +"&padron=" + padron;
         Log.i("PRUEBA", "URL: " + url);
@@ -160,6 +161,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("RESPUESTA","Response: " + response.toString());
+                        FirebaseMessaging.getInstance().subscribeToTopic("curso"+idCurso);
                         procesarRespuestaInscripcion(response);
 
                     }
