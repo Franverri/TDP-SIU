@@ -177,9 +177,46 @@ public class CondicionalesActivity extends AppCompatActivity {
         aceptarButton.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
+                aceptarCondicionales();
             }
         });
+    }
+
+    private void aceptarCondicionales(){
+        List<Integer> indexAlumnos = adapter.getChanges();
+        JSONArray padrones = new JSONArray();
+        for (Integer index :indexAlumnos){
+            padrones.put(alumnosList.get(index).getPadron());
+        }
+        String url = APIUrl + "condicional?id_curso=" + idCurso;
+        Log.i("API", "url: " + url);
+        JSONObject request = new JSONObject();
+        try{
+            request.put("padrones", padrones);
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.PUT, url, request, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("API","Response: " + response.toString());
+                        aceptarButton.setVisibility(View.INVISIBLE);
+                        enviarRequestGetCondicionales();
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(CondicionalesActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
     }
 
     private void configurarHTTPRequestSingleton() {

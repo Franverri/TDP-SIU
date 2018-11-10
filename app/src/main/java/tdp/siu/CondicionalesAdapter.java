@@ -20,7 +20,7 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
     //we are storing all the products in a list
     private List<Alumno> alumnosList;
 
-    public List<Integer> changesList;
+    private List<Integer> changesList;
 
     private Button aceptarButton;
 
@@ -30,6 +30,10 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
         this.alumnosList = productList;
         this.aceptarButton = button;
         changesList = new ArrayList<>();
+    }
+
+    public List<Integer> getChanges() {
+        return changesList;
     }
 
     @Override
