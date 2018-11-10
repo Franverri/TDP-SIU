@@ -57,9 +57,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivityAlumno extends AppCompatActivity
@@ -96,12 +99,24 @@ public class MainActivityAlumno extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Topic Firebase
-        FirebaseMessaging.getInstance().subscribeToTopic("all");
-
         //SharedPref para almacenar datos de sesión
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Topic Firebase
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+        suscribeTopicsGuardados();
+        //Los básicos que estan ya en la base para 95812
+        /*
+        FirebaseMessaging.getInstance().subscribeToTopic("curso1");
+        FirebaseMessaging.getInstance().subscribeToTopic("curso7");
+        FirebaseMessaging.getInstance().subscribeToTopic("curso4");
+        FirebaseMessaging.getInstance().subscribeToTopic("final16");
+        FirebaseMessaging.getInstance().subscribeToTopic("final31");
+        FirebaseMessaging.getInstance().subscribeToTopic("final17");
+        FirebaseMessaging.getInstance().subscribeToTopic("final33");
+        FirebaseMessaging.getInstance().subscribeToTopic("final3");
+        FirebaseMessaging.getInstance().subscribeToTopic("final5");*/
 
         padron = sharedPref.getString("padron", null);
         nombre = sharedPref.getString("nombre", null);
@@ -137,6 +152,19 @@ public class MainActivityAlumno extends AppCompatActivity
         configurarAccesoAPerfil();
 
         configurarClickTarjetas();
+    }
+
+    private void suscribeTopicsGuardados() {
+
+        String strTopics = sharedPref.getString("strTopics", "");
+        //Log.d("PRUEBAA", "Topics: " + strTopics);
+        List<String> listTopics = new ArrayList<String>(Arrays.asList(strTopics.split(";")));
+        for(int i = 0; i < listTopics.size(); i++){
+            //Log.d("PRUEBAA", "Topic: " + listTopics.get(i));
+            if(!listTopics.get(i).equals("")) {
+                FirebaseMessaging.getInstance().subscribeToTopic(listTopics.get(i));
+            }
+        }
     }
 
     @Override
@@ -191,6 +219,7 @@ public class MainActivityAlumno extends AppCompatActivity
     }
 
     private void procesarTopics(String response) {
+        String strTopics = "";
         try {
             JSONObject jsonObject = new JSONObject(response);
             JSONObject rel = jsonObject.getJSONObject("rel");
@@ -201,11 +230,15 @@ public class MainActivityAlumno extends AppCompatActivity
             //Log.d("PRUEBAA", "topic keys: " + topicNames);
             for (int i=0; i< topicNames.length() ;i++){
                 //Log.d("PRUEBAA", i+1 + "): " + topicNames.get(i));
+                strTopics = strTopics + topicNames.get(i) + ";";
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(String.valueOf(topicNames.get(i)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //Log.d("PRUEBAA", "Topics: " + strTopics);
+        editorShared.putString("strTopics", strTopics);
+        editorShared.apply();
     }
 
     @Override
