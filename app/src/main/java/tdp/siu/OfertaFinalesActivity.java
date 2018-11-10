@@ -63,7 +63,7 @@ public class OfertaFinalesActivity extends AppCompatActivity {
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
 
-    String padron;
+    String padron, nombreCarrera, codigoCarrera;
     Boolean periodoHabilitado;
     String descPeriodo;
 
@@ -82,6 +82,12 @@ public class OfertaFinalesActivity extends AppCompatActivity {
             periodoHabilitado = true;
         }
         descPeriodo = sharedPref.getString("descPeriodo", "");
+
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            codigoCarrera = b.getString("codigoCarrera");
+            nombreCarrera = b.getString("nombreCarrera");
+        }
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -227,11 +233,11 @@ public class OfertaFinalesActivity extends AppCompatActivity {
         String url;
 
         if(filtro.equals("")){
-            url = APIUrl + "alumno/oferta/"+padron;
+            url = APIUrl + "alumno/oferta/" + padron + "?id_carrera=" + codigoCarrera;;
         } else {
-            url = APIUrl + "alumno/oferta/" + padron + "?filtro=" + filtro;
+            url = APIUrl + "alumno/oferta/" + padron + "?id_carrera=" + codigoCarrera +  "?filtro=" + filtro;
         }
-
+        Log.d("API", "URL: " + url);
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
 

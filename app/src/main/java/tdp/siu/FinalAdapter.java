@@ -14,7 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,7 +95,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder holder, final int position) {
+    public void onBindViewHolder(final ProductViewHolder holder, final int position) {
         //getting the product of the specified position
         Final finalActual = finalList.get(position);
 
@@ -102,16 +104,26 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         holder.tvNombreCatedra.setText(finalActual.getNombreCatedra());
         holder.tvHorario.setText(finalActual.getHorario());
 
+        //spinner
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mCtx,
+                R.array.condiciones_final_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        holder.spinner.setAdapter(adapter);
+
         final String nombreMateria = finalActual.getNombreMateria();
         final String idFinal = finalActual.getIdFinal();
         final String fechaFinal = finalActual.getHorario();
         if(clickableCard){
             holder.ivCancel.setVisibility(View.GONE);
+            holder.spinner.setVisibility(View.VISIBLE);
             holder.cvFinalCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(estoy48hsAntes(fechaFinal)){
-                        mostrarDialogInscripcion(nombreMateria, idFinal);
+                        mostrarDialogInscripcion(nombreMateria, idFinal, holder.spinner.getSelectedItem().toString());
                     } else {
                         Toast.makeText(mCtx, "No es posible inscribirse a menos de 48hs del final",
                                 Toast.LENGTH_LONG).show();
@@ -174,7 +186,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
 
     }
 
-    private void mostrarDialogInscripcion(String nombreMateria, final String idFinal) {
+    private void mostrarDialogInscripcion(String nombreMateria, final String idFinal, final String condicion) {
 
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -182,12 +194,12 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         } else {
             builder = new AlertDialog.Builder(mCtx);
         }
-        builder.setTitle("Inscipción al final de " + nombreMateria)
-                .setMessage("¿Confirmar inscripción?")
+        builder.setTitle("Inscipción al final de " + nombreMateria )
+                .setMessage("Condición: " + condicion + "\n" + "¿Confirmar inscripción?")
                 .setPositiveButton("Inscribirme", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         estadoInscripcion = false;
-                        inscribirse(padron, idFinal);
+                        inscribirse(padron, idFinal, condicion);
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -199,10 +211,11 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
 
     }
 
-    private void inscribirse(String padron, String idFinal) {
+    private void inscribirse(String padron, String idFinal, String condicion) {
         progress = ProgressDialog.show(mCtx, "Inscripción",
                 "Inscribiendose a final...", true);
-        String url = APIUrl + "/inscribir?final="+ idFinal +"&padron=" + padron;
+        Boolean regular = (condicion.contentEquals("Regular"));
+        String url = APIUrl + "/inscribir?final="+ idFinal +"&padron=" + padron + "&es_regular=" + regular.toString();
         Log.i("PRUEBA", "URL: " + url);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -345,6 +358,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
         TextView tvNombreMateria, tvNombreCatedra, tvHorario;
         ImageView ivCancel;
         CardView cvFinalCard;
+        Spinner spinner;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
@@ -354,6 +368,7 @@ public class FinalAdapter extends RecyclerView.Adapter<FinalAdapter.ProductViewH
             tvHorario = itemView.findViewById(R.id.tvF_horario);
             cvFinalCard = itemView.findViewById(R.id.cvFinalCard);
             ivCancel = itemView.findViewById(R.id.tvF_cancelButton);
+            spinner = itemView.findViewById(R.id.spinner_final);
         }
     }
 }
