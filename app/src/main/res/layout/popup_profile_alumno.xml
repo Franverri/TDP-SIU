@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_border">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/primary_text_dark"/>
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvNombre"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvPadronText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/primary_text_dark"
+            android:text="Padrón: "/>
+
+        <TextView
+            android:id="@+id/tvMailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/primary_text_dark"
+            android:text="Mail: "/>
+
+        <TextView
+            android:id="@+id/tvCarreraText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/primary_text_dark"
+            android:text="Carrera: "/>
+
+        <TextView
+            android:id="@+id/tvPrioridadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/primary_text_dark"
+            android:text="Prioridad: "/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvNombre"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/ll1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvPadron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tvMail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/primary_text_dark"/>
+
+        <TextView
+            android:id="@+id/tvCarrera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/primary_text_dark"/>
+
+        <TextView
+            android:id="@+id/tvPrioridad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/primary_text_dark"/>
+
+    </LinearLayout>
+
+
+
+
+
+
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package tdp.siu;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
     //this context we will use to inflate the layout
     private Context mCtx;
 
+    private AdministradorPerfiles mAdministradorPerfiles;
+
     //we are storing all the products in a list
     private List<Alumno> alumnosList;
 
@@ -25,10 +28,11 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
     private Button aceptarButton;
 
     //getting the context and product list with constructor
-    public CondicionalesAdapter(Context mCtx, List<Alumno> productList, Button button) {
+    public CondicionalesAdapter(Context mCtx, List<Alumno> productList, Button button, AdministradorPerfiles adm) {
         this.mCtx = mCtx;
         this.alumnosList = productList;
         this.aceptarButton = button;
+        this.mAdministradorPerfiles = adm;
         changesList = new ArrayList<>();
     }
 
@@ -47,7 +51,7 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
     @Override
     public void onBindViewHolder(CondicionalesAdapter.ProductViewHolder holder, final int position) {
         //getting the product of the specified position
-        Alumno alumno = alumnosList.get(position);
+        final Alumno alumno = alumnosList.get(position);
 
         //binding the data with the view holder views
         holder.tvNombreAlumno.setText(alumno.getNombre());
@@ -69,7 +73,15 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
                 }
             }
         });
+
+        holder.cvAlumno.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                mAdministradorPerfiles.requestProfile(alumno.getPadron(), view);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -78,6 +90,7 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
 
+        CardView cvAlumno;
         TextView tvNombreAlumno, tvPadronAlumno, tvPrioridadAlumno;
         Switch swAlumno;
 
@@ -88,6 +101,11 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
             tvPadronAlumno = itemView.findViewById(R.id.tvPadronAlumno);
             tvPrioridadAlumno = itemView.findViewById(R.id.tvPrioridadAlumno);
             swAlumno = itemView.findViewById(R.id.switchAlumno);
+            cvAlumno = itemView.findViewById(R.id.cvCondicionalCard);
         }
+    }
+
+    public static interface AdministradorPerfiles {
+        void requestProfile(String padron, View anchor);
     }
 }
