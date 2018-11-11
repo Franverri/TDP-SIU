@@ -141,16 +141,18 @@ public class OfertaFinalesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
-                if(periodoHabilitado){
-                    goOpcionesFinales(adapter.getItem(position),
-                            listMateriaAux.get(position).getId(),
-                            listMateriaAux.get(position).getCodigo(),
-                            listMateriaAux.get(position).getNombre());
-                } else {
-                    Toast.makeText(OfertaFinalesActivity.this, "El período de inscripción aún no se encuentra habilitado",
-                            Toast.LENGTH_LONG).show();
+                materia = adapter.getItem(position);
+                if(!materia.equals("No existen coincidencias") && materia!= null){
+                    if(periodoHabilitado){
+                        goOpcionesFinales(adapter.getItem(position),
+                                listMateriaAux.get(position).getId(),
+                                listMateriaAux.get(position).getCodigo(),
+                                listMateriaAux.get(position).getNombre());
+                    } else {
+                        Toast.makeText(OfertaFinalesActivity.this, "El período de inscripción aún no se encuentra habilitado",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
-
             }
         });
     }
