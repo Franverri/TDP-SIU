@@ -61,7 +61,7 @@ public class TemplatePDF extends FileProvider {
         if(!folder.exists()){
             folder.mkdirs();
         }
-        pdfFile = new File(folder, "Template.pdf");
+        pdfFile = new File(folder, "CertificadoRegularidad.pdf");
     }
 
     public void addMetaData(String title, String subject, String author){
