@@ -1,17 +1,24 @@
 package tdp.siu;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -30,12 +37,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class CondicionalesActivity extends AppCompatActivity {
+public class CondicionalesActivity extends AppCompatActivity implements CondicionalesAdapter.AdministradorPerfiles {
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/docente/";
     int idCurso = -1;
+
+    String MAIL = "email";
+    String PADRON = "padron";
+    String NOMBRE = "nombre";
+    String PRIORIDAD = "prioridad";
+    String CARRERA = "carrera";
+    String APELLIDO = "apellido";
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -86,7 +102,7 @@ public class CondicionalesActivity extends AppCompatActivity {
         alumnosList = new ArrayList<>();
 
         //creating recyclerview adapter
-        adapter = new CondicionalesAdapter(this, alumnosList, aceptarButton);
+        adapter = new CondicionalesAdapter(this, alumnosList, aceptarButton, this);
 
         //Aca se manda el request al server
         //enviarRequestGetCondicionales();
@@ -95,6 +111,73 @@ public class CondicionalesActivity extends AppCompatActivity {
         actualizarCondicionales(mockJSON());
 
         recyclerView.setAdapter(adapter);
+    }
+
+    public void requestProfile(String padron){
+        String url = APIUrl + "alumno?padron=" + padron;
+        Log.i("API", "url: " + url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("API","Response: " + response.toString());
+                        showProfile(response);
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Error.Response", String.valueOf(error));
+                        Toast.makeText(CondicionalesActivity.this, "No fue posible conectarse al servidor, por favor intente más tarde",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(jsonObjectRequest);
+    }
+
+
+    public void showProfile(JSONObject response){
+        Map<String,String> profile = parseJSONProfile(response);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //Inflate the view from a predefined XML layout (no need for root id, using entire layout)
+        View layout = inflater.inflate(R.layout.popup_profile_alumno,null);
+        //load results
+        ((TextView)layout.findViewById(R.id.tvNombre)).setText(profile.get(NOMBRE));
+        float density=this.getResources().getDisplayMetrics().density;
+        // create a focusable PopupWindow with the given layout and correct size
+        final PopupWindow pw = new PopupWindow(layout, (int)density*240, (int)density*285, true);
+        //Set up touch closing outside of pop-up
+        pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        pw.setTouchInterceptor(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    pw.dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+        pw.setOutsideTouchable(true);
+        // display the pop-up in the center
+        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+    }
+
+    public Map<String,String> parseJSONProfile(JSONObject response){
+        try{
+            HashMap<String,String> map = new HashMap<String,String>();
+            map.put(PADRON,response.getString(PADRON));
+            map.put(NOMBRE,response.getString(NOMBRE)+" "+response.getString(APELLIDO));
+            map.put(MAIL,response.getString(MAIL));
+            map.put(CARRERA, response.getString(CARRERA));
+            map.put(PRIORIDAD, response.getString(PRIORIDAD));
+            return map;
+        }catch (JSONException e){
+            return null;
+        }
     }
 
     public void enviarRequestGetCondicionales() {
@@ -149,7 +232,7 @@ public class CondicionalesActivity extends AppCompatActivity {
         JSONObject alumno3 = new JSONObject();
         try {
             alumno1.put("apellido_y_nombre", "Diego Abal");
-            alumno1.put("padron",99999);
+            alumno1.put("padron",96803);
             alumno1.put("prioridad",1);
 
             alumno2.put("apellido_y_nombre", "Darío Herrera");
