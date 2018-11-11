@@ -104,7 +104,16 @@ public class MainActivityDocente extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        String mail = sharedPref.getString("mail", null);
+        actualizarDatosMenuLateral(mail);
         obtenerPeriodos();
+    }
+
+    private void actualizarDatosMenuLateral(String mail) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_docente);
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvMail = (TextView) headerView.findViewById(R.id.tvMenuDMail);
+        tvMail.setText(mail);
     }
 
     private void obtenerPeriodos() {
