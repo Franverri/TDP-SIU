@@ -135,16 +135,18 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
-                if(periodoHabilitado){
-                    goCurso(adapter.getItem(position),
-                            listMateriaAux.get(position).getId(),
-                            listMateriaAux.get(position).getCodigo(),
-                            listMateriaAux.get(position).getNombre());
-                } else {
-                    Toast.makeText(OfertaAcademicaActivity.this, "No se encuentra habilitado el período de inscripción a cursadas",
-                            Toast.LENGTH_LONG).show();
+                String materia = adapter.getItem(position);
+                if(!materia.equals("No existen coincidencias") && materia!= null){
+                    if(periodoHabilitado){
+                        goCurso(adapter.getItem(position),
+                                listMateriaAux.get(position).getId(),
+                                listMateriaAux.get(position).getCodigo(),
+                                listMateriaAux.get(position).getNombre());
+                    } else {
+                        Toast.makeText(OfertaAcademicaActivity.this, "No se encuentra habilitado el período de inscripción a cursadas",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
-
             }
         });
     }
