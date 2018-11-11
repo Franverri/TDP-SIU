@@ -77,7 +77,7 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
         holder.cvAlumno.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                mAdministradorPerfiles.requestProfile(alumno.getPadron());
+                mAdministradorPerfiles.requestProfile(alumno.getPadron(), view);
             }
         });
     }
@@ -106,6 +106,6 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
     }
 
     public static interface AdministradorPerfiles {
-        void requestProfile(String padron);
+        void requestProfile(String padron, View anchor);
     }
 }

@@ -113,7 +113,7 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         recyclerView.setAdapter(adapter);
     }
 
-    public void requestProfile(String padron){
+    public void requestProfile(String padron, final View anchor){
         String url = APIUrl + "alumno?padron=" + padron;
         Log.i("API", "url: " + url);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -122,7 +122,7 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("API","Response: " + response.toString());
-                        showProfile(response);
+                        showProfile(response, anchor);
 
                     }
                 }, new Response.ErrorListener() {
@@ -140,16 +140,20 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
     }
 
 
-    public void showProfile(JSONObject response){
+    public void showProfile(JSONObject response, View anchor){
         Map<String,String> profile = parseJSONProfile(response);
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //Inflate the view from a predefined XML layout (no need for root id, using entire layout)
         View layout = inflater.inflate(R.layout.popup_profile_alumno,null);
         //load results
         ((TextView)layout.findViewById(R.id.tvNombre)).setText(profile.get(NOMBRE));
+        ((TextView)layout.findViewById(R.id.tvPadron)).setText(profile.get(PADRON));
+        ((TextView)layout.findViewById(R.id.tvPrioridad)).setText(profile.get(PRIORIDAD));
+        ((TextView)layout.findViewById(R.id.tvMail)).setText(profile.get(MAIL));
+        ((TextView)layout.findViewById(R.id.tvCarrera)).setText(profile.get(CARRERA));
         float density=this.getResources().getDisplayMetrics().density;
         // create a focusable PopupWindow with the given layout and correct size
-        final PopupWindow pw = new PopupWindow(layout, (int)density*240, (int)density*285, true);
+        final PopupWindow pw = new PopupWindow(layout, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
         //Set up touch closing outside of pop-up
         pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         pw.setTouchInterceptor(new View.OnTouchListener() {
@@ -163,7 +167,8 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         });
         pw.setOutsideTouchable(true);
         // display the pop-up in the center
-        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+        pw.showAsDropDown(anchor);
+        //pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
     }
 
     public Map<String,String> parseJSONProfile(JSONObject response){
@@ -232,15 +237,15 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         JSONObject alumno3 = new JSONObject();
         try {
             alumno1.put("apellido_y_nombre", "Diego Abal");
-            alumno1.put("padron",96803);
+            alumno1.put("padron","96803");
             alumno1.put("prioridad",1);
 
             alumno2.put("apellido_y_nombre", "Darío Herrera");
-            alumno2.put("padron",12345);
+            alumno2.put("padron","00001");
             alumno2.put("prioridad",4);
 
             alumno3.put("apellido_y_nombre", "Néstor Pitana");
-            alumno3.put("padron",67876);
+            alumno3.put("padron","00002");
             alumno3.put("prioridad",10);
 
             arr.put(alumno1);
