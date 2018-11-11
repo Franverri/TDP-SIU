@@ -136,7 +136,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(esAlumno){
             url = APIUrl + "alumno/perfil?padron=" + sharedPref.getString("padron", "");
         } else {
-            url = APIUrl + "docente/perfil" + sharedPref.getString("legajo", "");
+            url = APIUrl + "docente/perfil?legajo=" + sharedPref.getString("legajo", "");
         }
 
         String mailAnterior = sharedPref.getString("mail", "");
