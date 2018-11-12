@@ -105,10 +105,10 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         adapter = new CondicionalesAdapter(this, alumnosList, aceptarButton, this);
 
         //Aca se manda el request al server
-        //enviarRequestGetCondicionales();
+        enviarRequestGetCondicionales();
 
         //Cambiar cuando este hecho el endpoint de la API
-        actualizarCondicionales(mockJSON());
+        //actualizarCondicionales(mockJSON());
 
         recyclerView.setAdapter(adapter);
     }
@@ -166,18 +166,23 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
             }
         });
         pw.setOutsideTouchable(true);
+        //pw.showAsDropDown(anchor);
         // display the pop-up in the center
-        pw.showAsDropDown(anchor);
-        //pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
     }
 
     public Map<String,String> parseJSONProfile(JSONObject response){
         try{
             HashMap<String,String> map = new HashMap<String,String>();
+            JSONArray carreras = response.getJSONArray(CARRERA);
+            String strCarreras = carreras.getString(0);
+            for (int i = 1; i < carreras.length(); i++){
+                strCarreras = strCarreras + ", " + carreras.getString(i);
+            }
             map.put(PADRON,response.getString(PADRON));
             map.put(NOMBRE,response.getString(NOMBRE)+" "+response.getString(APELLIDO));
             map.put(MAIL,response.getString(MAIL));
-            map.put(CARRERA, response.getString(CARRERA));
+            map.put(CARRERA, strCarreras);
             map.put(PRIORIDAD, response.getString(PRIORIDAD));
             return map;
         }catch (JSONException e){
@@ -222,8 +227,8 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
                 String padronAlumno = jsonobject.getString("padron");
                 String prioridadAlumno = jsonobject.getString("prioridad");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno, true));
-                recyclerView.setAdapter(adapter);
             }
+            recyclerView.setAdapter(adapter);
         } catch (JSONException e){
             Log.i("JSON","Error al parsear JSON de Condicionales");
         }
@@ -291,6 +296,8 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
                     public void onResponse(JSONObject response) {
                         Log.i("API","Response: " + response.toString());
                         aceptarButton.setVisibility(View.INVISIBLE);
+                        Toast.makeText(CondicionalesActivity.this, "Condicionales aceptados",
+                                Toast.LENGTH_LONG).show();
                         enviarRequestGetCondicionales();
                     }
                 }, new Response.ErrorListener() {
