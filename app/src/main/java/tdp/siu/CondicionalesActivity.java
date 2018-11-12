@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -165,18 +166,23 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
             }
         });
         pw.setOutsideTouchable(true);
+        //pw.showAsDropDown(anchor);
         // display the pop-up in the center
-        pw.showAsDropDown(anchor);
-        //pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
     }
 
     public Map<String,String> parseJSONProfile(JSONObject response){
         try{
             HashMap<String,String> map = new HashMap<String,String>();
+            JSONArray carreras = response.getJSONArray(CARRERA);
+            String strCarreras = carreras.getString(0);
+            for (int i = 1; i < carreras.length(); i++){
+                strCarreras = strCarreras + ", " + carreras.getString(i);
+            }
             map.put(PADRON,response.getString(PADRON));
             map.put(NOMBRE,response.getString(NOMBRE)+" "+response.getString(APELLIDO));
             map.put(MAIL,response.getString(MAIL));
-            map.put(CARRERA, response.getString(CARRERA));
+            map.put(CARRERA, strCarreras);
             map.put(PRIORIDAD, response.getString(PRIORIDAD));
             return map;
         }catch (JSONException e){
