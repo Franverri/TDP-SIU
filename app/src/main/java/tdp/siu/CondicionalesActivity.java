@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -105,10 +104,10 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         adapter = new CondicionalesAdapter(this, alumnosList, aceptarButton, this);
 
         //Aca se manda el request al server
-        //enviarRequestGetCondicionales();
+        enviarRequestGetCondicionales();
 
         //Cambiar cuando este hecho el endpoint de la API
-        actualizarCondicionales(mockJSON());
+        //actualizarCondicionales(mockJSON());
 
         recyclerView.setAdapter(adapter);
     }
@@ -222,8 +221,8 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
                 String padronAlumno = jsonobject.getString("padron");
                 String prioridadAlumno = jsonobject.getString("prioridad");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno, true));
-                recyclerView.setAdapter(adapter);
             }
+            recyclerView.setAdapter(adapter);
         } catch (JSONException e){
             Log.i("JSON","Error al parsear JSON de Condicionales");
         }
@@ -291,6 +290,8 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
                     public void onResponse(JSONObject response) {
                         Log.i("API","Response: " + response.toString());
                         aceptarButton.setVisibility(View.INVISIBLE);
+                        Toast.makeText(CondicionalesActivity.this, "Condicionales aceptados",
+                                Toast.LENGTH_LONG).show();
                         enviarRequestGetCondicionales();
                     }
                 }, new Response.ErrorListener() {
