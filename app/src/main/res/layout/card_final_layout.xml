@@ -9,9 +9,8 @@
         android:id="@+id/cvFinalCard"
         android:layout_width="match_parent"
         android:layout_height="125dp"
-        android:layout_margin="5dp"
         android:clickable="true"
-        card_view:cardCornerRadius="2dp">
+        style="@style/Cardview">
 
         <RelativeLayout
             android:layout_width="match_parent"

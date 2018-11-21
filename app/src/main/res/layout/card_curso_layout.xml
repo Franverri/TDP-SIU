@@ -10,11 +10,9 @@
         android:id="@+id/cvCursoCard"
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:layout_margin="5dp"
         android:clickable="true"
         android:focusable="true"
-        card_view:cardCornerRadius="10dp"
-        card_view:cardElevation="5dp">
+        style="@style/Cardview">
 
         <RelativeLayout
             android:layout_width="match_parent"
