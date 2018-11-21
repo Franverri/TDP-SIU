@@ -12,7 +12,7 @@
         android:id="@+id/recyclerView_inscriptos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        style="@style/RecyclerPadding">
     </android.support.v7.widget.RecyclerView>
 
     <ImageButton

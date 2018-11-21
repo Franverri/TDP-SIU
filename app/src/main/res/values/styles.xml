@@ -31,5 +31,10 @@
         <item name="cardElevation">8dp</item>
     </style>
 
+    <style name="RecyclerPadding">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingBottom">80dp</item>
+    </style>
+
 
 </resources>
