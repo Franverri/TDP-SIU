@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_main2"
-    tools:context=".OfertaFinalesActivity">
+    tools:context=".OfertaFinalesActivity"
+    style="@style/AppTheme.Background">
 
     <LinearLayout
         android:focusableInTouchMode="true"

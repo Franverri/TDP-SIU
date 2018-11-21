@@ -2,8 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/fondo_main2"
-    tools:context=".ProfileActivity">
+    tools:context=".ProfileActivity"
+    style="@style/AppTheme.Background">
 
     <LinearLayout
         android:id="@+id/linearLayout_profile"
