@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ProfileActivity"
-    style="@style/AppTheme.Background">
+    style="@style/AppTheme.LightBackground">
 
     <LinearLayout
         android:id="@+id/linearLayout_profile"

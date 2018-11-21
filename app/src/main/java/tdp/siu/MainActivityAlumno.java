@@ -486,7 +486,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnCursada = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
                     Log.d("FECHAS", "Cursada: " + estaEnCursada);
-                    //editorShared.putBoolean("estaEnDesinscripcion", true);
+                    //editorShared.putBoolean("estaEnCursada", true);
                     editorShared.putBoolean("estaEnCursada", estaEnCursada);
 
                     //---------------
@@ -507,6 +507,7 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnFinales = validarPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
+                    //editorShared.putBoolean("estaEnFinales", true);
                     editorShared.putBoolean("estaEnFinales", estaEnFinales);
 
                     //---------------

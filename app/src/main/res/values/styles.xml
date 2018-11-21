@@ -21,4 +21,9 @@
         <item name="android:background">@drawable/fondo_login</item>
     </style>
 
+    <style name="AppTheme.LightBackground">
+        <item name="android:background">@drawable/fondo_light2</item>
+    </style>
+
+
 </resources>
