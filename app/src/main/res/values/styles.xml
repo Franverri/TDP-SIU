@@ -37,4 +37,25 @@
     </style>
 
 
+    <style name="FloatingButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="fabCustomSize">60dp</item>
+        <item name="fabSize">auto</item>
+        <item name="maxImageSize">50dp</item>
+        <item name="android:tint">@android:color/black</item>
+    </style>
+
+    <style name="FloatingTextButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+
+
 </resources>

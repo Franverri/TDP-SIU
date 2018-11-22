@@ -15,20 +15,10 @@
         style="@style/RecyclerPadding">
     </android.support.v7.widget.RecyclerView>
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/csv_alumnos_button"
-        android:layout_width="50dip"
-        android:layout_height="50dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:background="@null"
-        android:src="@drawable/csv_icon">
-    </ImageButton>
+        style="@style/FloatingButton"
+        android:src="@drawable/ic_download">
+    </android.support.design.widget.FloatingActionButton>
 
 </RelativeLayout>
