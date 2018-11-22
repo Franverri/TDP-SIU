@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -109,30 +110,17 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
 
         configurarHTTPRequestSingleton();
 
+        configurarBotonNuevaFecha();
+
         configurarRecyclerView();
 
         dateValidator = new DateValidator();
         timeValidator = new TimeValidator();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar_fechas_examen, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
     public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if (id == R.id.button_add) {
-            if(periodoHabilitado){
-                DialogAgregarFecha();
-            } else {
-                Toast.makeText(FechasDeExamenActivity.this, "No se encuentra habilitado el periodo de cursadas", Toast.LENGTH_LONG).show();
-            }
-        } else if (id == android.R.id.home) { //BackPressed
-            super.onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
+        super.onBackPressed();
+        return true;
     }
 
     private DateTime obtenerDateTime(String date, String time){
@@ -144,6 +132,20 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
             e.printStackTrace();
             return null;
         }
+    }
+
+    private void configurarBotonNuevaFecha() {
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.btn_nuevaFecha);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(periodoHabilitado){
+                    DialogAgregarFecha();
+                } else {
+                    Toast.makeText(FechasDeExamenActivity.this, "No se encuentra habilitado el periodo de cursadas", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private void DialogAgregarFecha(){
