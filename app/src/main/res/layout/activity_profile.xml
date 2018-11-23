@@ -103,6 +103,7 @@
                     android:id="@+id/tvProfile_nombre2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorTitleFont"
                     android:textSize="20sp"
                     android:text="Franco Etcheverri"/>
 
@@ -110,6 +111,7 @@
                     android:id="@+id/tvProfile_DNI2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorTitleFont"
                     android:textSize="20sp"
                     android:text="33333333"/>
 
@@ -118,6 +120,7 @@
                     android:id="@+id/tvProfile_padron2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorTitleFont"
                     android:textSize="20sp"
                     android:text="99999"/>
 
