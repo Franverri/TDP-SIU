@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.TestLooperManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AlphaBackGroundActivity {
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -69,6 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_profile);
+
+        setAlphaBackGround();
 
         //Determinar si colocar Padron o Legajo según el usuario
         configurarAtributos();
