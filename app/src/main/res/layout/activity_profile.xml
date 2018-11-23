@@ -131,6 +131,8 @@
                     android:id="@+id/tvProfile_mail2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="textEmailAddress"
                     android:textSize="20sp"
                     android:text="franco@mail.com"/>
 
@@ -138,24 +140,27 @@
                     android:id="@+id/tvProfile_psw2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
+                    android:textSize="20sp"
                     android:hint="Ingrese la contraseña actual" />
 
                 <EditText
                     android:id="@+id/tvProfile_pswNueva2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
+                    android:textSize="20sp"
                     android:hint="Ingrese la nueva contraseña" />
 
                 <EditText
                     android:id="@+id/tvProfile_pswNueva3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
+                    android:textSize="20sp"
                     android:hint="Repita la nueva contraseña" />
 
                 <RelativeLayout

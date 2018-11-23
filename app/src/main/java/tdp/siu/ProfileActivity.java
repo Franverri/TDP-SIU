@@ -147,6 +147,7 @@ public class ProfileActivity extends AppCompatActivity {
         String pswNueva = String.valueOf(etPSWnueva.getText());
         String pswNueva2 = String.valueOf(etPSWnueva2.getText());
         boolean mailValido = validarMail(mailIngresado);
+        Log.v("DEBUG", "Password nueva: " + pswNueva);
         boolean pswValida = validarPSW(pswNueva);
         boolean exitoso = false;
         if(mailValido){
