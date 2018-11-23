@@ -18,13 +18,7 @@
 
     <Button
         android:id="@+id/aceptar_condicionales_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="true"
-        android:theme="@style/Widget.MaterialComponents.FloatingActionButton"
+        style="@style/TextButton.Bottom"
         android:text="aceptar"
         android:visibility="invisible"/>
 </RelativeLayout>

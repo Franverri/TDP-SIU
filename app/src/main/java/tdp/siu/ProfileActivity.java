@@ -58,7 +58,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+        //Si habilito el fullscreen no me scrollea la pagina con el teclado en pantalla
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setTitle("Perfil");
 

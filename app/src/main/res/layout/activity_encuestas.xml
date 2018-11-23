@@ -446,14 +446,9 @@
 
         <Button
             android:id="@+id/btnEnviar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/TextButton"
             android:layout_margin="10dp"
-            android:text="ENVIAR"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radio_group" />
+            android:text="ENVIAR"/>
 
     </LinearLayout>
 

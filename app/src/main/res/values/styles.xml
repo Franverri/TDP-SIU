@@ -49,11 +49,16 @@
         <item name="android:tint">@android:color/black</item>
     </style>
 
-    <style name="FloatingTextButton" parent="Widget.MaterialComponents.FloatingActionButton">
+    <style name="TextButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextButton.Bottom">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginBottom">15dp</item>
     </style>
 
 
