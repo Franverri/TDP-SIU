@@ -90,8 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    usuario = String.valueOf(mEmailView.getText());
+                if (id == EditorInfo.IME_ACTION_DONE) {
                     attemptLogin();
                     return true;
                 }
@@ -164,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            usuario = String.valueOf(mEmailView.getText());
             enviarRequestLogin(email,password);
         }
     }

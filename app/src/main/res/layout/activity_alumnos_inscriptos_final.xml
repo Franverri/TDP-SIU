@@ -5,38 +5,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_docente"
-    tools:context=".AlumnosInscriptosFinalActivity">
+    tools:context=".AlumnosInscriptosFinalActivity"
+    style="@style/AppTheme.Background">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_inscriptos_final"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        style="@style/RecyclerPadding">
     </android.support.v7.widget.RecyclerView>
 
 
     <Button
         android:id="@+id/guardar_cambios_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="true"
-        android:theme="@style/Widget.MaterialComponents.FloatingActionButton"
+        style="@style/TextButton.Bottom"
         android:text="guardar cambios"
         android:visibility="invisible"/>
 
     <Button
         android:id="@+id/cerrar_fecha_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15dp"
-        android:layout_centerHorizontal="true"
-        android:textAllCaps="true"
-        android:theme="@style/Widget.MaterialComponents.FloatingActionButton"
+        style="@style/TextButton.Bottom"
         android:text="cerrar fecha"
         android:visibility="invisible"/>
 

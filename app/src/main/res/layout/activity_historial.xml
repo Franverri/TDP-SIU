@@ -11,15 +11,16 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textColor="@color/colorTitleFont"
         android:textSize="22dp"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorTitleBackground"/>
 
     <TableLayout
         android:id="@+id/table_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorTitleBackground" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -40,7 +41,7 @@
             <android.support.v7.widget.CardView
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="#a1a1a1"
+                app:cardBackgroundColor="@color/colorUnclickableGrey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp">

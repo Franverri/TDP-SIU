@@ -9,8 +9,7 @@
         android:id="@+id/cvAlumnoFinalCard"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="5dp"
-        card_view:cardCornerRadius="10dp">
+        style="@style/Cardview">
 
         <LinearLayout
             android:layout_width="match_parent"

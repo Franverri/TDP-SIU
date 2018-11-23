@@ -154,20 +154,16 @@ public class MainActivityDocente extends AppCompatActivity
                     //CURSADA
 
                     String fechaInicioCursada = jsonobject.getString("fechaInicioCursadas");
-                    String diaCursadas = obtenerDiaFecha(fechaInicioCursada);
-                    String horaCursadas = obtenerHoraFecha(fechaInicioCursada);
-
                     String fechaCierreCursada = jsonobject.getString("fechaFinCursadas");
-                    String diaFinCursadas = obtenerDiaFecha(fechaCierreCursada);
-                    String horaFinCursadas = obtenerHoraFecha(fechaCierreCursada);
-
-                    //Boolean estaEnCursadas = validezPeriodo(fechaInicioCursada, fechaCierreCursada);
                     Boolean estaEnCursadas = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
-                    //editorShared.putBoolean("estaEnCursadas", true);
-                    editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
+                    editorShared.putBoolean("estaEnCursadas", true);
+                    //editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
+
                     Log.i("PERIODOS", "Inicio Cursada: " + fechaInicioCursada);
                     Log.i("PERIODOS", "Fin Cursada   : " + fechaCierreCursada);
                     Log.i("PERIODOS", "Cursada       : " + estaEnCursadas);
+
+                    // FINALES
 
                     String fechaInicioFinales = jsonobject.getString("fechaInicioFinales");
                     String diaFinales = obtenerDiaFecha(fechaInicioFinales);

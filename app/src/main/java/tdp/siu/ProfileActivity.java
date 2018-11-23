@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.TestLooperManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AlphaBackGroundActivity {
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -58,7 +59,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        
+        //Si habilito el fullscreen no me scrollea la pagina con el teclado en pantalla
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setTitle("Perfil");
 
@@ -67,6 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_profile);
+
+        setAlphaBackGround();
 
         //Determinar si colocar Padron o Legajo según el usuario
         configurarAtributos();
@@ -145,6 +150,7 @@ public class ProfileActivity extends AppCompatActivity {
         String pswNueva = String.valueOf(etPSWnueva.getText());
         String pswNueva2 = String.valueOf(etPSWnueva2.getText());
         boolean mailValido = validarMail(mailIngresado);
+        Log.v("DEBUG", "Password nueva: " + pswNueva);
         boolean pswValida = validarPSW(pswNueva);
         boolean exitoso = false;
         if(mailValido){

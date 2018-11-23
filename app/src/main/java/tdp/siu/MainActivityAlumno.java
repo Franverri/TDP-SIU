@@ -444,8 +444,8 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnInscripcion = validarPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
                     Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
-                    //editorShared.putBoolean("estaEnInscripcion", true);
-                    editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
+                    editorShared.putBoolean("estaEnInscripcion", true);
+                    //editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
 
                     //-------------
 
@@ -465,8 +465,8 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnDesinscripcion = validarPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
                     Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
-                    //editorShared.putBoolean("estaEnDesinscripcion", true);
-                    editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
+                    editorShared.putBoolean("estaEnDesinscripcion", true);
+                    //editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
 
                     //---------------
 
@@ -486,8 +486,8 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnCursada = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
                     Log.d("FECHAS", "Cursada: " + estaEnCursada);
-                    //editorShared.putBoolean("estaEnDesinscripcion", true);
-                    editorShared.putBoolean("estaEnCursada", estaEnCursada);
+                    editorShared.putBoolean("estaEnCursada", true);
+                    //editorShared.putBoolean("estaEnCursada", estaEnCursada);
 
                     //---------------
 
@@ -507,7 +507,8 @@ public class MainActivityAlumno extends AppCompatActivity
 
                     estaEnFinales = validarPeriodo(fechaInicioFinales, fechaCierreFinales);
                     Log.d("FECHAS", "Finales: " + estaEnFinales);
-                    editorShared.putBoolean("estaEnFinales", estaEnFinales);
+                    editorShared.putBoolean("estaEnFinales", true);
+                    //editorShared.putBoolean("estaEnFinales", estaEnFinales);
 
                     //---------------
 

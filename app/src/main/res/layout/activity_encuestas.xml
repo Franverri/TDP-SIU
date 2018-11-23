@@ -20,9 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorTitleFont"
+            android:textStyle="bold"
             android:textSize="22dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorTitleBackground"/>
 
         <TextView
             android:textColor="#000000"
@@ -446,14 +447,9 @@
 
         <Button
             android:id="@+id/btnEnviar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/TextButton"
             android:layout_margin="10dp"
-            android:text="ENVIAR"
-            android:textAllCaps="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radio_group" />
+            android:text="ENVIAR"/>
 
     </LinearLayout>
 
