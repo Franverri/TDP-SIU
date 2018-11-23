@@ -136,12 +136,14 @@ public class HistorialActivity extends AppCompatActivity {
 
         TableRow header_row = new TableRow(this);
 
+        int color = getResources().getColor(R.color.colorTitleFont);
+
         //column 1
         TextView header_tv = new TextView(this);
         header_tv.setLayoutParams(params1);
         header_tv.setText("Codigo");
         header_tv.setGravity(Gravity.CENTER);
-        header_tv.setTextColor(Color.WHITE);
+        header_tv.setTextColor(color);
         header_tv.setTextSize(20);
         header_row.addView(header_tv);
 
@@ -150,7 +152,7 @@ public class HistorialActivity extends AppCompatActivity {
         header_tv.setLayoutParams(params2);
         header_tv.setText("Nombre");
         header_tv.setGravity(Gravity.CENTER);
-        header_tv.setTextColor(Color.WHITE);
+        header_tv.setTextColor(color);
         header_tv.setTextSize(20);
         header_row.addView(header_tv);
 
@@ -159,7 +161,7 @@ public class HistorialActivity extends AppCompatActivity {
         header_tv.setLayoutParams(params3);
         header_tv.setText("Nota");
         header_tv.setGravity(Gravity.CENTER);
-        header_tv.setTextColor(Color.WHITE);
+        header_tv.setTextColor(color);
         header_tv.setTextSize(20);
         header_row.addView(header_tv);
 
@@ -168,7 +170,7 @@ public class HistorialActivity extends AppCompatActivity {
         header_tv.setLayoutParams(params4);
         header_tv.setText("Fecha");
         header_tv.setGravity(Gravity.CENTER);
-        header_tv.setTextColor(Color.WHITE);
+        header_tv.setTextColor(color);
         header_tv.setTextSize(20);
         header_row.addView(header_tv);
 

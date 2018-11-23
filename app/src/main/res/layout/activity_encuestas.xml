@@ -20,9 +20,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorTitleFont"
+            android:textStyle="bold"
             android:textSize="22dp"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/colorTitleBackground"/>
 
         <TextView
             android:textColor="#000000"
