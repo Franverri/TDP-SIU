@@ -8,7 +8,7 @@ public abstract class AlphaBackGroundActivity extends AppCompatActivity {
     int ALPHA = 140;
 
     public void setAlphaBackGround(){
-        View backgroundImage = findViewById(R.id.background_profile);
+        View backgroundImage = findViewById(R.id.background);
         Drawable background = backgroundImage.getBackground();
         background.setAlpha(ALPHA);
     }

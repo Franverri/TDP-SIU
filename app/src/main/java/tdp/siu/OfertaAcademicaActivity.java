@@ -44,7 +44,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class OfertaAcademicaActivity extends AppCompatActivity {
+public class OfertaAcademicaActivity extends AlphaBackGroundActivity {
 
     ProgressDialog progress;
     EditText etSearch;
@@ -86,6 +86,8 @@ public class OfertaAcademicaActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_oferta_academica);
+
+        setAlphaBackGround();
 
         setTitle("Oferta académica " + descPeriodo);
 
