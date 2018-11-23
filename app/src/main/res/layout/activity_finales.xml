@@ -19,5 +19,5 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_nuevoFinal"
         style="@style/FloatingButton"
-        android:src="@drawable/ic_add"/>
+        android:src="@drawable/ic_add_black"/>
 </RelativeLayout>

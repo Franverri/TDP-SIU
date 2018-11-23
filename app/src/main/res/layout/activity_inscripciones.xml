@@ -19,6 +19,6 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/btn_calendar"
         style="@style/FloatingButton"
-        android:src="@drawable/ic_calendar"/>
+        android:src="@drawable/ic_calendar_black"/>
 
 </RelativeLayout>
