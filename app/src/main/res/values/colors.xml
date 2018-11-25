@@ -6,4 +6,5 @@
     <color name="colorUnclickableGrey">#9E9E9E</color>
     <color name="colorTitleBackground">#a1a1a1</color>
     <color name="colorTitleFont">#000000</color>
+    <color name="colorBlackHint">#4d4d4d</color>
 </resources>

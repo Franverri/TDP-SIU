@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -60,6 +62,8 @@ public class EncuestasActivity extends AlphaBackGroundActivity {
 
         setearTitulo();
 
+        setearComentarios();
+
         configurarBtnEnviar();
     }
 
@@ -88,6 +92,12 @@ public class EncuestasActivity extends AlphaBackGroundActivity {
         TextView tvTitulo = (TextView) findViewById(R.id.tvTituloEncuesta);
         tvTitulo.setText("[" + codigoCarrera + "] " + nombreCarrera);
 
+    }
+
+    private void setearComentarios(){
+        EditText editText = findViewById(R.id.comentario_encuesta);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     private void configurarBtnEnviar() {
