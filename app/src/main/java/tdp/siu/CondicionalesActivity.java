@@ -3,6 +3,7 @@ package tdp.siu;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -145,6 +146,10 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         //Inflate the view from a predefined XML layout (no need for root id, using entire layout)
         View layout = inflater.inflate(R.layout.popup_profile_alumno,null);
+        //set background
+        View backgroundImage = layout.findViewById(R.id.background);
+        Drawable background = backgroundImage.getBackground();
+        background.setAlpha(215);
         //load results
         ((TextView)layout.findViewById(R.id.tvNombre)).setText(profile.get(NOMBRE));
         ((TextView)layout.findViewById(R.id.tvPadron)).setText(profile.get(PADRON));
