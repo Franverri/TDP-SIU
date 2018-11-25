@@ -31,15 +31,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if(remoteMessage.getData().size() > 0){
             Log.d("FIREBASEE", "Data: " + remoteMessage.getData());
-            mostrarNotificacion(remoteMessage.getData().get("title"), remoteMessage.getData().get("text"));
+            mostrarNotificacion(remoteMessage.getData().get("title"), remoteMessage.getData().get("text"), remoteMessage.getData().get("timestamp"));
         }
 
     }
 
-    private void mostrarNotificacion(String title, String body) {
+    private void mostrarNotificacion(String title, String body, String timestamp) {
         String padron = sharedPref.getString("padron", null);
         String strNotificaciones = sharedPref.getString("strNotificaciones"+padron, "");
-        strNotificaciones = strNotificaciones + title + ": " + body + ";";
+        strNotificaciones = strNotificaciones + timestamp + " - " + title + ": " + body + ";";
         editorShared.putString("strNotificaciones"+padron, strNotificaciones);
         editorShared.apply();
 
