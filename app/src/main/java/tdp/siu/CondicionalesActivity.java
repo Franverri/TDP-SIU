@@ -277,12 +277,14 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
 
     private void aceptarCondicionales(){
         List<Integer> indexAlumnos = adapter.getChanges();
+        Log.d("DEBUG","Indices Alumnos: " + indexAlumnos.toString());
         JSONArray padrones = new JSONArray();
         for (Integer index :indexAlumnos){
             padrones.put(alumnosList.get(index).getPadron());
         }
         String url = APIUrl + "condicional?id_curso=" + idCurso;
         Log.i("API", "url: " + url);
+        Log.i("API", "padrones: " + padrones.toString());
         JSONObject request = new JSONObject();
         try{
             request.put("padrones", padrones);
@@ -298,6 +300,7 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
                         aceptarButton.setVisibility(View.INVISIBLE);
                         Toast.makeText(CondicionalesActivity.this, "Condicionales aceptados",
                                 Toast.LENGTH_LONG).show();
+                        adapter.resetChanges();
                         enviarRequestGetCondicionales();
                     }
                 }, new Response.ErrorListener() {

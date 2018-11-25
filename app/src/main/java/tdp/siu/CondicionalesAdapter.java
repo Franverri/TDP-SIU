@@ -40,6 +40,10 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
         return changesList;
     }
 
+    public void resetChanges(){
+        changesList.clear();
+    }
+
     @Override
     public CondicionalesAdapter.ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //inflating and returning our view holder
