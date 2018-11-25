@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -96,7 +97,7 @@ public class CondicionalesAdapter extends RecyclerView.Adapter<CondicionalesAdap
 
         CardView cvAlumno;
         TextView tvNombreAlumno, tvPadronAlumno, tvPrioridadAlumno;
-        Switch swAlumno;
+        CheckBox swAlumno;
 
         public ProductViewHolder(View itemView) {
             super(itemView);
