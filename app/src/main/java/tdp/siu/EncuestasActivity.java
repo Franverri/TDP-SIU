@@ -26,7 +26,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
 
-public class EncuestasActivity extends AppCompatActivity {
+public class EncuestasActivity extends AlphaBackGroundActivity {
 
     RequestQueue queue;
     String APIUrl ="https://siu-api.herokuapp.com/";
@@ -46,6 +46,7 @@ public class EncuestasActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_encuestas);
+        setAlphaBackGround();
 
         Bundle b = getIntent().getExtras();
         if(b != null){

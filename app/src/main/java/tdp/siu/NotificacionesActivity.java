@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.util.Arrays;
 import java.util.List;
 
-public class NotificacionesActivity extends AppCompatActivity {
+public class NotificacionesActivity extends AlphaBackGroundActivity {
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -40,6 +40,7 @@ public class NotificacionesActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_notificaciones);
+        setAlphaBackGround();
 
         configurarBtnClear();
     }

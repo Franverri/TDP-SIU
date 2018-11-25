@@ -36,7 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class HistorialActivity extends AppCompatActivity {
+public class HistorialActivity extends AlphaBackGroundActivity {
 
     ProgressDialog progress;
     EditText etSearch;
@@ -78,6 +78,7 @@ public class HistorialActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         setContentView(R.layout.activity_historial);
+        setAlphaBackGround();
 
         Bundle b = getIntent().getExtras();
         if(b != null){

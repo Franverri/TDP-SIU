@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/background"
+    android:background="@drawable/fondo_login_alpha">
 
     <LinearLayout
         android:divider="@drawable/divider_list"
