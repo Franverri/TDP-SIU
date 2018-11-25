@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -58,6 +59,8 @@ public class HistorialActivity extends AlphaBackGroundActivity {
     TableRow.LayoutParams params4;
 
     TextView tvTitulo;
+
+    int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
 
     private void configurarTabla() {
 
+        color = getResources().getColor(R.color.colorTitleFont);
         tvTitulo = (TextView) findViewById(R.id.table_titulo);
         tvTitulo.setText(nombreCarrera);
 
@@ -137,7 +141,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
 
         TableRow header_row = new TableRow(this);
 
-        int color = getResources().getColor(R.color.colorTitleFont);
+
 
         //column 1
         TextView header_tv = new TextView(this);
@@ -146,6 +150,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(color);
         header_tv.setTextSize(20);
+        header_tv.setTypeface(header_tv.getTypeface(), Typeface.BOLD);
         header_row.addView(header_tv);
 
         //column 2
@@ -155,6 +160,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(color);
         header_tv.setTextSize(20);
+        header_tv.setTypeface(header_tv.getTypeface(), Typeface.BOLD);
         header_row.addView(header_tv);
 
         //column 3
@@ -164,6 +170,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(color);
         header_tv.setTextSize(20);
+        header_tv.setTypeface(header_tv.getTypeface(), Typeface.BOLD);
         header_row.addView(header_tv);
 
         //column 4
@@ -173,6 +180,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         header_tv.setGravity(Gravity.CENTER);
         header_tv.setTextColor(color);
         header_tv.setTextSize(20);
+        header_tv.setTypeface(header_tv.getTypeface(), Typeface.BOLD);
         header_row.addView(header_tv);
 
         header_row.setGravity(Gravity.CENTER);
@@ -320,6 +328,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         TextView tv = new TextView(this);
         tv.setLayoutParams(params1);
         tv.setText(codigoMateria);
+        tv.setTextColor(color);
         tv.setGravity(Gravity.CENTER);
         row.addView(tv);
 
@@ -327,6 +336,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         tv = new TextView(this);
         tv.setLayoutParams(params2);
         tv.setText(nombreMateria);
+        tv.setTextColor(color);
         tv.setGravity(Gravity.CENTER_VERTICAL);
         row.addView(tv);
 
@@ -334,6 +344,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         tv = new TextView(this);
         tv.setLayoutParams(params3);
         tv.setText(nota);
+        tv.setTextColor(color);
         tv.setGravity(Gravity.CENTER);
         row.addView(tv);
 
@@ -341,6 +352,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         tv = new TextView(this);
         tv.setLayoutParams(params4);
         tv.setText(fecha);
+        tv.setTextColor(color);
         tv.setGravity(Gravity.CENTER);
         row.setGravity(Gravity.CENTER);
         row.addView(tv);
