@@ -62,6 +62,8 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
     RecyclerView recyclerView;
     Button aceptarButton;
 
+    boolean puedeAceptar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,11 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         Bundle b = getIntent().getExtras();
         if(b != null)
             idCurso = b.getInt("id");
+
+        //SharedPref para almacenar datos de sesión
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+        puedeAceptar = sharedPref.getBoolean("estaEnInscripcion", false) || sharedPref.getBoolean("estaEnDesinscripcion", false);
 
         //Remove notification bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -279,7 +286,12 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         aceptarButton.setOnClickListener( new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                aceptarCondicionales();
+                if (puedeAceptar){
+                    aceptarCondicionales();
+                } else{
+                    Toast.makeText(CondicionalesActivity.this, "No es posible aceptar condicionales en este período",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

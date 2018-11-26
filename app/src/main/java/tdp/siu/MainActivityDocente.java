@@ -151,6 +151,31 @@ public class MainActivityDocente extends AppCompatActivity
             try {
                 if (jsonobject != null) {
 
+                    //INSCRIPCION
+
+                    String fechaInicioInscripcion = jsonobject.getString("fechaInicioInscripcionCursadas");
+                    String fechaCierreInscripcion = jsonobject.getString("fechaFinInscripcionCursadas");
+
+                    boolean estaEnInscripcion = validarPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
+                    Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
+                    //editorShared.putBoolean("estaEnInscripcion", true);
+                    editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
+
+                    //-------------
+
+                    //DESINSCRIPCION
+
+                    String fechaInicioDesinscripcion = jsonobject.getString("fechaInicioDesinscripcionCursadas");
+                    String fechaCierreDesinscripcion = jsonobject.getString("fechaFinDesinscripcionCursadas");
+
+                    boolean estaEnDesinscripcion = validarPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
+                    Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
+                    //editorShared.putBoolean("estaEnDesinscripcion", true);
+                    editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
+
+                    //---------------
+
+
                     //CURSADA
 
                     String fechaInicioCursada = jsonobject.getString("fechaInicioCursadas");
