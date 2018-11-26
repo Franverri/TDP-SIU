@@ -156,8 +156,8 @@ public class MainActivityDocente extends AppCompatActivity
                     String fechaInicioCursada = jsonobject.getString("fechaInicioCursadas");
                     String fechaCierreCursada = jsonobject.getString("fechaFinCursadas");
                     Boolean estaEnCursadas = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
-                    editorShared.putBoolean("estaEnCursadas", true);
-                    //editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
+                    //editorShared.putBoolean("estaEnCursadas", true);
+                    editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
 
                     Log.i("PERIODOS", "Inicio Cursada: " + fechaInicioCursada);
                     Log.i("PERIODOS", "Fin Cursada   : " + fechaCierreCursada);
