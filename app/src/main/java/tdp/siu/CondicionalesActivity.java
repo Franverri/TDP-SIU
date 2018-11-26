@@ -225,13 +225,17 @@ public class CondicionalesActivity extends AppCompatActivity implements Condicio
         try {
             alumnosList.clear();
             JSONArray array = response.getJSONArray("condicionales");
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject jsonobject = null;
-                jsonobject = array.getJSONObject(i);
+            int cantCondicionales = array.length();
+            for (int i = 0; i < cantCondicionales; i++) {
+                JSONObject jsonobject = array.getJSONObject(i);
                 String nombreAlumno = jsonobject.getString("apellido_y_nombre");
                 String padronAlumno = jsonobject.getString("padron");
                 String prioridadAlumno = jsonobject.getString("prioridad");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno, true));
+            }
+            if (cantCondicionales == 0){
+                Toast.makeText(CondicionalesActivity.this, "No hay alumnos condicionales a esta materia",
+                        Toast.LENGTH_LONG).show();
             }
             recyclerView.setAdapter(adapter);
         } catch (JSONException e){

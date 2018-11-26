@@ -206,32 +206,29 @@ public class AlumnosInscriptosActivity extends AppCompatActivity implements Acti
 
     private void actualizarAlumnosInscriptos(JSONObject response){
         alumnosList.clear();
-        JSONArray array = null;
         try {
-            array = response.getJSONArray("inscriptos");
-        }catch (JSONException e){
-            Log.i("JSON","Error al parsear JSON");
-        }
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject jsonobject = null;
-            try {
-                jsonobject = array.getJSONObject(i);
-            } catch (JSONException e) {
-                Log.i("JSON","Error al parsear JSON");
-            }
-            try {
+            JSONArray array = response.getJSONArray("inscriptos");
+            int cantInscriptos = array.length();
+            for (int i = 0; i < cantInscriptos; i++) {
+                JSONObject jsonobject = array.getJSONObject(i);
                 String nombreAlumno = jsonobject.getString("apellido_y_nombre");
                 String padronAlumno = jsonobject.getString("padron");
                 String prioridadAlumno = jsonobject.getString("prioridad");
                 boolean condicional = !jsonobject.getBoolean("es_regular");
                 alumnosList.add(new Alumno(nombreAlumno, padronAlumno, prioridadAlumno, condicional));
-            } catch (JSONException e) {
-                Log.i("JSON","Error al obtener datos del JSON");
             }
+            if (cantInscriptos == 0) {
+                Toast.makeText(AlumnosInscriptosActivity.this, "No hay alumnos inscriptos a este curso",
+                        Toast.LENGTH_LONG).show();
+            }
+            recyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            Log.i("JSON","Error al obtener datos del JSON");
         }
-        recyclerView.setAdapter(adapter);
-
     }
+
+
+
 
 
     private void configurarHTTPRequestSingleton() {
