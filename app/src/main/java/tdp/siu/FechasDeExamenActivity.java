@@ -152,6 +152,7 @@ public class FechasDeExamenActivity extends AppCompatActivity implements FechasD
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Nueva Fecha de Examen");
+        builder.setMessage("Inicio: " + inicioFinales.toString(DATE_PATTERN) + "\nFin: " +finFinales.toString(DATE_PATTERN));
 
         View viewInflated = LayoutInflater.from(this).inflate(R.layout.nueva_fecha_examen_dialog,(ViewGroup) findViewById(android.R.id.content), false);
         // Set up the input
