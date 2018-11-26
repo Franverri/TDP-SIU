@@ -107,6 +107,7 @@ public class MainActivityDocente extends AppCompatActivity
         String mail = sharedPref.getString("mail", null);
         actualizarDatosMenuLateral(mail);
         obtenerPeriodos();
+        enviarRequestCursos();
     }
 
     private void actualizarDatosMenuLateral(String mail) {

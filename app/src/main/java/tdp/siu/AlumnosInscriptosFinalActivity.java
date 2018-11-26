@@ -51,7 +51,7 @@ public class AlumnosInscriptosFinalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Recuperar el id del curso en el cual se hizo click
+        //Recuperar el id del final en el cual se hizo click
         Bundle b = getIntent().getExtras();
         if (b != null)
             idFinal = b.getString("id");
