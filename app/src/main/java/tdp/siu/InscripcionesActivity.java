@@ -234,6 +234,13 @@ public class InscripcionesActivity extends AppCompatActivity {
         String horarioAnterior = "";
         String horarioActual = "";
 
+        if (horarios.contentEquals(".-.")){
+            horarios = "";
+            aulas = "";
+            dias = "";
+            sede = "";
+        }
+
         String[] arraySede = sede.split(";");
         String[] arrayAulas = aulas.split(";");
         String[] arrayDias = dias.split(";");
