@@ -159,8 +159,8 @@ public class MainActivityDocente extends AppCompatActivity
 
                     boolean estaEnInscripcion = validarPeriodo(fechaInicioInscripcion, fechaCierreInscripcion);
                     Log.d("FECHAS", "Inscripcion: " + estaEnInscripcion);
-                    //editorShared.putBoolean("estaEnInscripcion", true);
-                    editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
+                    editorShared.putBoolean("estaEnInscripcion", true);
+                    //editorShared.putBoolean("estaEnInscripcion", estaEnInscripcion);
 
                     //-------------
 
@@ -171,8 +171,8 @@ public class MainActivityDocente extends AppCompatActivity
 
                     boolean estaEnDesinscripcion = validarPeriodo(fechaInicioDesinscripcion, fechaCierreDesinscripcion);
                     Log.d("FECHAS", "Desinscripcion: " + estaEnDesinscripcion);
-                    //editorShared.putBoolean("estaEnDesinscripcion", true);
-                    editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
+                    editorShared.putBoolean("estaEnDesinscripcion", true);
+                    //editorShared.putBoolean("estaEnDesinscripcion", estaEnDesinscripcion);
 
                     //---------------
 
@@ -182,8 +182,8 @@ public class MainActivityDocente extends AppCompatActivity
                     String fechaInicioCursada = jsonobject.getString("fechaInicioCursadas");
                     String fechaCierreCursada = jsonobject.getString("fechaFinCursadas");
                     Boolean estaEnCursadas = validarPeriodo(fechaInicioCursada, fechaCierreCursada);
-                    //editorShared.putBoolean("estaEnCursadas", true);
-                    editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
+                    editorShared.putBoolean("estaEnCursadas", true);
+                    //editorShared.putBoolean("estaEnCursadas", estaEnCursadas);
 
                     Log.i("PERIODOS", "Inicio Cursada: " + fechaInicioCursada);
                     Log.i("PERIODOS", "Fin Cursada   : " + fechaCierreCursada);
