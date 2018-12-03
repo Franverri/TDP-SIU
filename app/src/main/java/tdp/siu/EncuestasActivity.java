@@ -124,7 +124,8 @@ public class EncuestasActivity extends AlphaBackGroundActivity {
 
         progress = ProgressDialog.show(this, "Encuestas",
                 "Enviando respuestas...", true);
-        String url = APIUrl + "alumno/encuestas?padron=" + padron + "&id_materia=" + idMateria + "&respuesta="+ strDatos;
+        String url = APIUrl + "alumno/encuestas?padron=" + padron + "&id_materia=" + idMateria + "&respuesta="+ strDatos.replace(" ","+");
+        Log.d("API","URL: " + url);
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
                 {
