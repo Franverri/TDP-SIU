@@ -191,7 +191,7 @@ public class CatedrasAdapter extends RecyclerView.Adapter<CatedrasAdapter.Produc
                 case 1:
                     Toast.makeText(mCtx, "La inscripción se realizó correctamente",
                             Toast.LENGTH_LONG).show();
-                    Intent myIntent = new Intent(mCtx, OfertaAcademicaActivity.class);
+                    Intent myIntent = new Intent(mCtx, MainActivityAlumno.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     mCtx.startActivity(myIntent);
                     break;
