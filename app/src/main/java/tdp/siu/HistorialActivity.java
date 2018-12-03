@@ -292,7 +292,7 @@ public class HistorialActivity extends AlphaBackGroundActivity {
         tableLayout.removeAllViews();
 
         if(response.length() == 0){
-            añadirFila(0,"-","", "-", "-");
+            añadirFila(0,"-","-", "-", "-");
         } else {
             for (int i = 0; i < response.length(); i++) {
                 JSONObject jsonobject = null;
