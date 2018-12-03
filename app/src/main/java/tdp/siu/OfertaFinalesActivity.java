@@ -236,9 +236,9 @@ public class OfertaFinalesActivity extends AlphaBackGroundActivity {
         String url;
 
         if(filtro.equals("")){
-            url = APIUrl + "alumno/ofertaFinales/" + padron + "?id_carrera=" + codigoCarrera;;
+            url = APIUrl + "alumno/ofertaFinales/" + padron + "?id_carrera=" + codigoCarrera;
         } else {
-            url = APIUrl + "alumno/ofertaFinales/" + padron + "?id_carrera=" + codigoCarrera +  "?filtro=" + filtro;
+            url = APIUrl + "alumno/ofertaFinales/" + padron + "?id_carrera=" + codigoCarrera +  "&filtro=" + filtro;
         }
         Log.d("API", "URL: " + url);
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest
